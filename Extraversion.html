@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    "frage": "Welche Hypothese wurde in der Studie untersucht?",
+    "a": "Extravertierte zeigen stärkeres Unwohlsein bei Meinungsverschiedenheiten.",
+    "b": "Introvertierte passen ihr Verhalten stärker an, um Konsistenz herzustellen.",
+    "c": "Extravertierte haben ein stärker erregbares Zentralnervensystem.",
+    "d": "Introvertierte nehmen andere Gruppenmitglieder positiver wahr.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche unabhängige Variable wurde *nicht* manipuliert?",
+    "a": "Gruppenposition (zustimmend vs. entgegengesetzt)",
+    "b": "Extraversion (Selbsteinschätzung)",
+    "c": "Gruppenform (Diskussion vs. Kontrolle)",
+    "d": "Alter der Proband:innen",
+    "richtig": "d"
+  },
+  {
+    "frage": "Wie wurde die Extraversion gemessen?",
+    "a": "Durch Verhaltensbeobachtung",
+    "b": "Mit einem Big-Five-Inventar (Selbsteinschätzung)",
+    "c": "Über physiologische Erregungsmessung",
+    "d": "Durch Fremdeinschätzung der Gruppenmitglieder",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche statistische Methode wurde für die Auswertung der emotionalen Reaktionen verwendet?",
+    "a": "Korrelationsanalyse",
+    "b": "ANOVA",
+    "c": "Regression",
+    "d": "t-Test",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was war ein signifikanter Haupteffekt der Gruppenposition?",
+    "a": "Extravertierte zeigten mehr positive Emotionen.",
+    "b": "Mehr Unwohlsein bei entgegengesetzter Position anderer.",
+    "c": "Introvertierte änderten seltener ihr Verhalten.",
+    "d": "Keine Unterschiede in der Selbstbewertung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Interaktion war *marginal signifikant* für das Unwohlsein?",
+    "a": "Gruppenform × Extraversion",
+    "b": "Gruppenposition × Extraversion",
+    "c": "Geschlecht × Extraversion",
+    "d": "Alter × Gruppenposition",
+    "richtig": "b"
+  },
+  {
+    "frage": "In welcher Bedingung unterschieden sich Introvertierte und Extravertierte *nicht* in der Verhaltensänderung?",
+    "a": "Zustimmende Gruppenposition",
+    "b": "Entgegengesetzte Gruppenposition",
+    "c": "Kontrollbedingung ohne Diskussion",
+    "d": "Bei positiven Emotionen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Limitation wurde in der Studie genannt?",
+    "a": "Zu große Stichprobe",
+    "b": "Extraversion als dichotomes Maß (nicht kontinuierlich)",
+    "c": "Fehlende Manipulation der Gruppenposition",
+    "d": "Keine Erhebung von Verhaltensdaten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf die *Kontrollbedingung* zu?",
+    "a": "Es fand eine reale Diskussion statt.",
+    "b": "Proband:innen erhielten Feedback zur Gruppenposition.",
+    "c": "Extraversion wurde hier nicht gemessen.",
+    "d": "Es gab keine Angaben zur Gruppenposition.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was war die Coverstory des Experiments?",
+    "a": "Untersuchung von Lernstrategien",
+    "b": "Vorhersage von Gruppendiskussionen",
+    "c": "Analyse von physiologischem Stress",
+    "d": "Messung von Intelligenzunterschieden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche abhängige Variable wurde *nicht* erhoben?",
+    "a": "Unwohlsein",
+    "b": "Negative Selbstbewertung",
+    "c": "Herzfrequenz",
+    "d": "Verhaltensänderungsabsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche theoretische Grundlage stützte die Hypothese?",
+    "a": "Eysencks Theorie zum Zentralnervensystem",
+    "b": "Maslows Bedürfnishierarchie",
+    "c": "Freuds Triebtheorie",
+    "d": "Banduras sozialkognitive Theorie",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie viele Proband:innen wurden im finalen Sample analysiert?",
+    "a": "205",
+    "b": "188",
+    "c": "141",
+    "d": "100",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Ergebnis zeigte die ANOVA zur *Verhaltensänderung*?",
+    "a": "Keine Effekte der Gruppenposition",
+    "b": "Introvertierte änderten ihr Verhalten signifikant häufiger",
+    "c": "Extravertierte zeigten mehr positive Emotionen",
+    "d": "Gruppenform hatte den stärksten Einfluss",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist eine kausale Interpretation der Ergebnisse eingeschränkt?",
+    "a": "Fehlende Kontrollbedingung",
+    "b": "Extraversion wurde nicht randomisiert zugeteilt",
+    "c": "Zu kleine Effektstärken",
+    "d": "Keine Signifikanz der Ergebnisse",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,732 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    "frage": "Welcher Prozess wird durch die Kategorisierung eines sozialen Stimulus am stärksten beeinflusst?",
+    "a": "Automatische Aktivierung von Stereotypen",
+    "b": "Systematische Analyse aller Informationen",
+    "c": "Emotionale Reaktionen",
+    "d": "Langfristige Gedächtnisspeicherung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Im Experiment von Duncan (1976) wurde das Verhalten eines Schwarzen im Vergleich zu einem Weißen eher auf welche Ursache attribuiert?",
+    "a": "Situative Umstände",
+    "b": "Persönlichkeitseigenschaften",
+    "c": "Zufall",
+    "d": "Externe Zwänge",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter „Salienz“ in der sozialen Kognition?",
+    "a": "Die emotionale Intensität eines Stimulus",
+    "b": "Die Fähigkeit eines Stimulus, Aufmerksamkeit zu binden",
+    "c": "Die logische Konsistenz einer Information",
+    "d": "Die kulturelle Akzeptanz eines Verhaltens",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat die Kategorisierung in der sozialen Informationsverarbeitung?",
+    "a": "Sie reduziert kognitive Komplexität durch Generalisierung",
+    "b": "Sie fördert individuelle Differenzierung",
+    "c": "Sie erhöht die Fehleranfälligkeit von Urteilen",
+    "d": "Sie blockiert den Zugriff auf implizite Stereotype",
+    "richtig": "a"
+  },
+  {
+    "frage": "In Corrells Schieß-/Nicht-Schieß-Experiment (2002) zeigten Teilnehmende die höchste Fehlerrate, wenn:",
+    "a": "Ein bewaffneter Weißer erschien",
+    "b": "Ein unbewaffneter Schwarzer erschien",
+    "c": "Ein unbewaffneter Weißer erschien",
+    "d": "Ein bewaffneter Schwarzer erschien",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Heuristik nutzen Menschen, wenn sie die Häufigkeit eines Ereignisses anhand der Leichtigkeit der Erinnerbarkeit einschätzen?",
+    "a": "Repräsentativitätsheuristik",
+    "b": "Verfügbarkeitsheuristik",
+    "c": "Ankerheuristik",
+    "d": "Affektheuristik",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Tendenz, den eigenen Beitrag zu gemeinsamen Projekten zu überschätzen, wird am besten durch welche Heuristik erklärt?",
+    "a": "Verfügbarkeitsheuristik",
+    "b": "Repräsentativitätsheuristik",
+    "c": "Rückschaufehler",
+    "d": "Selbstwertdienliche Verzerrung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Ein Richter, der sein Urteil unbewusst an einer zufälligen Zahl orientiert, zeigt welches Phänomen?",
+    "a": "Korrespondenzverzerrung",
+    "b": "Anker- und Anpassungsheuristik",
+    "c": "Auslassungsverzerrung",
+    "d": "Kognitive Dissonanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum wählen viele Menschen in Tversky/Kahnemans Krankheitsszenario die riskante Option, wenn der Rahmen „Verluste“ betont?",
+    "a": "Sie überschätzen kleine Wahrscheinlichkeiten",
+    "b": "Sie neigen zur Risikovermeidung bei Verlusten",
+    "c": "Sie ignorieren statistische Informationen",
+    "d": "Sie vertrauen auf Autoritäten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Verzerrung beschreibt die Überschätzung der Vorhersehbarkeit vergangener Ereignisse?",
+    "a": "Rückschaufehler",
+    "b": "Bestätigungsfehler",
+    "c": "Halo-Effekt",
+    "d": "Gruppenattributionsfehler",
+    "richtig": "a"
+  },
+  {
+    "frage": "Nach Kelleys Kovariationsprinzip führt eine Personenattribution zu welchem Informationsmuster?",
+    "a": "Hoher Konsens, hohe Distinktheit, hohe Konsistenz",
+    "b": "Niedriger Konsens, niedrige Distinktheit, hohe Konsistenz",
+    "c": "Hoher Konsens, niedrige Distinktheit, niedrige Konsistenz",
+    "d": "Niedriger Konsens, hohe Distinktheit, niedrige Konsistenz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Dimension unterscheidet Weiner NICHT in seinem Attributionsmodell?",
+    "a": "Lokation (intern/extern)",
+    "b": "Stabilität",
+    "c": "Kontrollierbarkeit",
+    "d": "Intentionalität",
+    "richtig": "d"
+  },
+  {
+    "frage": "Die „Akteur-Beobachter-Divergenz“ besagt, dass:",
+    "a": "Beobachter Verhalten stärker auf Situationen attribuieren",
+    "b": "Akteure ihr Verhalten stärker auf Dispositionen zurückführen",
+    "c": "Beobachter Verhalten stärker auf Dispositionen attribuieren",
+    "d": "Akteure externe Faktoren ignorieren",
+    "richtig": "c"
+  },
+  {
+    "frage": "Ein depressiver Attributionsstil ist gekennzeichnet durch:",
+    "a": "Internale, stabile und unkontrollierbare Ursachenzuschreibungen",
+    "b": "Externale, instabile und kontrollierbare Zuschreibungen",
+    "c": "Überbetonung situationaler Faktoren",
+    "d": "Realistische Einschätzung aller Ursachen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Im Experiment von Weiner et al. (1982) führte die Zuschreibung kontrollierbarer Ursachen zu welcher Emotion?",
+    "a": "Mitleid",
+    "b": "Ärger",
+    "c": "Freude",
+    "d": "Überraschung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das Kontinuum-Modell von Fiske und Neuberg beschreibt:",
+    "a": "Den Übergang von automatischer Kategorisierung zu individueller Verarbeitung",
+    "b": "Die Dominanz emotionaler über kognitive Prozesse",
+    "c": "Die Priorisierung heuristischer über systematische Verarbeitung",
+    "d": "Die Unvereinbarkeit von Stereotypen und individuellen Informationen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Automatische Prozesse sind charakterisiert durch:",
+    "a": "Hohen kognitiven Aufwand",
+    "b": "Bewusste Steuerbarkeit",
+    "c": "Schnelle und unbewusste Ausführung",
+    "d": "Individuelle Differenzierung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wann erfolgt nach Gilbert et al. (1988) eine Korrektur dispositionaler Attributionen?",
+    "a": "Immer automatisch",
+    "b": "Nur bei hoher Motivation und kognitiven Ressourcen",
+    "c": "Bei negativen Emotionen",
+    "d": "In kollektivistischen Kulturen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Bless (1997) führt eine positive Stimmung tendenziell zu:",
+    "a": "Analytischer Informationsverarbeitung",
+    "b": "Verstärkter Nutzung von Stereotypen",
+    "c": "Vermeidung von Heuristiken",
+    "d": "Höherer Fehleranfälligkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das „Affect Infusion Model“ von Forgas sagt voraus, dass Stimmungen Entscheidungen besonders stark beeinflussen, wenn:",
+    "a": "Routinehandlungen ausgeführt werden",
+    "b": "Kreative Lösungen benötigt werden",
+    "c": "Keine kognitiven Ressourcen verfügbar sind",
+    "d": "Die Situation klar strukturiert ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Emotion löst die Attribution von Misserfolg auf interne, stabile Faktoren aus?",
+    "a": "Stolz",
+    "b": "Niedergeschlagenheit",
+    "c": "Wut",
+    "d": "Überraschung",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Barghs Experiment (1996) zur automatischen Verhaltensaktivierung bewegten sich Teilnehmer nach dem Priming von Altersstereotypen:",
+    "a": "Schneller",
+    "b": "Langsamer",
+    "c": "Unverändert",
+    "d": "Unkoordiniert",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum zeigten Polizisten in Corrells Experiment (2009) weniger stereotype Schießentscheidungen als Laien?",
+    "a": "Sie hatten keine impliziten Vorurteile",
+    "b": "Spezielle Trainings reduzierten den Stereotypeinfluss",
+    "c": "Sie ignorierten die Hautfarbe bewusst",
+    "d": "Sie waren emotional abgestumpft",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Experiment von Benbow und Stürmer (2017) wurde die Kriminalität von Vätern im Vergleich zu Müttern eher auf welche Ursachen attribuiert?",
+    "a": "Situative Umstände",
+    "b": "Persönlichkeitseigenschaften",
+    "c": "Gesellschaftliche Strukturen",
+    "d": "Genetische Veranlagung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Prospect Theory erklärt, warum Menschen bei Verlusten:",
+    "a": "Risikoavers agieren",
+    "b": "Risikosuchend agieren",
+    "c": "Rationale Nutzenmaximierung betreiben",
+    "d": "Emotionale Kontrolle verlieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Gigerenzers Kritik am „Heuristiken und Verzerrungen“-Ansatz betont:",
+    "a": "Die Unfähigkeit der Menschen, rationale Entscheidungen zu treffen",
+    "b": "Die Bedeutung von Umweltanpassung und Effizienz",
+    "c": "Die Überlegenheit statistischer Modelle",
+    "d": "Die Irrelevanz kultureller Einflüsse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt die „Anspruch-Anpassungs-Theorie“ nach Selten (2001)?",
+    "a": "Die Anpassung von Entscheidungen an emotionale Zustände",
+    "b": "Die flexible Anpassung von Anspruchsniveaus an Ressourcen",
+    "c": "Die starre Orientierung an sozialen Normen",
+    "d": "Die Vermeidung kognitiver Dissonanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Theorie der kognitiven Dissonanz sagt voraus, dass Menschen:",
+    "a": "Inkonsistente Informationen aktiv suchen",
+    "b": "Konsistente Informationen bevorzugen",
+    "c": "Emotionale Konflikte ignorieren",
+    "d": "Rationale Abwägungen priorisieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Selbstwertdienliche Attributionen dienen primär dem:",
+    "a": "Schutz des Selbstwertgefühls",
+    "b": "Aufbau sozialer Beziehungen",
+    "c": "Erwerb neuen Wissens",
+    "d": "Vermeiden von Verantwortung",
+    "richtig": "a"
+  },
+  {
+    "frage": "In kollektivistischen Kulturen neigen Menschen stärker zu:",
+    "a": "Dispositionalen Attributionen",
+    "b": "Situationalen Attributionen",
+    "c": "Selbstwertdienlichen Verzerrungen",
+    "d": "Repräsentativitätsheuristiken",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der Rückschaufehler führt in juristischen Kontexten häufig zu:",
+    "a": "Überschätzung der Vorhersehbarkeit von Ereignissen",
+    "b": "Unterstellung böser Absichten",
+    "c": "Ignoranz situativer Faktoren",
+    "d": "Überbetonung statistischer Evidenz",
+    "richtig": "a"
+  },
+  {
+    "frage": "In Oeberst und Goeckenjans Experiment (2016) urteilten Richter häufiger auf Fahrlässigkeit, wenn:",
+    "a": "Der Ausgang des Falls unbekannt war",
+    "b": "Der Ausgang des Falls bekannt war",
+    "c": "Emotionale Appelle genutzt wurden",
+    "d": "Stereotype aktiviert wurden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Eine Person schätzt die Kriminalitätsrate in ihrer Stadt höher ein, nachdem sie einen Bericht über einen Einbruch sah. Welche Heuristik liegt vor?",
+    "a": "Verfügbarkeitsheuristik",
+    "b": "Repräsentativitätsheuristik",
+    "c": "Ankerheuristik",
+    "d": "Affektheuristik",
+    "richtig": "a"
+  },
+{
+        "frage": "Welches Experiment zeigt, dass Hautfarbe die Attribution von Aggression beeinflusst?",
+        "a": "Asch (1946)",
+        "b": "Duncan (1976)",
+        "c": "Milgram (1963)",
+        "d": "Zimbardo (1971)",
+        "richtig": "b"
+    },
+    {
+        "frage": "In Corrells Schieß-/Nicht-Schieß-Experiment (2002) schossen Teilnehmende am häufigsten fälschlicherweise auf:",
+        "a": "Bewaffnete Weiße",
+        "b": "Unbewaffnete Schwarze",
+        "c": "Bewaffnete Schwarze",
+        "d": "Unbewaffnete Weiße",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Heuristik nutzt man, wenn man die Häufigkeit eines Ereignisses anhand der Leichtigkeit der Erinnerung einschätzt?",
+        "a": "Repräsentativitätsheuristik",
+        "b": "Verfügbarkeitsheuristik",
+        "c": "Ankerheuristik",
+        "d": "Affektheuristik",
+        "richtig": "b"
+    },
+    {
+        "frage": "Die Tendenz, eigenes Verhalten auf situative Faktoren zurückzuführen, Fremdverhalten aber auf Dispositionen, nennt man:",
+        "a": "Halo-Effekt",
+        "b": "Akteur-Beobachter-Divergenz",
+        "c": "Selbstwertdienliche Verzerrung",
+        "d": "Rückschaufehler",
+        "richtig": "b"
+    },
+    {
+        "frage": "Nach Kelleys Kovariationsprinzip führt eine Personenattribution zu welchem Informationsmuster?",
+        "a": "Hoher Konsens, hohe Distinktheit, hohe Konsistenz",
+        "b": "Niedriger Konsens, niedrige Distinktheit, hohe Konsistenz",
+        "c": "Hoher Konsens, niedrige Distinktheit, niedrige Konsistenz",
+        "d": "Niedriger Konsens, hohe Distinktheit, niedrige Konsistenz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Dimension fehlt in Weiners Attributionsmodell?",
+        "a": "Lokation (intern/extern)",
+        "b": "Stabilität",
+        "c": "Kontrollierbarkeit",
+        "d": "Intentionalität",
+        "richtig": "d"
+    },
+    {
+        "frage": "Ein depressiver Attributionsstil ist gekennzeichnet durch:",
+        "a": "Internale, stabile, unkontrollierbare Zuschreibungen",
+        "b": "Externale, instabile, kontrollierbare Zuschreibungen",
+        "c": "Überbetonung situativer Faktoren",
+        "d": "Realistische Einschätzung aller Ursachen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Die Prospect Theory erklärt, dass Menschen bei Verlusten eher:",
+        "a": "Risikoavers agieren",
+        "b": "Risikosuchend agieren",
+        "c": "Rationale Nutzenmaximierung betreiben",
+        "d": "Emotionale Kontrolle verlieren",
+        "richtig": "b"
+    },
+    {
+        "frage": "In Aschs Experiment (1946) hatte welches Merkmal den stärksten Einfluss auf den Gesamteindruck?",
+        "a": "Intelligent",
+        "b": "Warm/Kalt",
+        "c": "Höflisch/Grob",
+        "d": "Fleißig",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welches Modell beschreibt die Integration von Informationen durch Mittelwertbildung?",
+        "a": "Kontinuum-Modell (Fiske & Neuberg)",
+        "b": "Informationsintegrationstheorie (Anderson)",
+        "c": "Duales Prozessmodell (Brewer)",
+        "d": "Konnektionistisches Modell (Kunda & Thagard)",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Dimensionen dominieren implizite Persönlichkeitstheorien nach Rosenberg et al. (1968)?",
+        "a": "Extraversion/Introversion",
+        "b": "Soziabilität und Intelligenz",
+        "c": "Offenheit/Gewissenhaftigkeit",
+        "d": "Dominanz/Unterwürfigkeit",
+        "richtig": "b"
+    },
+    {
+        "frage": "Der Halo-Effekt beschreibt, dass:",
+        "a": "Eine Eigenschaft den Gesamteindruck dominiert",
+        "b": "Erste Informationen stärker gewichtet werden",
+        "c": "Negative Informationen besser erinnert werden",
+        "d": "Kulturelle Stereotype die Wahrnehmung prägen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Effekt beschreibt die Überschätzung der Vorhersehbarkeit vergangener Ereignisse?",
+        "a": "Rückschaufehler",
+        "b": "Bestätigungsfehler",
+        "c": "Halo-Effekt",
+        "d": "Ankereffekt",
+        "richtig": "a"
+    },
+    {
+        "frage": "Die Tendenz, Informationen zu suchen, die bestehende Eindrücke bestätigen, nennt man:",
+        "a": "Konfirmatorische Informationssuche",
+        "b": "Verfügbarkeitsheuristik",
+        "c": "Selbstwertdienliche Verzerrung",
+        "d": "Kognitive Dissonanz",
+        "richtig": "a"
+    },
+    {
+        "frage": "In Rosenthal & Jacobsons „Pygmalioneffekt“-Studie:",
+        "a": "Lehrer behandelten „begabte“ Schüler besser",
+        "b": "Schüler ignorierten Lehrererwartungen",
+        "c": "Negative Erwartungen führten zu schlechteren Leistungen",
+        "d": "Eltern beeinflussten die Leistungen direkt",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Effekt tritt bei geringer Verarbeitungskapazität auf?",
+        "a": "Primacy-Effekt",
+        "b": "Recency-Effekt",
+        "c": "Halo-Effekt",
+        "d": "Pygmalion-Effekt",
+        "richtig": "b"
+    },
+    {
+        "frage": "Gigerenzers „Bounded Rationality“ kritisiert, dass traditionelle Modelle:",
+        "a": "Umweltkomplexität ignorieren",
+        "b": "Emotionen überbewerten",
+        "c": "Heuristiken nicht anerkennen",
+        "d": "Kulturelle Unterschiede vernachlässigen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Die Anspruch-Anpassungs-Theorie (Selten) betont:",
+        "a": "Flexibles Anpassen von Zielen an Ressourcen",
+        "b": "Starre Nutzung von Stereotypen",
+        "c": "Emotionale Steuerung von Entscheidungen",
+        "d": "Mathematische Optimierung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welche Heuristik führt dazu, dass Richter von willkürlichen Zahlen beeinflusst werden?",
+        "a": "Verfügbarkeitsheuristik",
+        "b": "Anker- und Anpassungsheuristik",
+        "c": "Repräsentativitätsheuristik",
+        "d": "Affektheuristik",
+        "richtig": "b"
+    },
+    {
+        "frage": "Laut Prospect Theory neigen Menschen bei Verlusten zu:",
+        "a": "Risikoaversion",
+        "b": "Risikobereitschaft",
+        "c": "Rationaler Abwägung",
+        "d": "Emotionale Abstumpfung",
+        "richtig": "b"
+    },
+    {
+        "frage": "In kollektivistischen Kulturen werden Verhaltensursachen eher:",
+        "a": "Dispositional attribuiert",
+        "b": "Situational attribuiert",
+        "c": "Auf Glück zurückgeführt",
+        "d": "Ignoriert",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Hirnareale sind bei der Verarbeitung von Dominanz und Vertrauenswürdigkeit aktiv?",
+        "a": "Unterschiedliche Areale",
+        "b": "Nur der präfrontale Cortex",
+        "c": "Das limbische System",
+        "d": "Keine spezifischen Areale",
+        "richtig": "a"
+    },
+    {
+        "frage": "Kindchenschema-Gesichter werden oft als:",
+        "a": "Dominant und kompetent",
+        "b": "Naiv und unerfahren",
+        "c": "Aggressiv und durchsetzungsfähig",
+        "d": "Unattraktiv und schwach",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Dimension fehlt in Todorovs Gesichtswahrnehmungsmodell?",
+        "a": "Vertrauenswürdigkeit",
+        "b": "Dominanz",
+        "c": "Emotionalität",
+        "d": "Attraktivität",
+        "richtig": "c"
+    },
+    {
+        "frage": "In Snyders Experiment (1977) führte die Erwartung einer attraktiven Gesprächspartnerin zu:",
+        "a": "Kontaktfreudigerem Verhalten der Männer",
+        "b": "Gleichgültigem Verhalten",
+        "c": "Aggressiven Reaktionen",
+        "d": "Keinem Unterschied",
+        "richtig": "a"
+    },
+    {
+        "frage": "Was zeigte Kassin et al. (2003) zu Schuldvermutungen in Verhören?",
+        "a": "Unschuldige gestanden häufiger unter Druck",
+        "b": "Schuldige wurden immer entlastet",
+        "c": "Richter ignorierten Vorurteile",
+        "d": "Emotionen hatten keinen Einfluss",
+        "richtig": "a"
+    },
+    {
+        "frage": "In Willis & Todorovs Experiment (2006) bildeten Teilnehmende Eindrücke innerhalb:",
+        "a": "100 Millisekunden",
+        "b": "5 Sekunden",
+        "c": "1 Minute",
+        "d": "10 Sekunden",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Effekt erklärt, dass ein attraktiver Aufsatz besser bewertet wird?",
+        "a": "Halo-Effekt",
+        "b": "Primacy-Effekt",
+        "c": "Recency-Effekt",
+        "d": "Ankereffekt",
+        "richtig": "a"
+    },
+    {
+        "frage": "Brewers duales Prozessmodell unterscheidet zwischen:",
+        "a": "Kategorisierung und Personalisierung",
+        "b": "Automatischer und kontrollierter Verarbeitung",
+        "c": "Heuristischer und systematischer Verarbeitung",
+        "d": "Rationaler und emotionaler Entscheidung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Das Kontinuum-Modell (Fiske & Neuberg) beschreibt:",
+        "a": "Übergang von Kategorisierung zu Individualisierung",
+        "b": "Dominanz emotionaler Prozesse",
+        "c": "Additive Informationsintegration",
+        "d": "Kulturelle Unterschiede in der Wahrnehmung",
+        "richtig": "a"
+    },
+    {   
+        "frage": "Welches Konzept liegt den konnektionistischen Modellen (Kunda & Thagard) zugrunde?",
+        "a": "Assoziative Netzwerke",
+        "b": "Mathematische Optimierung",
+        "c": "Kognitive Dissonanz",
+        "d": "Soziale Rollen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Prozess sorgt dafür, dass Stereotype automatisch aktiviert werden?",
+        "a": "Kontrollierte Verarbeitung",
+        "b": "Priming",
+        "c": "Kognitive Algebra",
+        "d": "Selbstbestätigung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was sagt die Theorie der kognitiven Dissonanz über das Verhalten der Menschen aus?",
+        "a": "Sie suchen nach inkonsistenten Informationen",
+        "b": "Sie bevorzugen konsistente Informationen",
+        "c": "Sie ignorieren ihre Emotionen",
+        "d": "Sie priorisieren rationale Abwägungen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist der Hauptzweck von selbstwertdienlichen Attributionen?",
+        "a": "Schutz des Selbstwertgefühls",
+        "b": "Aufbau sozialer Beziehungen",
+        "c": "Erwerb neuen Wissens",
+        "d": "Vermeidung von Verantwortung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welches Ziel verfolgt das Erkenntnismotiv?",
+        "a": "Oberflächliche Verarbeitung",
+        "b": "Akkurate Informationssuche",
+        "c": "Bestätigung von Stereotypen",
+        "d": "Emotionale Bewertungen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Warum sind stereotype Körperwahrnehmungen problematisch?",
+        "a": "Sie legitimieren Gewalt gegen Gruppen",
+        "b": "Sie verbessern die Urteilsgenauigkeit",
+        "c": "Sie reduzieren kognitive Dissonanz",
+        "d": "Sie fördern die Individualisierung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welches Motiv steht hinter der Suche nach konsistenten Informationen?",
+        "a": "Erkenntnismotiv",
+        "b": "Konsistenzmotiv",
+        "c": "Selbstwertmotiv",
+        "d": "Kontrollmotiv",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was reduzierte das Erkenntnismotiv in Neubergs Experiment (1989)?",
+        "a": "Negative Vorurteile",
+        "b": "Positive Eindrücke",
+        "c": "Kognitive Dissonanz",
+        "d": "Heuristische Verarbeitung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Effekt erklärt die bessere Erinnerung an inkonsistente Informationen?",
+        "a": "Primacy-Effekt",
+        "b": "Tiefere Verarbeitung",
+        "c": "Halo-Effekt",
+        "d": "Recency-Effekt",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die „sich selbst erfüllende Prophezeiung“?",
+        "a": "Erwartungen führen zu bestätigendem Verhalten",
+        "b": "Erste Eindrücke sind unveränderbar",
+        "c": "Negative Informationen werden ignoriert",
+        "d": "Kulturelle Stereotype prägen Urteile",
+        "richtig": "a"
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

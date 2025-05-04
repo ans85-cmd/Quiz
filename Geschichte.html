@@ -1,0 +1,393 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    frage: "Welches Jahr gilt als Geburtsjahr der Sozialpsychologie?",
+    a: "1863", b: "1898", c: "1908", d: "1924",
+    richtig: "c"
+  },
+  {
+    frage: "Wer verwendete den Begriff „Sozialpsychologie“ erstmals im deutschsprachigen Raum im heutigen Sinne?",
+    a: "Wilhelm Wundt", b: "Gustav Adolf Lindner", c: "Gordon Allport", d: "Kurt Lewin",
+    richtig: "b"
+  },
+  {
+    frage: "Welche These wird heute als „Whorf-Sapir-Hypothese“ bezeichnet?",
+    a: "Sprache prägt das Denken", b: "Gruppen verhalten sich irrational", c: "Einstellungen folgen sozialen Normen", d: "Emotionen sind universell",
+    richtig: "a"
+  },
+  {
+    frage: "Warum wird die Völkerpsychologie Wundts in der Psychologie kaum rezipiert?",
+    a: "Sie war zu experimentell", b: "Sie entfernte sich von psychologischen Fragestellungen", c: "Sie stützte Rassenideologien", d: "Sie ignorierte kulturelle Unterschiede",
+    richtig: "b"
+  },
+  {
+    frage: "Welches Experiment gilt als frühes Beispiel sozialer Erleichterung (Social Facilitation)?",
+    a: "Milgrams Gehorsamkeitsexperiment", b: "Tripletts Radfahrexperiment", c: "Aschs Konformitätsexperiment", d: "Zimbardos Gefängnisexperiment",
+    richtig: "b"
+  },
+  {
+    frage: "Wer gründete 1860 die „Zeitschrift für Völkerpsychologie und Sprachwissenschaft“?",
+    a: "Wundt & Herbart", b: "Lazarus & Steinthal", c: "LeBon & Tarde", d: "Allport & Lewin",
+    richtig: "b"
+  },
+  {
+    frage: "Welches Konzept prägte Gustave LeBon in der Massenpsychologie?",
+    a: "Soziale Erleichterung", b: "Gruppenpolarisation", c: "Masse als kopfloses Tier", d: "Kognitive Dissonanz",
+    richtig: "c"
+  },
+  {
+    frage: "Welcher Autor verband Massenpsychologie mit juristischen Fragen?",
+    a: "Scipio Sighele", b: "Floyd Allport", c: "Kurt Lewin", d: "Muzafer Sherif",
+    richtig: "a"
+  },
+  {
+    frage: "Warum blieb die Massenpsychologie des 19. Jahrhunderts empirisch unbedeutend?",
+    a: "Fehlende Finanzierung", b: "Unklare Begrifflichkeit und fehlende Experimente", c: "Politische Zensur", d: "Konkurrenz zur Gestaltpsychologie",
+    richtig: "b"
+  },
+  {
+    frage: "Welches Thema dominierte Wundts Völkerpsychologie?",
+    a: "Experimentelle Gedächtnisforschung", b: "Sprache, Religion, Mythos", c: "Autoritäre Führung", d: "Kognitive Dissonanz",
+    richtig: "b"
+  },
+  {
+    frage: "Wer führte die ersten Experimente zur Wirkung der Anwesenheit anderer durch?",
+    a: "Walther Moede", b: "Floyd Allport", c: "Norman Triplett", d: "Kurt Lewin",
+    richtig: "a"
+  },
+  {
+    frage: "Welches Konzept prägte Floyd Allport in seinem Lehrbuch von 1924?",
+    a: "Gruppenseele", b: "Behavioristische Sozialpsychologie", c: "Kognitive Dissonanz", d: "Feldtheorie",
+    richtig: "b"
+  },
+  {
+    frage: "Warum kritisierte Wellek Lewins Führungsstil-Experimente?",
+    a: "Sie seien zu theoretisch", b: "Sie seien typisch amerikanisch und oberflächlich", c: "Sie ignorierten biologische Faktoren", d: "Sie waren nicht replizierbar",
+    richtig: "b"
+  },
+  {
+    frage: "Welche Methode entwickelte Jakob Moreno zur Analyse von Gruppenstrukturen?",
+    a: "Soziometrie", b: "F-Skala", c: "Balancemodell", d: "Reflexologie",
+    richtig: "a"
+  },
+  {
+    frage: "Wer untersuchte die Entstehung von Gruppennormen in Laborexperimenten?",
+    a: "Muzafer Sherif", b: "Leon Festinger", c: "Solomon Asch", d: "Stanley Schachter",
+    richtig: "a"
+  },
+  {
+    frage: "Welches Institut war das erste für Sozialpsychologie in Deutschland?",
+    a: "Universität Köln", b: "Technische Hochschule Karlsruhe", c: "Humboldt-Universität Berlin", d: "Universität Hamburg",
+    richtig: "b"
+  },
+  {
+    frage: "Wer prägte den Begriff der „Bezugsgruppe“ (reference group)?",
+    a: "Herbert Hyman", b: "Leon Festinger", c: "Gordon Allport", d: "Kurt Lewin",
+    richtig: "a"
+  },
+  {
+    "frage": "Welche beiden Disziplinen gelten als Vorläufer der modernen Sozialpsychologie?",
+    "a": "Klinische Psychologie und Neurowissenschaften",
+    "b": "Völkerpsychologie und Massenpsychologie",
+    "c": "Entwicklungspsychologie und Kognitionspsychologie",
+    "d": "Philosophie und Physiologie",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wer gilt als Begründer der wissenschaftlichen Völkerpsychologie im 19. Jahrhundert?",
+    "a": "Wilhelm Wundt",
+    "b": "Moritz Lazarus und Hajim Steinthal",
+    "c": "Gustave LeBon",
+    "d": "Kurt Lewin",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Werk prägte die Massenpsychologie und beschrieb die Masse als „kopfloses Tier“?",
+    "a": "„Die Autoritäre Persönlichkeit“ von Adorno",
+    "b": "„Psychologie der Massen“ von Gustave LeBon",
+    "c": "„Group Dynamics“ von Kurt Lewin",
+    "d": "„Social Facilitation“ von Floyd Allport",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Methode dominierte in Wilhelm Wundts Völkerpsychologie?",
+    "a": "Experimente unter Laborbedingungen",
+    "b": "Beobachtung und Vergleich kultureller Phänomene",
+    "c": "Statistische Korrelationsanalysen",
+    "d": "Neurophysiologische Messungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wer führte das erste experimentelle Sozialpsychologie-Studie zum „Schrittmacherphänomen“ durch?",
+    "a": "Muzafer Sherif",
+    "b": "Norman Triplett",
+    "c": "Floyd Allport",
+    "d": "Kurt Lewin",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Konzept untersuchte Floyd Allport in seinen Experimenten zur „Social Facilitation“?",
+    "a": "Die Wirkung von Wettbewerb auf Leistung",
+    "b": "Den Einfluss der bloßen Anwesenheit anderer auf Verhalten",
+    "c": "Die Entstehung von Gruppennormen",
+    "d": "Die Rolle von Autoritätsgehorsam",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Forscher entwickelte die Soziometrie zur Analyse von Gruppenstrukturen?",
+    "a": "Jakob L. Moreno",
+    "b": "Muzafer Sherif",
+    "c": "Leon Festinger",
+    "d": "Robert F. Bales",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welches Experiment von Kurt Lewin untersuchte den Einfluss von Führungsstilen auf Gruppenverhalten?",
+    "a": "Das Konformitätsexperiment",
+    "b": "Das Ferienlagerexperiment",
+    "c": "Das autoritäre vs. demokratische Führungsexperiment",
+    "d": "Das Dissonanzexperiment",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was war das zentrale Thema von Muzafer Sherifs Forschung in den 1930er-Jahren?",
+    "a": "Die Entstehung sozialer Normen in Gruppen",
+    "b": "Die Wirkung von Mediengewalt",
+    "c": "Die Dynamik von Vorurteilen",
+    "d": "Die Psychologie der Massenpanik",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Theorie entwickelte Leon Festinger in den 1950er-Jahren?",
+    "a": "Die Theorie der kognitiven Dissonanz",
+    "b": "Die Balance-Theorie sozialer Beziehungen",
+    "c": "Die Selbstwirksamkeitstheorie",
+    "d": "Die Theorie des sozialen Lernens",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wer gründete das erste Institut für Sozialpsychologie in Deutschland?",
+    "a": "Peter R. Hofstätter",
+    "b": "Willy Hellpach",
+    "c": "Martin Irle",
+    "d": "Hans Anger",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Problem behinderte die Rezeption amerikanischer Sozialpsychologie in Westdeutschland nach 1945?",
+    "a": "Fehlende Bibliotheksbestände und Sprachbarrieren",
+    "b": "Politische Zensur",
+    "c": "Ablehnung empirischer Methoden",
+    "d": "Dominanz der Gestaltpsychologie",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Rolle spielte der Sonderforschungsbereich 24 in Mannheim?",
+    "a": "Er förderte die experimentelle Entscheidungsforschung und internationale Kooperationen",
+    "b": "Er konzentrierte sich auf klinische Psychologie",
+    "c": "Er entwickelte die F-Skala zur Messung von Autoritarismus",
+    "d": "Er etablierte die Völkerpsychologie neu",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie wurde die Sozialpsychologie in der DDR ideologisch gerahmt?",
+    "a": "Als Teil der marxistisch-leninistischen Wissenschaft",
+    "b": "Als Ablehnung westlicher Theorien",
+    "c": "Als rein angewandte Disziplin ohne Theoriebezug",
+    "d": "Als Fortführung der Gestaltpsychologie",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wer kritisierte die experimentelle Sozialpsychologie der 1960er als „Spaß-und-Spiele-Orientierung“?",
+    "a": "Kenneth Ring",
+    "b": "Kurt Lewin",
+    "c": "Gordon Allport",
+    "d": "Solomon Asch",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Aussage trifft auf Peter R. Hofstätters Beitrag zur Sozialpsychologie zu?",
+    "a": "Er popularisierte die amerikanische Sozialpsychologie durch Bestseller",
+    "b": "Er entwickelte die Theorie der kognitiven Dissonanz",
+    "c": "Er leitete das Ferienlagerexperiment",
+    "d": "Er gründete die Zeitschrift für Sozialpsychologie",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum wurde die Sozialpsychologie in der DDR stark eingeschränkt?",
+    "a": "Wegen des Pädologendekrets von 1936 und ideologischer Vorgaben",
+    "b": "Wegen mangelnder Finanzierung",
+    "c": "Wegen fehlender internationaler Anerkennung",
+    "d": "Wegen der Dominanz der Psychoanalyse",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Organisation förderte die europäische Sozialpsychologie nach dem Zweiten Weltkrieg?",
+    "a": "Die Deutsche Gesellschaft für Psychologie (DGPs)",
+    "b": "Die European Association of Social Psychology (EASP)",
+    "c": "Das Social Science Research Council (SSRC)",
+    "d": "Die American Psychological Association (APA)",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Merkmal kennzeichnete die EAESP in ihren Anfängen?",
+    "a": "Fokus auf experimentelle Forschung und kleine Mitgliederzahl",
+    "b": "Ausschluss osteuropäischer Forschender",
+    "c": "Dominanz deutscher Psycholog*innen",
+    "d": "Konzentration auf angewandte Themen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Zeitschrift wurde 1970 zum zentralen Publikationsorgan der deutschen Sozialpsychologie?",
+    "a": "„Journal of Personality and Social Psychology“",
+    "b": "„Zeitschrift für Sozialpsychologie“",
+    "c": "„Group Dynamics“",
+    "d": "„Social Psychology Quarterly“",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

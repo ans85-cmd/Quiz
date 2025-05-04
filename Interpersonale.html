@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    "frage": "Welche der folgenden Aussagen kennzeichnet eine enge Beziehung?",
+    "a": "Oberflächliche Interaktionen in wenigen Situationen.",
+    "b": "Einseitige Abhängigkeit ohne gegenseitige Beeinflussung.",
+    "c": "Hohe wechselseitige Abhängigkeit über längere Dauer.",
+    "d": "Keine emotionale Bindung zwischen den Partnern.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welcher Effekt beschreibt, dass häufiger Kontakt zwischen Personen zu stärkerer Sympathie führt?",
+    "a": "Halo-Effekt",
+    "b": "Mere-Exposure-Effekt",
+    "c": "Reaktanz-Effekt",
+    "d": "Selbsterfüllende Prophezeiung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf physische Attraktivität in der Personenwahrnehmung zu?",
+    "a": "Sie hat keinen Einfluss auf die Zuschreibung anderer positiver Eigenschaften.",
+    "b": "Attraktivität korreliert negativ mit der Durchschnittlichkeit der Gesichtszüge.",
+    "c": "Sie wirkt als Heuristik bei der Bewertung von Personen.",
+    "d": "Frauen achten stärker auf Attraktivität als Männer.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein zentraler Grund, warum Ähnlichkeit in Einstellungen Attraktion fördert?",
+    "a": "Ähnliche Personen sind finanziell erfolgreicher.",
+    "b": "Sie ermöglicht gemeinsame Aktivitäten und Bestätigung des Selbstbilds.",
+    "c": "Ähnlichkeit reduziert Konflikte vollständig.",
+    "d": "Sie garantiert automatisch langfristige Beziehungen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Ergebnis zeigte die Studie von Wright & Contrada (1986) zum „hard-to-get“-Effekt?",
+    "a": "Extrem selektive Personen wurden als attraktivste Partner bewertet.",
+    "b": "„Schwer zu kriegende“ Personen wurden als arrogant und weniger interessant wahrgenommen.",
+    "c": "Die Strategie erhöhte das Interesse an der Zielperson signifikant.",
+    "d": "Keine Unterschiede zwischen selektiven und nicht-selektiven Personen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet eine Gemeinschaftsbeziehung (communal relationship)?",
+    "a": "Ressourcenaustausch nach dem Gleichheitsprinzip.",
+    "b": "Fokus auf Bedürfnisse des Partners, unabhängig von Gegenleistungen.",
+    "c": "Beziehungen zwischen Arbeitskollegen oder Nachbarn.",
+    "d": "Strikte Buchführung über Geben und Nehmen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat Selbstenthüllung in Beziehungen?",
+    "a": "Sie reduziert Konflikte durch Geheimhaltung.",
+    "b": "Sie fördert Vertrauen und gegenseitiges Kennenlernen.",
+    "c": "Sie dient der Demonstration von Überlegenheit.",
+    "d": "Sie ist nur in romantischen Beziehungen relevant.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zur „Experience Sampling Method“ ist korrekt?",
+    "a": "Sie erfasst Erinnerungen an vergangene Ereignisse.",
+    "b": "Probanden dokumentieren ihr Erleben in Echtzeit.",
+    "c": "Sie wird nur in Laborstudien eingesetzt.",
+    "d": "Sie misst ausschließlich körperliche Gesundheit.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche der folgenden Aussagen beschreibt Einsamkeit korrekt?",
+    "a": "Sie tritt nur bei Alleinsein auf.",
+    "b": "Sie ist eine Reaktion auf Diskrepanz zwischen gewünschten und tatsächlichen Beziehungen.",
+    "c": "Sie ist unabhängig von sozialen Fähigkeiten.",
+    "d": "Sie wird durch Rückzug immer gelindert.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion sozialer Unterstützung bezieht sich auf materielle Hilfe?",
+    "a": "Emotionale Unterstützung",
+    "b": "Instrumentelle Unterstützung",
+    "c": "Bewertungsunterstützung",
+    "d": "Kognitive Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche drei Komponenten umfasst ein Beziehungsschema nach Baldwin (1992)?",
+    "a": "Selbst-Schema, Partner-Schema, Situations-Schema",
+    "b": "Selbst-Schema, Partner-Schema, Interaktionsskript",
+    "c": "Kognitive, emotionale, behaviorale Schemata",
+    "d": "Wahrnehmung, Bewertung, Handlung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Bindungsstil ist durch Vertrauen und fehlende Verlustängste gekennzeichnet?",
+    "a": "Ängstlich/ambivalent",
+    "b": "Vermeidend",
+    "c": "Sicher",
+    "d": "Desorganisiert",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was zeigte die Studie von Hazan & Shaver (1987) zu Bindungsstilen bei Erwachsenen?",
+    "a": "Die Mehrheit hatte einen ängstlichen Bindungsstil.",
+    "b": "Sicher gebundene Personen beschrieben ihre Beziehungen als instabil.",
+    "c": "56% der Befragten ordneten sich dem sicheren Stil zu.",
+    "d": "Vermeidende Personen bevorzugten enge Freundschaften.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welches Merkmal ist bei der Partnerwahl nach Buss (1989) für Männer wichtiger als für Frauen?",
+    "a": "Gute finanzielle Aussichten",
+    "b": "Physische Attraktivität",
+    "c": "Ehrgeiz und Fleiß",
+    "d": "Emotionale Stabilität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Erklärung bietet Eagly (1987) für Geschlechtsunterschiede in der Partnerwahl?",
+    "a": "Biologische Prädispositionen",
+    "b": "Soziale Rollenerwartungen und Machtstrukturen",
+    "c": "Genetische Unterschiede in der Intelligenz",
+    "d": "Kulturell universelle Vorlieben",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Liebesstile nach Lee (1973) sind Primärstile?",
+    "a": "Eros, Ludus, Mania",
+    "b": "Eros, Ludus, Storge",
+    "c": "Pragma, Agape, Mania",
+    "d": "Storge, Pragma, Agape",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Komponente fehlt in der „leeren Liebe“ nach Sternbergs Dreieck?",
+    "a": "Intimität",
+    "b": "Leidenschaft",
+    "c": "Verbindlichkeit",
+    "d": "Keine – alle Komponenten sind vorhanden.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt die „Missattribution“ nach Zillmann (1984)?",
+    "a": "Übertragung von Erregung auf einen falschen Reiz",
+    "b": "Bewusste Täuschung in Beziehungen",
+    "c": "Fehlende emotionale Bindung",
+    "d": "Rationalisierung von Konflikten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welches Ergebnis zeigte die Hängebrücken-Studie von Dutton & Aron (1974)?",
+    "a": "Männer auf der sicheren Brücke kontaktierten häufiger die Versuchsleiterin.",
+    "b": "Körperliche Erregung wurde nicht mit Attraktion verknüpft.",
+    "c": "Männer auf der wackeligen Brücke kontaktierten die attraktive Versuchsleiterin häufiger.",
+    "d": "Frauen zeigten stärkere Reaktionen als Männer.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage trifft auf kameradschaftliche Liebe zu?",
+    "a": "Sie ist intensiver als leidenschaftliche Liebe.",
+    "b": "Sie basiert auf Selbstenthüllung und Vertrauen.",
+    "c": "Sie ist kurzlebig und von sexueller Anziehung geprägt.",
+    "d": "Sie tritt nur in Familienbeziehungen auf.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche drei Faktoren bestimmen Commitment im Investitionsmodell von Rusbult?",
+    "a": "Zufriedenheit, Alternativen, Investitionen",
+    "b": "Leidenschaft, Intimität, Verbindlichkeit",
+    "c": "Attraktivität, Ähnlichkeit, Nähe",
+    "d": "Emotionen, Kognitionen, Verhalten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welches Kommunikationsmuster ist typisch für „negative affect reciprocity“?",
+    "a": "Konflikte werden durch Schweigen gelöst.",
+    "b": "Negative Emotionen werden wechselseitig verstärkt.",
+    "c": "Partner vermeiden jede Konfrontation.",
+    "d": "Emotionale Reaktionen werden unterdrückt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet „beziehungsdienliche Attributionen“?",
+    "a": "Negative Handlungen werden der Persönlichkeit des Partners zugeschrieben.",
+    "b": "Positive Handlungen werden als situativ und instabil bewertet.",
+    "c": "Negative Handlungen werden external attribuiert, positive internal.",
+    "d": "Partner idealisieren sich gegenseitig unrealistisch.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage zur Trennung trifft zu?",
+    "a": "Geschiedene haben eine niedrigere Sterblichkeitsrate als Verheiratete.",
+    "b": "Der negative Effekt einer Scheidung hält unbegrenzt an.",
+    "c": "Geschiedene, die wieder heiraten, haben eine höhere Sterblichkeit als dauerhaft Verheiratete.",
+    "d": "Kinder sind von Scheidungen nicht betroffen.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Reaktionen sind typisch für die Trauerphase unmittelbar nach einem Todesfall?",
+    "a": "Gesteigerte kognitive Leistungsfähigkeit",
+    "b": "Depression und Störung der Alltagsaktivitäten",
+    "c": "Sofortige Rückkehr zur Normalität",
+    "d": "Übermäßige Freude und Erleichterung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Konzept beschreibt die innere Festlegung auf eine Beziehung?",
+    "a": "Selbstenthüllung",
+    "b": "Commitment",
+    "c": "Mere-Exposure-Effekt",
+    "d": "Reaktanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor fördert laut Austauschtheorien den Beziehungserhalt?",
+    "a": "Kosten übersteigen den Nutzen",
+    "b": "Nutzen übersteigt Kosten und Alternativen",
+    "c": "Fehlende Investitionen",
+    "d": "Hohe Konflikthäufigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zur „Reaktanztheorie“ ist korrekt?",
+    "a": "Sie erklärt, warum Verbote die Attraktion steigern können.",
+    "b": "Sie bezieht sich nur auf materielle Ressourcen.",
+    "c": "Sie ist irrelevant für romantische Beziehungen.",
+    "d": "Sie beschreibt die Anpassung an soziale Normen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Studie belegt den Zusammenhang zwischen Durchschnittlichkeit der Gesichtszüge und Attraktivität?",
+    "a": "Langlois & Roggman (1990)",
+    "b": "Buss (1989)",
+    "c": "Dutton & Aron (1974)",
+    "d": "Hazan & Shaver (1987)",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was ist ein zentrales Merkmal des vermeidenden Bindungsstils?",
+    "a": "Übermäßiges Bedürfnis nach Nähe",
+    "b": "Angst vor Verlust und Verlassenwerden",
+    "c": "Unterdrückung des Nähebedürfnisses",
+    "d": "Idealisierung des Partners",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage zur Partnerwahl nach evolutionärer Perspektive trifft zu?",
+    "a": "Frauen bevorzugen jüngere Partner aufgrund höherer Fruchtbarkeit.",
+    "b": "Männer achten stärker auf Ressourcen als Frauen.",
+    "c": "Frauen priorisieren Eigenschaften, die zukünftigen Erfolg signalisieren.",
+    "d": "Ähnlichkeit spielt keine Rolle.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Funktion hat „Ludus“ als Liebesstil?",
+    "a": "Aufopferung für den Partner",
+    "b": "Liebe als strategisches Spiel",
+    "c": "Langfristige Verbindlichkeit",
+    "d": "Emotionale Tiefe und Intimität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Komponente fehlt in der „romantischen Liebe“ nach Sternberg?",
+    "a": "Intimität",
+    "b": "Leidenschaft",
+    "c": "Verbindlichkeit",
+    "d": "Keine – alle sind vorhanden.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage zur Selbstenthüllung ist falsch?",
+    "a": "Sie folgt dem Gleichheitsprinzip in der Kommunikation.",
+    "b": "Übermäßige Selbstenthüllung kann in frühen Beziehungsphasen schaden.",
+    "c": "Sie ist in westlichen Kulturen bei Männern stärker ausgeprägt.",
+    "d": "Sie fördert Vertrauen und gegenseitiges Verständnis.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Studie untersuchte den Einfluss von Gleichstellung auf Partnerpräferenzen?",
+    "a": "Buss (1989)",
+    "b": "Eagly & Wood (1999)",
+    "c": "Hazan & Shaver (1987)",
+    "d": "Rusbult (2001)",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zur „kameradschaftlichen Liebe“ trifft zu?",
+    "a": "Sie ist durch intensive physiologische Erregung gekennzeichnet.",
+    "b": "Sie basiert auf Sicherheit und gegenseitigem Vertrauen.",
+    "c": "Sie dominiert in frühen Beziehungsphasen.",
+    "d": "Sie ist weniger stabil als leidenschaftliche Liebe.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie nutzen Menschen mit „distress-maintaining attributions“?",
+    "a": "Positive Handlungen werden internal attribuiert.",
+    "b": "Negative Handlungen werden external attribuiert.",
+    "c": "Negative Handlungen werden stabil und internal zugeschrieben.",
+    "d": "Sie ignorieren Konflikte vollständig.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage zur „Mania“ als Liebesstil trifft zu?",
+    "a": "Sie kombiniert Eros und Storge.",
+    "b": "Sie ist durch obsessive und schmerzhafte Züge gekennzeichnet.",
+    "c": "Sie basiert auf rationaler Kalkulation.",
+    "d": "Sie entspricht der leidenschaftslosen Freundschaft.",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

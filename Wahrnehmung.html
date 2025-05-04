@@ -1,0 +1,468 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    "frage": "Welcher Effekt beschreibt, dass häufiger Kontakt zu stärkerer Sympathie führt?",
+    "a": "Halo-Effekt",
+    "b": "Mere-Exposure-Effekt",
+    "c": "Reaktanz-Effekt",
+    "d": "Selbsterfüllende Prophezeiung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf den ersten Eindruck zu?",
+    "a": "Er ist ausschließlich von bewussten Denkprozessen geprägt.",
+    "b": "Er wird durch kategoriale Wahrnehmung und Stereotype gebildet.",
+    "c": "Er bleibt immer unverändert, unabhängig von späteren Interaktionen.",
+    "d": "Er hat keinen Einfluss auf Verhaltensreaktionen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die Studie von Dutton & Aron (1974) mit der Hängebrücke?",
+    "a": "Körperliche Erregung wird nie mit Attraktion verknüpft.",
+    "b": "Männer auf der wackeligen Brücke kontaktierten die attraktive Versuchsleiterin häufiger.",
+    "c": "Frauen reagierten stärker auf physische Attraktivität.",
+    "d": "Die Brückenart hatte keinen Einfluss auf das Verhalten.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat der Implicit Association Test (IAT)?",
+    "a": "Er misst explizite Vorurteile.",
+    "b": "Er deckt implizite Assoziationen zwischen Konzepten auf.",
+    "c": "Er trainiert soziale Kompetenzen.",
+    "d": "Er bewertet kognitive Intelligenz.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Dimensionen sind für den ersten Eindruck besonders relevant?",
+    "a": "Intelligenz und Humor",
+    "b": "Vertrauenswürdigkeit und Dominanz",
+    "c": "Alter und Beruf",
+    "d": "Körpergröße und Gewicht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das Continuum-Modell von Fiske und Neuberg?",
+    "a": "Die ausschließliche Nutzung von Stereotypen in der Wahrnehmung.",
+    "b": "Den Übergang von kategorialer zu individueller Informationsverarbeitung.",
+    "c": "Die Priorisierung von Emotionen über Kognitionen.",
+    "d": "Die Unveränderbarkeit des ersten Eindrucks.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zu Stereotypen ist korrekt?",
+    "a": "Sie sind immer biologisch determiniert.",
+    "b": "Sie können auf sozialen Konstruktionen beruhen.",
+    "c": "Sie haben keinen Einfluss auf Verhaltensentscheidungen.",
+    "d": "Sie werden nie durch Medien verstärkt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigten Experimente zum „Shooter Bias“?",
+    "a": "Polizisten schießen unabhängig von Hautfarbe gleich häufig.",
+    "b": "Schwarze Zielpersonen wurden öfter fälschlich als bewaffnet wahrgenommen.",
+    "c": "Weiße Zielpersonen lösten schneller Fehlreaktionen aus.",
+    "d": "Hautfarbe hatte keinen Einfluss auf die Reaktionszeit.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Prozess trägt zur Stabilität des ersten Eindrucks bei?",
+    "a": "Konfirmatorische Informationssuche",
+    "b": "Randomisierte Hypothesentests",
+    "c": "Emotionale Neutralität",
+    "d": "Kognitive Dissonanz",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Aussage trifft auf Skripte zu?",
+    "a": "Sie beschreiben individuelle Persönlichkeitsmerkmale.",
+    "b": "Sie sind mentale Repräsentationen von Ereignisabfolgen.",
+    "c": "Sie beziehen sich nur auf berufliche Kontexte.",
+    "d": "Sie sind unveränderlich.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Basiskategorien werden in der sozialen Wahrnehmung priorisiert?",
+    "a": "Beruf und Einkommen",
+    "b": "Geschlecht, Alter und sozialer Status",
+    "c": "Religion und politische Einstellung",
+    "d": "Kleidung und Sprachakzent",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein „Perseverance Bias“?",
+    "a": "Die Tendenz, neue Informationen zu priorisieren.",
+    "b": "Das Festhalten am ersten Eindruck trotz gegenteiliger Informationen.",
+    "c": "Die Abneigung gegen soziale Kategorisierung.",
+    "d": "Die Überbewertung von Emotionen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zur sozialen Kategorisierung ist falsch?",
+    "a": "Sie erleichtert die Informationsverarbeitung.",
+    "b": "Sie ist immer bewusst und kontrolliert.",
+    "c": "Sie kann zu Übergeneralisierungen führen.",
+    "d": "Sie basiert auf wahrgenommenen Ähnlichkeiten.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der „Kernel of Truth“-Ansatz bei Stereotypen?",
+    "a": "Stereotype sind immer frei von Fakten.",
+    "b": "Stereotype können teilweise auf realen Unterschieden beruhen.",
+    "c": "Stereotype werden ausschließlich durch Medien geprägt.",
+    "d": "Stereotype sind universell identisch.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielt die Amygdala in der sozialen Wahrnehmung?",
+    "a": "Sie ist für logisches Denken verantwortlich.",
+    "b": "Sie verarbeitet emotionale Reize und Bedrohungen.",
+    "c": "Sie steuert bewusste Entscheidungsprozesse.",
+    "d": "Sie ist irrelevant für die Gesichtserkennung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Experiment untersuchte den Einfluss von physischer Erregung auf Attraktion?",
+    "a": "Milgram-Experiment",
+    "b": "Hängebrücken-Experiment (Dutton & Aron)",
+    "c": "Stanford-Prison-Experiment",
+    "d": "Asch-Konformitätsexperiment",
+    "richtig": "b"
+  },
+    {
+        "frage": "Welche Aussage zur „Selbsterfüllenden Prophezeiung“ ist korrekt?",
+        "a": "Sie betrifft nur positive Erwartungen.",
+        "b": "Sie entsteht durch verzerrtes Verhalten des Beurteilenden.",
+        "c": "Sie ist unabhängig von sozialen Interaktionen.",
+        "d": "Sie wurde nie im schulischen Kontext nachgewiesen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Funktion haben assoziative Netzwerke in der Kognitionsforschung?",
+        "a": "Sie trennen Konzepte strikt voneinander.",
+        "b": "Sie verbinden mental repräsentierte Konzepte.",
+        "c": "Sie verhindern die Aktivierung von Stereotypen.",
+        "d": "Sie sind nur für unbewusste Prozesse relevant.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was zeigte Solomon Aschs Forschung zur Eindrucksbildung?",
+        "a": "Alle Eigenschaften haben gleichen Einfluss auf den Eindruck.",
+        "b": "Eigenschaften wie „warm“ vs. „kalt“ prägen den Gesamteindruck stärker.",
+        "c": "Der erste Eindruck ist immer falsch.",
+        "d": "Kulturen unterscheiden sich nicht in der Eindrucksbildung.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf „Schemata“ zu?",
+        "a": "Sie beziehen sich nur auf Objekte, nicht auf Personen.",
+        "b": "Sie sind mentale Strukturen zur Organisation von Wissen.",
+        "c": "Sie sind statisch und unveränderlich.",
+        "d": "Sie spielen keine Rolle in der sozialen Interaktion.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Strategie hilft, den ersten Eindruck zu revidieren?",
+        "a": "Konfirmatorische Informationssuche",
+        "b": "Gezielte Suche nach diskonfirmatorischen Informationen",
+        "c": "Ignoranz gegenüber Feedback",
+        "d": "Verstärkung von Stereotypen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zu Prototypen ist korrekt?",
+        "a": "Sie sind immer individuell unterschiedlich.",
+        "b": "Sie repräsentieren idealtypische Merkmale einer Kategorie.",
+        "c": "Sie beziehen sich nur auf biologische Eigenschaften.",
+        "d": "Sie sind irrelevant für die soziale Wahrnehmung.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein zentrales Ergebnis der Forschung zum „Shooter Bias“?",
+        "a": "Hautfarbe hat keinen Einfluss auf Entscheidungen.",
+        "b": "Stereotype führen zu verzerrten Bedrohungswahrnehmungen.",
+        "c": "Polizisten sind immer unbeeinflusst von Vorurteilen.",
+        "d": "Fehlentscheidungen sind gleichmäßig verteilt.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Rolle spielen „Skripte“ in der sozialen Wahrnehmung?",
+        "a": "Sie beschreiben individuelle Persönlichkeiten.",
+        "b": "Sie definieren erwartete Abfolgen von Handlungen.",
+        "c": "Sie sind nur in beruflichen Kontexten relevant.",
+        "d": "Sie verhindern kognitive Verzerrungen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf den „Perseverance Bias“ zu?",
+        "a": "Er fördert die flexible Anpassung von Eindrücken.",
+        "b": "Er führt zum Festhalten an initialen Urteilen.",
+        "c": "Er ist nur in Laborstudien nachweisbar.",
+        "d": "Er betrifft nur positive Eindrücke.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Studie untersuchte den Einfluss von Adjektiven auf die Eindrucksbildung?",
+        "a": "Milgram (1963)",
+        "b": "Asch (1946)",
+        "c": "Zimbardo (1971)",
+        "d": "Bandura (1961)",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur Gesichtswahrnehmung ist korrekt?",
+        "a": "Vertrauenswürdigkeit korreliert objektiv mit Gesichtsmerkmalen.",
+        "b": "Bestimmte Gesichtszüge lösen stereotype Zuschreibungen aus.",
+        "c": "Kultur hat keinen Einfluss auf die Wahrnehmung von Gesichtern.",
+        "d": "Dominanz wird immer mit runden Gesichtern assoziiert.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein zentrales Merkmal des Fiske-Neuberg-Modells?",
+        "a": "Die ausschließliche Nutzung von Stereotypen.",
+        "b": "Der Übergang von Kategorisierung zu individueller Wahrnehmung.",
+        "c": "Die Vernachlässigung von sozialem Status.",
+        "d": "Die Priorisierung von Emotionen über Kognitionen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zu impliziten Vorurteilen ist falsch?",
+        "a": "Sie können durch den IAT gemessen werden.",
+        "b": "Sie sind immer bewusst kontrollierbar.",
+        "c": "Sie beeinflussen automatische Verhaltensreaktionen.",
+        "d": "Sie werden durch Sozialisation geprägt.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf „soziale Kategorien“ zu?",
+        "a": "Sie sind immer biologisch determiniert.",
+        "b": "Sie können politische Funktionen in Gesellschaften erfüllen.",
+        "c": "Sie sind in allen Kulturen identisch.",
+        "d": "Sie beziehen sich nur auf Geschlecht und Alter.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was zeigten Studien zur Stabilität des ersten Eindrucks im schulischen Kontext?",
+        "a": "Lehrer revidieren ihre Einschätzungen ständig.",
+        "b": "Erste Eindrücke bleiben über Monate hinweg stabil.",
+        "c": "Schüler können den ersten Eindruck leicht ändern.",
+        "d": "Der erste Eindruck ist irrelevant für die Benotung.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur „Reaktanztheorie“ ist korrekt?",
+        "a": "Sie erklärt die Anpassung an soziale Normen.",
+        "b": "Verbote können die Attraktivität einer Option steigern.",
+        "c": "Sie bezieht sich nur auf materielle Ressourcen.",
+        "d": "Sie ist irrelevant für romantische Beziehungen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Rolle spielen „Basiskategorien“ in der sozialen Wahrnehmung?",
+        "a": "Sie sind kulturübergreifend identisch.",
+        "b": "Sie umfassen Geschlecht, Alter und sozialen Status.",
+        "c": "Sie beziehen sich nur auf Berufe.",
+        "d": "Sie werden bewusst kontrolliert.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf die „Selbsterfüllende Prophezeiung“ zu?",
+        "a": "Sie betrifft nur positive Erwartungen.",
+        "b": "Sie entsteht durch Verhalten, das den Eindruck bestätigt.",
+        "c": "Sie ist unabhängig von sozialen Interaktionen.",
+        "d": "Sie wurde nie im schulischen Kontext nachgewiesen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur „sozialen Kognitionsforschung“ ist korrekt?",
+        "a": "Sie ignoriert den Einfluss von Emotionen.",
+        "b": "Sie untersucht mentale Repräsentationen sozialer Informationen.",
+        "c": "Sie ist ausschließlich auf Laborstudien beschränkt.",
+        "d": "Sie bezieht sich nur auf explizite Einstellungen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zu „Schemata“ ist falsch?",
+        "a": "Sie organisieren Wissen über soziale Situationen.",
+        "b": "Sie sind statisch und unveränderlich.",
+        "c": "Sie können Ursache-Wirkungs-Zusammenhänge abbilden.",
+        "d": "Sie beeinflussen die Erwartungen in Interaktionen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf „kulturelle Unterschiede“ in der sozialen Wahrnehmung zu?",
+        "a": "Basiskategorien sind kulturübergreifend identisch.",
+        "b": "Stereotype variieren je nach kulturellem Kontext.",
+        "c": "Gesichtswahrnehmung ist unabhängig von Kultur.",
+        "d": "Skripte sind in allen Kulturen identisch.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zum „Implicit Association Test (IAT)“ ist korrekt?",
+        "a": "Er misst nur explizite Vorurteile.",
+        "b": "Er deckt unbewusste Assoziationen zwischen Konzepten auf.",
+        "c": "Er ist ausschließlich für politische Einstellungen geeignet.",
+        "d": "Er wurde von Solomon Asch entwickelt.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur „sozialen Informationsverarbeitung“ ist korrekt?",
+        "a": "Sie erfolgt ausschließlich bewusst.",
+        "b": "Sie kombiniert automatische und kontrollierte Prozesse.",
+        "c": "Sie ignoriert kategoriale Wahrnehmung.",
+        "d": "Sie ist unabhängig von sozialem Status.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf „Skripte“ zu?",
+        "a": "Sie beschreiben individuelle Persönlichkeitsmerkmale.",
+        "b": "Sie definieren erwartete Abfolgen in sozialen Situationen.",
+        "c": "Sie sind nur in beruflichen Kontexten relevant.",
+        "d": "Sie verhindern kognitive Verzerrungen.",
+        "richtig": "b"
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

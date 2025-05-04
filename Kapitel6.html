@@ -1,0 +1,788 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+        "frage": "Was ist nach sozialpsychologischer Definition ein zentrales Merkmal von Kommunikation?",
+        "a": "Sie erfordert immer eine sprachliche Botschaft",
+        "b": "Sie geschieht ausschließlich zwischen zwei realen Personen",
+        "c": "Sie beinhaltet den Austausch von Zeichen zwischen Senderin und Empfängerin",
+        "d": "Sie funktioniert nur im persönlichen Face-to-Face-Kontakt",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche der folgenden Aussagen beschreibt ein Symbol im Kommunikationsprozess korrekt?",
+        "a": "Es besteht eine natürliche Verbindung zur Bedeutung",
+        "b": "Es ist eine abstrahierte Darstellung eines Gegenstandes",
+        "c": "Es muss erlernt werden, da keine natürliche Verbindung besteht",
+        "d": "Es funktioniert nur im digitalen Kontext",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche der folgenden Aussagen beschreibt ein Symptom im Kommunikationsprozess?",
+        "a": "Es handelt sich um ein bewusst erzeugtes Signal",
+        "b": "Es besteht ein kausaler Zusammenhang zwischen Zeichen und Bedeutung",
+        "c": "Es handelt sich um eine kulturell erlernte Form",
+        "d": "Es steht synonym mit Symbol",
+        "richtig": "b"
+    },
+    {
+        "frage": "Das Modell von Schulz von Thun unterscheidet vier Seiten einer Nachricht. Was gehört nicht dazu?",
+        "a": "Selbstoffenbarung",
+        "b": "Beziehungsebene",
+        "c": "Kontextanalyse",
+        "d": "Appell",
+        "richtig": "c"
+    },
+    {
+        "frage": "Ein Kommunikationsproblem liegt laut Schulz von Thun vor, wenn …",
+        "a": "der Empfänger kein Interesse hat",
+        "b": "die empfangene Botschaft nur nonverbal ist",
+        "c": "die dekodierte Seite nicht der intendierten Seite entspricht",
+        "d": "nur der Sachinhalt übertragen wurde",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was beschreibt die Maxime der Quantität nach Grice?",
+        "a": "Man soll so detailliert wie möglich kommunizieren",
+        "b": "Man soll die Relevanz des Gesagten beachten",
+        "c": "Man soll nicht mehr sagen als nötig",
+        "d": "Man soll emotional offen kommunizieren",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Maxime verletzt man, wenn man ironisch spricht?",
+        "a": "Maxime der Qualität",
+        "b": "Maxime der Quantität",
+        "c": "Maxime der Modalität",
+        "d": "Maxime der Beziehung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Was beschreibt der Begriff Implikatur?",
+        "a": "Eine Lüge mit negativen Folgen",
+        "b": "Eine sprachliche Unklarheit",
+        "c": "Eine absichtlich doppeldeutige Botschaft",
+        "d": "Eine kontextuelle Interpretation über den Wortsinn hinaus",
+        "richtig": "d"
+    },
+    {
+        "frage": "Laut Watzlawick kann man „nicht nicht kommunizieren“. Was bedeutet das?",
+        "a": "Kommunikation findet nur verbal statt",
+        "b": "Auch Schweigen ist Kommunikation",
+        "c": "Kommunikation kann jederzeit abgelehnt werden",
+        "d": "Nonverbale Signale sind bedeutungslos",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was meint das 3. Axiom von Watzlawick et al.?",
+        "a": "Kommunikation ist eindeutig",
+        "b": "Kommunikation geschieht ohne Kontext",
+        "c": "Jeder Beitrag ist Ursache und Wirkung zugleich",
+        "d": "Blickkontakt ist essentiell",
+        "richtig": "c"
+    },
+    {
+        "frage": "Ein Beispiel für symmetrische Eskalation ist:",
+        "a": "Ein Chef gibt Anweisungen",
+        "b": "Zwei Kollegen streiten darum, wer Recht hat",
+        "c": "Eine Mutter tröstet ihr Kind",
+        "d": "Ein Arzt spricht mit einer Patientin",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was bedeutet digitale Kommunikation im Sinne von Watzlawick?",
+        "a": "Kommunikation über digitale Medien",
+        "b": "Kommunikation ohne Körpersprache",
+        "c": "Kommunikation über sprachliche Mittel",
+        "d": "Kommunikation über Symbole",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was kennzeichnet eine komplementäre Beziehung?",
+        "a": "Beide Partner haben denselben Status",
+        "b": "Beide übernehmen abwechselnd Führungsrollen",
+        "c": "Es gibt eine klare Hierarchie zwischen den Partnern",
+        "d": "Keine der beiden Personen übernimmt Verantwortung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Aussage trifft auf das Modell von Grice zu?",
+        "a": "Es basiert auf digitaler Kommunikation",
+        "b": "Es betrachtet nonverbale Kommunikation",
+        "c": "Es beschreibt Spielregeln effektiver Kommunikation",
+        "d": "Es fokussiert sich auf Blickkontakt",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wofür steht das Relevanzprinzip nach Grice?",
+        "a": "Aussagen sollen immer emotional sein",
+        "b": "Aussagen müssen zur Gesprächssituation passen",
+        "c": "Aussagen sollen provozieren",
+        "d": "Aussagen dürfen keine Emotionen enthalten",
+        "richtig": "b"
+    },
+    {
+        "frage": "Wodurch zeichnen sich intentionsorientierte Modelle aus?",
+        "a": "Fokus auf Körpersprache",
+        "b": "Fokus auf Empfängerreaktionen",
+        "c": "Fokus auf Absicht der Senderperson",
+        "d": "Fokus auf neuronale Prozesse",
+        "richtig": "c"
+    },
+    {
+        "frage": "Die Theory of Mind ist …",
+        "a": "die Fähigkeit, sich selbst zu reflektieren",
+        "b": "die Fähigkeit, Gedanken und Absichten anderer zu erschließen",
+        "c": "eine Form der kognitiven Dissonanz",
+        "d": "eine psychotische Denkstörung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Carl Rogers betont in seiner Gesprächspsychotherapie besonders:",
+        "a": "Inhaltsfokus",
+        "b": "Konfrontation",
+        "c": "Empathie und Spiegeln",
+        "d": "Autorität",
+        "richtig": "c"
+    },
+    {
+        "frage": "Die Meta-Analyse von Elliott et al. (2018) zeigt, dass …",
+        "a": "Blickkontakt Lügen verrät",
+        "b": "therapeutische Empathie irrelevant ist",
+        "c": "Empathie ein signifikanter Prädiktor für Therapieerfolg ist",
+        "d": "nur Verhaltenstherapie wirksam ist",
+        "richtig": "c"
+    },
+    {
+        "frage": "Das Kommunikationsmodell von Hargie & Dickson beinhaltet nicht:",
+        "a": "Merkmale der Person",
+        "b": "Feedback",
+        "c": "Soziale Netzwerke",
+        "d": "Wahrnehmung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Aussage zur nonverbalen Kommunikation ist korrekt?",
+        "a": "Nonverbale Signale sind leichter zu interpretieren als verbale",
+        "b": "Nonverbale Signale sind unabhängig vom Kontext",
+        "c": "Nonverbale Signale können verbale Aussagen untermauern oder widersprechen",
+        "d": "Nonverbale Kommunikation ist universell verständlich",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was beschreibt Proxemik?",
+        "a": "Die digitale Kommunikation zwischen Menschen",
+        "b": "Die Bewertung der Gesprächsinhalte",
+        "c": "Das Raumverhalten zwischen Kommunikationspartner*innen",
+        "d": "Das Verhältnis von Sprechen und Schweigen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist laut Edward T. Hall keine der vier Distanzen?",
+        "a": "Intime Distanz",
+        "b": "Soziale Distanz",
+        "c": "Kommunikative Distanz",
+        "d": "Öffentliche Distanz",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Distanz ist typischerweise in beruflichen Kontexten angemessen?",
+        "a": "Intime Distanz",
+        "b": "Gesellig-persönliche Distanz",
+        "c": "Soziale Distanz",
+        "d": "Öffentliche Distanz",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wann wird eine zu große Distanz zwischen engen Freunden typischerweise als negativ empfunden?",
+        "a": "Bei einem Bewerbungsgespräch",
+        "b": "Wenn sie als Ablehnung interpretiert wird",
+        "c": "Wenn sie von Fremden verlangt wird",
+        "d": "Immer, unabhängig vom Kontext",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was zeigt die Meta-Analyse von Sporer & Schwandt (2007) zum Thema Lügen?",
+        "a": "Lügnerinnen vermeiden Blickkontakt",
+        "b": "Lügnerinnen bewegen sich übermäßig viel",
+        "c": "Lügner*innen zeigen reduzierte Körperbewegung",
+        "d": "Lügen erkennt man immer an der Mimik",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche nonverbale Verhaltensweise wurde nicht zuverlässig mit Lügen in Verbindung gebracht?",
+        "a": "Weniger Handbewegungen",
+        "b": "Weniger Nicken",
+        "c": "Weniger Fußbewegung",
+        "d": "Vermehrter Blickkontakt",
+        "richtig": "d"
+    },
+    {
+        "frage": "Was ist eine bedeutende Funktion von Gesten laut Bressem (2028)?",
+        "a": "Ausschließlich kulturelle Identifikation",
+        "b": "Unterdrückung emotionaler Reaktionen",
+        "c": "Darstellung, Appell und Ausdruck",
+        "d": "Kontrolle der Lautstärke",
+        "richtig": "c"
+    },
+    {
+        "frage": "Warum sind Gesten in der interkulturellen Kommunikation problematisch?",
+        "a": "Weil sie universal sind",
+        "b": "Weil sie immer unbewusst sind",
+        "c": "Weil ihre Bedeutung kulturabhängig ist",
+        "d": "Weil sie sprachlich redundant sind",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was wurde in der Meta-Analyse von Hostetter (2011) über Gesten festgestellt?",
+        "a": "Gesten sind für Erwachsene bedeutungslos",
+        "b": "Gesten haben keinen Einfluss auf Kommunikation",
+        "c": "Gesten verbessern das Verstehen v. a. bei Kindern",
+        "d": "Nur redundante Gesten sind hilfreich",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welcher Aspekt beeinflusst laut Hostetter (2011) die Wirksamkeit von Gesten?",
+        "a": "Die Augenfarbe der sprechenden Person",
+        "b": "Die Redundanz zur Sprache",
+        "c": "Der Inhalt der gesagten Worte",
+        "d": "Die Anzahl der Zuhörenden",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was trifft auf olfaktorische Kommunikation zu?",
+        "a": "Der Mensch kann kaum Gerüche unterscheiden",
+        "b": "Gerüche lösen keine Assoziationen aus",
+        "c": "Gerüche lösen starke, langlebige emotionale Erinnerungen aus",
+        "d": "Gerüche bleiben nie im Raum",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Information kann nicht über Körpergeruch transportiert werden?",
+        "a": "Geschlecht",
+        "b": "Alter",
+        "c": "IQ",
+        "d": "Stress",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was zeigt die Studie von de Groot, Smeets & Semin (2015)?",
+        "a": "Körpergeruch hat keine sozialen Funktionen",
+        "b": "Gerüche sind bedeutungslos für Kommunikation",
+        "c": "Stressgeruch erhöht Wachsamkeit bei anderen",
+        "d": "Menschen erkennen keine Emotionen am Geruch",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist besonders am Geruchssinn in der Kommunikation?",
+        "a": "Er wird bewusst interpretiert",
+        "b": "Er ist der einzige Sinn ohne kulturelle Unterschiede",
+        "c": "Er aktiviert soziale Hirnregionen und wirkt oft unbewusst",
+        "d": "Er ist stark von Lichtverhältnissen abhängig",
+        "richtig": "c"
+    },
+    {
+        "frage": "In welcher Situation wird intime Distanz typischerweise toleriert?",
+        "a": "Beim Vorstellungsgespräch",
+        "b": "In einer vollen Sauna",
+        "c": "In der U-Bahn bei leerem Waggon",
+        "d": "Beim Vortrag in der Universität",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die soziale oder kollektive Identitätsdefinition im Kontext der Proxemik?",
+        "a": "Nur enge Freunde dürfen nah kommen",
+        "b": "Fremde dürfen nicht näher als 3 Meter kommen",
+        "c": "Fremde können bei gemeinsamen Zielen als „Wir“ erlebt werden",
+        "d": "Identität spielt keine Rolle in der Distanz",
+        "richtig": "c"
+    },
+    {
+        "frage": "Warum ist rein schriftliche Kommunikation oft missverständlich?",
+        "a": "Weil Menschen nicht lesen können",
+        "b": "Weil Kontext keine Rolle spielt",
+        "c": "Weil nonverbale Hinweise fehlen",
+        "d": "Weil Schrift zu viele Details enthält",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Aussage zum Beziehungsaspekt einer Nachricht ist korrekt?",
+        "a": "Er enthält nur neutrale Sachinformationen",
+        "b": "Er wird immer verbal vermittelt",
+        "c": "Er zeigt die Statusrelation der Kommunikationspartner*innen",
+        "d": "Er ist im Encoder-Decoder-Modell irrelevant",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist laut Schulz von Thun ein Appell in der Kommunikation?",
+        "a": "Eine versteckte Kritik",
+        "b": "Eine Bitte um Beziehungsklärung",
+        "c": "Ein Versuch, das Verhalten des Gegenübers zu beeinflussen",
+        "d": "Eine Wiederholung des Sachinhalts",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist laut Watzlawick mit „Man kann nicht nicht kommunizieren“ gemeint?",
+        "a": "Jede körperliche Reaktion ist ein Kommunikationsakt",
+        "b": "Kommunikation funktioniert nur verbal",
+        "c": "Auch Schweigen oder Abwenden kann kommunikative Bedeutung haben",
+        "d": "Kommunikation ist immer freiwillig",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche zwei Aspekte werden im Modell von Watzlawick immer gleichzeitig kommuniziert?",
+        "a": "Inhalt & Appell",
+        "b": "Beziehung & Selbstoffenbarung",
+        "c": "Sachinformation & Beziehungsinformation",
+        "d": "Sender & Empfänger",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wodurch entstehen laut Watzlawick häufig Konflikte in Beziehungen?",
+        "a": "Ironie",
+        "b": "Symmetrische Eskalation",
+        "c": "Unterschiedliche Interpunktion von Kommunikationsabläufen",
+        "d": "Mangel an Appellen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was beschreibt das Konzept der Interpunktion?",
+        "a": "Grammatikalische Zeichenverwendung",
+        "b": "Der Versuch, Kommunikationsverläufe linear zu erklären",
+        "c": "Der Einsatz von nonverbalen Signalen",
+        "d": "Die Betonung der Beziehungsseite",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was kennzeichnet eine Double-Bind-Situation?",
+        "a": "Eine Situation mit übermäßiger Nähe",
+        "b": "Zwei widersprüchliche Botschaften mit einem Kommunikationsverbot",
+        "c": "Komplementäre Kommunikation zwischen zwei Partnern",
+        "d": "Offene Metakommunikation",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist eine typische Folge eines Double-Binds?",
+        "a": "Gesteigerte Motivation",
+        "b": "Erhöhte Empathie",
+        "c": "Gefühl der Hilflosigkeit und potenzieller psychischer Stress",
+        "d": "Erhöhte Konzentrationsfähigkeit",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist ein Ziel des Modells von Carl Rogers?",
+        "a": "Kontrolle des Gesprächsflusses",
+        "b": "Emotionale Überzeugungstechniken",
+        "c": "Echtheit, Empathie und unbedingte Wertschätzung",
+        "d": "Dominanz in der Gesprächsführung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist Kongruenz im Rogers-Modell?",
+        "a": "Uneindeutigkeit der Aussagen",
+        "b": "Authentizität und Übereinstimmung zwischen innerem Zustand und Ausdruck",
+        "c": "Eine Technik der Gesprächsführung",
+        "d": "Kognitive Dissonanz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist keine der drei Grundhaltungen nach Rogers?",
+        "a": "Empathie",
+        "b": "Unbedingte Wertschätzung",
+        "c": "Neutralität",
+        "d": "Kongruenz",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was beschreibt der Chamäleon-Effekt?",
+        "a": "Die bewusste Anpassung an andere",
+        "b": "Das Wechseln der Gesprächspartner",
+        "c": "Die automatische Verhaltensnachahmung",
+        "d": "Das ständige Wechseln von Themen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Wirkung hat Verhaltensmimikry laut Experimenten mit Avataren?",
+        "a": "Sie führt zu Verwirrung",
+        "b": "Sie verstärkt Misstrauen",
+        "c": "Sie steigert Sympathie und Hilfsbereitschaft",
+        "d": "Sie hat keine Wirkung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Aussage zur Verhaltensmimikry ist korrekt?",
+        "a": "Sie ist meist bewusst gesteuert",
+        "b": "Sie tritt nur bei Familienmitgliedern auf",
+        "c": "Sie geschieht unbewusst und signalisiert soziale Nähe",
+        "d": "Sie tritt nur bei Kindern auf",
+        "richtig": "c"
+    },
+    {
+        "frage": "In welchen Situationen ist Verhaltensmimikry typischerweise reduziert?",
+        "a": "Bei ähnlichen Zielen",
+        "b": "Bei positiver Stimmung",
+        "c": "Bei Interaktionsvermeidung oder Konflikten",
+        "d": "Bei hohem Selbstwert",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche neurobiologischen Systeme sind bei emotionaler Ansteckung aktiv?",
+        "a": "Nur das Kleinhirn",
+        "b": "Nur das Sprachzentrum",
+        "c": "Spiegelneuronen und vegetatives Nervensystem",
+        "d": "Olfaktorisches System",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist das Ziel nonverbaler Synchronisation laut Forschung?",
+        "a": "Kontrolle des Gesprächs",
+        "b": "Unabhängigkeit signalisieren",
+        "c": "Soziale Bindung stärken und Vertrauen fördern",
+        "d": "Ironie auflösen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was versteht man unter emotionaler Ansteckung?",
+        "a": "Übertragung von Gedanken über Sprache",
+        "b": "Gleichzeitiges Nachahmen von Bewegungen",
+        "c": "Übertragung von Gefühlszuständen durch Synchronisation",
+        "d": "Erzeugen von künstlicher Nähe",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Aussage beschreibt analoge Modalität nach Watzlawick korrekt?",
+        "a": "Verbale Sprache",
+        "b": "Mimik, Tonfall und Körpersprache",
+        "c": "Geschriebene Sprache",
+        "d": "Technische Datenübertragung",
+        "richtig": "b"
+    },
+    {
+        "frage": "In welcher Beziehung überwiegt komplementäre Kommunikation typischerweise?",
+        "a": "Zwischen Kolleg*innen",
+        "b": "Zwischen Geschwistern",
+        "c": "Zwischen Arzt und Patient",
+        "d": "Zwischen Freunden",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist laut Grice ein typisches Beispiel für die Verletzung der Maxime der Modalität?",
+        "a": "Direktes Ansprechen eines Problems",
+        "b": "Ironische Aussage ohne passende nonverbale Hinweise",
+        "c": "Kurze, sachliche Aussage",
+        "d": "Wiederholte Aussagen zur Verdeutlichung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Wie lassen sich Implikaturen beschreiben?",
+        "a": "Absichtslos gesprochene Sätze",
+        "b": "Emotionale Zwischentöne",
+        "c": "Bedeutungen, die über das Gesagte hinausgehen und durch Kontext erschlossen werden",
+        "d": "Objektiv nachweisbare Informationen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was war das zentrale Ergebnis des Ekman & Friesen-Experiments (1971) mit den Fore in Neuguinea?",
+        "a": "Emotionale Gesichtsausdrücke werden nur kulturabhängig verstanden",
+        "b": "Die Fore konnten keine westlichen Ausdrücke deuten",
+        "c": "Basisemotionen werden universell erkannt",
+        "d": "Es war kein signifikanter Unterschied zur Vergleichsgruppe erkennbar",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Emotion gehört nicht zu den sechs Basisemotionen nach Ekman & Friesen (1975)?",
+        "a": "Angst",
+        "b": "Ekel",
+        "c": "Überraschung",
+        "d": "Scham",
+        "richtig": "d"
+    },
+    {
+        "frage": "Was ist laut dem Encoder-Decoder-Modell (Shannon & Weaver, 1949) keine zentrale Komponente?",
+        "a": "Verschlüsselung",
+        "b": "Entschlüsselung",
+        "c": "Feedbackschleife",
+        "d": "Fehlerquellen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist laut Watzlawick ein typisches Beispiel für analoge Kommunikation?",
+        "a": "Ein präzise formulierter Befehl",
+        "b": "Ein ironischer Kommentar",
+        "c": "Der Tonfall bei einer Aussage",
+        "d": "Eine SMS",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wann wird digitale Kommunikation bevorzugt?",
+        "a": "Bei der nonverbalen Selbstoffenbarung",
+        "b": "Bei sachlichen Informationen",
+        "c": "Bei Beziehungskonflikten",
+        "d": "Bei emotionaler Kommunikation",
+        "richtig": "b"
+    },
+    {
+        "frage": "Wie kann eine Double-Bind-Situation entstehen?",
+        "a": "Durch offene Gesprächsführung",
+        "b": "Durch widersprüchliche Botschaften und Verbot von Metakommunikation",
+        "c": "Durch zu viele Kommunikationspartner",
+        "d": "Durch fehlende Beziehung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Wodurch wird eine Double-Bind-Situation typischerweise verschärft?",
+        "a": "Wenn Metakommunikation erlaubt ist",
+        "b": "Wenn ein Machtgefälle besteht",
+        "c": "Wenn die Empfängerin ironisch reagiert",
+        "d": "Wenn der Sender eindeutig formuliert",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist kein Merkmal empathischer Kommunikation nach Rogers?",
+        "a": "Unbedingte positive Beachtung",
+        "b": "Kongruenz",
+        "c": "Überlegenheit",
+        "d": "Empathie",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was beschreibt der Chamäleon-Effekt?",
+        "a": "Absichtliches Täuschen durch Körpersprache",
+        "b": "Spontane Nachahmung sozial relevanter Verhaltensweisen",
+        "c": "Wechsel der Meinung in Gruppen",
+        "d": "Manipulation in Gesprächen",
+        "richtig": "b"
+    },
+    {
+        "frage": "In welcher Situation ist Mimikry typischerweise reduziert?",
+        "a": "Wenn man gemocht wird",
+        "b": "Wenn man sich verbunden fühlt",
+        "c": "Wenn soziale Distanz signalisiert werden soll",
+        "d": "Wenn beide lachen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was fördert laut Chartrand & Lakin (2013) die Tendenz zur Verhaltensmimikry?",
+        "a": "Negative Stimmung",
+        "b": "Kulturelle Unterschiede",
+        "c": "Wahrgenommene Ähnlichkeit",
+        "d": "Unbekanntheit der anderen Person",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was bewirkt Mimikry beim Interaktionspartner laut Forschung?",
+        "a": "Weniger Nähe",
+        "b": "Rückgang von Empathie",
+        "c": "Zunahme von Hilfsbereitschaft",
+        "d": "Mehr Abgrenzung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wie hängt nonverbale Kommunikation mit dem ELM (Elaboration Likelihood Model) zusammen?",
+        "a": "Nonverbale Signale beeinflussen nur die zentrale Route",
+        "b": "Nonverbale Signale sind nur bei Werbung wichtig",
+        "c": "Nonverbale Hinweise wirken über zentrale und periphere Route",
+        "d": "Nonverbale Kommunikation unterläuft dem ELM",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche nonverbale Komponente beeinflusst laut ELM besonders die periphere Verarbeitung?",
+        "a": "Lautstärke",
+        "b": "Mimik des Senders",
+        "c": "Länge der Argumentation",
+        "d": "Faktenwissen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Funktion hat Verhaltensmimikry im sozialen Miteinander?",
+        "a": "Herstellung von Statusunterschieden",
+        "b": "Verstärkung sozialer Bindung und Vertrauen",
+        "c": "Ausdruck von Meinungsdifferenz",
+        "d": "Vermeidung sozialer Nähe",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Folgen hat das Nachgeahmtwerden laut Forschung?",
+        "a": "Rückgang von Kooperation",
+        "b": "Steigerung von Vorurteilen",
+        "c": "Zunahme von Empathie und gegenseitigem Verstehen",
+        "d": "Soziale Unsicherheit",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist eine Implikatur laut Grice?",
+        "a": "Eine offene Lüge",
+        "b": "Eine falsche Rückmeldung",
+        "c": "Eine nicht explizit genannte, aber verstandene Bedeutung",
+        "d": "Eine nonverbale Nachricht",
+        "richtig": "c"
+    },
+    {
+        "frage": "Warum sind Implikaturen zentral für menschliche Kommunikation?",
+        "a": "Weil sie Grammatik ersetzen",
+        "b": "Weil sie alle Regeln der Maximen verletzen",
+        "c": "Weil sie Kontextwissen aktivieren",
+        "d": "Weil sie Metakommunikation verbieten",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was gehört nicht zu den Maximen nach Grice?",
+        "a": "Maxime der Ehrlichkeit",
+        "b": "Maxime der Quantität",
+        "c": "Maxime der Qualität",
+        "d": "Maxime der Relevanz",
+        "richtig": "a"
+    },
+    {
+        "frage": "Wann verletzt man die Maxime der Modalität?",
+        "a": "Wenn man die Wahrheit sagt",
+        "b": "Wenn man über mehrere Themen gleichzeitig spricht",
+        "c": "Wenn man zu wenig redet",
+        "d": "Wenn man ironisch spricht",
+        "richtig": "b"
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+        "frage": "Welche Aussage beschreibt die Bindungstheorie nach Bowlby und Ainsworth am besten?",
+        "a": "Bindung ist ausschließlich genetisch bedingt.",
+        "b": "Bindung entwickelt sich durch wiederholte Interaktionen mit Bezugspersonen.",
+        "c": "Bindung entsteht erst ab dem Schulalter.",
+        "d": "Bindung ist ein rein kulturelles Phänomen.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was aktiviert das Bindungssystem bei Kindern?",
+        "a": "Neugierde auf neue Umgebungen",
+        "b": "Wahrgenommene Bedrohung oder Angst",
+        "c": "Hunger oder Müdigkeit",
+        "d": "Spielerische Exploration",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Phase der Bindungsentwicklung beschreibt die „zielkorrigierte Partnerschaft“?",
+        "a": "Ab dem 6. Lebensmonat",
+        "b": "Ab dem 2. Lebensjahr",
+        "c": "Erst im Erwachsenenalter",
+        "d": "Pränatal",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein zentrales Merkmal des unsicher-vermeidenden Bindungsstils?",
+        "a": "Übermäßiges Klammern an die Bindungsperson",
+        "b": "Ignorieren der Bindungsperson bei Rückkehr",
+        "c": "Wechsel zwischen Nähesuche und Ablehnung",
+        "d": "Desorganisiertes Verhalten unter Stress",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Methode nutzt Mary Ainsworth zur Erfassung frühkindlicher Bindung?",
+        "a": "Elternfragebögen",
+        "b": "Fremden-Situationstest",
+        "c": "Hormonanalysen",
+        "d": "Retrospektive Interviews",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welcher Bindungsstil ist mit internalisierenden Symptomen (z. B. Depression) assoziiert?",
+        "a": "Sicher",
+        "b": "Unsicher-vermeidend",
+        "c": "Unsicher-ambivalent",
+        "d": "Desorganisiert",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf desorganisierte Bindung (Typ D) zu?",
+        "a": "Das Kind zeigt konsistente Strategien zur Stressbewältigung.",
+        "b": "Die Beziehung zur Bindungsperson ist angstbesetzt.",
+        "c": "Das Kind exploriert intensiv, um Stress zu kompensieren.",
+        "d": "Sie tritt nur bei Vernachlässigung auf.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was gilt als Risikofaktor für desorganisierte Bindung?",
+        "a": "Sichere Eltern-Kind-Interaktion",
+        "b": "Kindesmisshandlung",
+        "c": "Frühgeburt",
+        "d": "Geschwisterbeziehungen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur Plastizität von Bindung ist korrekt?",
+        "a": "Bindungsstile sind ab dem 3. Lebensjahr unveränderlich.",
+        "b": "Traumatische Ereignisse können Bindungsmuster überschreiben.",
+        "c": "Genetik bestimmt den Bindungsstil lebenslang.",
+        "d": "Nur Therapie kann Bindung verändern.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur transgenerationalen Weitergabe von Bindung ist falsch?",
+        "a": "Eltern können unbewusst eigene Bindungsmuster an Kinder weitergeben.",
+        "b": "Die Korrelation zwischen Eltern- und Kind-Bindungsstilen ist stark.",
+        "c": "Erfahrungen im Erwachsenenalter können frühkindliche Muster modifizieren.",
+        "d": "Bindungsstile werden nicht direkt vererbt.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was wird im Fremden-Situationstest nicht beobachtet?",
+        "a": "Reaktion des Kindes auf Trennung von der Bindungsperson",
+        "b": "Spielverhalten in einer vertrauten Umgebung",
+        "c": "Interaktion mit einer fremden Person",
+        "d": "Verhalten bei Rückkehr der Bindungsperson",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Kritik gibt es am Fremden-Situationstest?",
+        "a": "Er misst nur genetische Prädispositionen.",
+        "b": "Er ist kulturübergreifend nicht immer valide.",
+        "c": "Er erfordert verbale Antworten des Kindes.",
+        "d": "Er dauert zu lange für Kleinkinder.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welcher Bindungsstil zeigt im Fremden-Situationstest kein Stressverhalten, obwohl physiologische Stressmarker vorliegen?",
+        "a": "Sicher (Typ B)",
+        "b": "Unsicher-vermeidend (Typ A)",
+        "c": "Unsicher-ambivalent (Typ C)",
+        "d": "Desorganisiert (Typ D)",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Dimensionen beschreiben Bindungsstile bei Erwachsenen?",
+        "a": "Extraversion und Neurotizismus",
+        "b": "Ängstlichkeit und Vermeidung",
+        "c": "Offenheit und Gewissenhaftigkeit",
+        "d": "Dominanz und Unterwürfigkeit",
+        "richtig": "b"
+    },
+    {
+        "frage": "Wie nutzen ängstlich gebundene Erwachsene Sexualität in Partnerschaften?",
+        "a": "Zur emotionalen Distanzierung",
+        "b": "Zur Rückversicherung der Beziehung",
+        "c": "Um Autonomie zu demonstrieren",
+        "d": "Als rein physische Befriedigung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welcher Bindungsstil korreliert mit geringer sexueller Zufriedenheit?",
+        "a": "Sicher",
+        "b": "Vermeidend",
+        "c": "Ambivalent",
+        "d": "Desorganisiert",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Hypothese beschreibt den Einfluss der Elternbeziehung auf Geschwister?",
+        "a": "Kompensationshypothese",
+        "b": "Spillover-Hypothese",
+        "c": "Kontrasthypothese",
+        "d": "Autonomiehypothese",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein zentraler Befund zur Rolle von Geschwistern?",
+        "a": "Sie prägen weniger als Eltern.",
+        "b": "Sie dienen als soziale Modelle.",
+        "c": "Sie fördern nur Konkurrenzverhalten.",
+        "d": "Sie sind irrelevant für die Sozialisation.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur Bindungsrepräsentation ist korrekt?",
+        "a": "Sie ist ausschließlich genetisch bedingt.",
+        "b": "Sie basiert auf kognitiven Schemata aus Interaktionserfahrungen.",
+        "c": "Sie wird pränatal angelegt.",
+        "d": "Sie ist bei Zwillingen identisch.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage trifft auf Leihmutterschaft zu?",
+        "a": "Sie verhindert sichere Bindung.",
+        "b": "Soziale Eltern können sichere Bindung aufbauen.",
+        "c": "Nur biologische Mütter sind Bindungspersonen.",
+        "d": "Sie führt immer zu desorganisierter Bindung.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welches System steht in der Bindungstheorie nicht im Fokus?",
+        "a": "Bindungssystem",
+        "b": "Explorationssystem",
+        "c": "Immunsystem",
+        "d": "Fürsorgesystem",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Aussage zur frühkindlichen Bindung ist falsch?",
+        "a": "Sie ist ab dem 2. Lebensjahr stabil.",
+        "b": "Sie ist unveränderlich durch spätere Erfahrungen.",
+        "c": "Sie wird durch Traumata beeinflusst.",
+        "d": "Sie dient als Basis für Exploration.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Rolle spielt elterliche Feinfühligkeit?",
+        "a": "Sie verstärkt unsicher-vermeidende Bindung.",
+        "b": "Sie fördert sichere Bindung.",
+        "c": "Sie ist irrelevant für die Bindung.",
+        "d": "Sie führt zu überbehütendem Verhalten.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt das Investment Model of Commitment?",
+        "a": "Finanzielle Investitionen in Beziehungen",
+        "b": "Partnerschaftszufriedenheit, Alternativen und Investitionen",
+        "c": "Genetische Investitionen in Nachkommen",
+        "d": "Psychologische Therapiemodelle",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Aussage zur Meta-Analyse des Fremden-Situationstests ist korrekt?",
+        "a": "Sichere Bindung ist global unter 30 %. ",
+        "b": "Sichere Bindung liegt in den meisten Studien über 50 %. ",
+        "c": "Desorganisierte Bindung ist die häufigste Kategorie.",
+        "d": "Kultur hat keinen Einfluss auf die Ergebnisse.",
+        "richtig": "b"
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    "frage": "Was ist der zentrale Forschungsgegenstand der Sozialpsychologie?",
+    "a": "Biologische Determinanten des Verhaltens",
+    "b": "Erleben und Verhalten in sozialen Situationen",
+    "c": "Klinische Störungen bei Gruppenmitgliedern",
+    "d": "Neuronale Prozesse bei Entscheidungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Prämisse sozialpsychologischer Forschung betont die subjektive Wahrnehmung von Situationen?",
+    "a": "Menschen reagieren auf objektive Realität.",
+    "b": "Soziale Realität wird aktiv konstruiert.",
+    "c": "Verhalten ist genetisch vorherbestimmt.",
+    "d": "Emotionen sind universell gleich.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach Kurt Lewins Verhaltensgleichung ist Verhalten eine Funktion von:",
+    "a": "Genetik und Umwelt",
+    "b": "Person und Situation",
+    "c": "Kognition und Emotion",
+    "d": "Kultur und Erziehung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter einer „statistischen Interaktion“ in der Sozialpsychologie?",
+    "a": "Der Effekt einer Variable hängt von der Ausprägung einer anderen ab.",
+    "b": "Zwei Variablen korrelieren direkt miteinander.",
+    "c": "Eine Mediatorvariable erklärt den Kausalzusammenhang.",
+    "d": "Eine Störvariable verfälscht die Ergebnisse.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Aussage trifft auf „starke Situationen“ zu?",
+    "a": "Sie bieten wenig Struktur und klare Verhaltenserwartungen.",
+    "b": "Persönlichkeitsmerkmale dominieren das Verhalten.",
+    "c": "Sie sind durch eindeutige Normen und Sanktionen geprägt.",
+    "d": "Sie fördern individuell abweichendes Verhalten.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein „hypothetisches Konstrukt“?",
+    "a": "Eine direkt beobachtbare Variable",
+    "b": "Ein abstrakter Begriff, der über Indikatoren gemessen wird",
+    "c": "Eine experimentelle Manipulation",
+    "d": "Eine statistische Interaktion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Methode eignet sich am besten zur Überprüfung von Kausalhypothesen?",
+    "a": "Korrelationsstudie",
+    "b": "Laborsexperiment mit Randomisierung",
+    "c": "Ethnographische Beobachtung",
+    "d": "Metaanalyse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt die „interne Validität“ eines Experiments?",
+    "a": "Generalisierbarkeit der Ergebnisse auf andere Kontexte",
+    "b": "Sicherheit, dass die UV tatsächlich die AV beeinflusst",
+    "c": "Repräsentativität der Stichprobe",
+    "d": "Übereinstimmung zwischen Theorie und Messung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Variable erklärt, warum ein Effekt auftritt?",
+    "a": "Moderatorvariable",
+    "b": "Mediatorvariable",
+    "c": "Störvariable",
+    "d": "Kontrollvariable",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet ein „psychologisch realistisches“ Experiment?",
+    "a": "Es gleicht einer Alltagssituation optisch genau.",
+    "b": "Es löst ähnliche psychologische Prozesse aus wie reale Situationen.",
+    "c": "Es verwendet ausschließlich Felddaten.",
+    "d": "Es verzichtet auf Täuschungen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum werden in sozialpsychologischen Experimenten oft Täuschungen eingesetzt?",
+    "a": "Um Versuchspersonen zu verwirren",
+    "b": "Um spontane Reaktionen zu erfassen und Demand Characteristics zu reduzieren",
+    "c": "Um die externe Validität zu erhöhen",
+    "d": "Um Kosten zu sparen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine zentrale Forderung der „Open Science“-Bewegung?",
+    "a": "Hypothesen nachträglich an Daten anzupassen",
+    "b": "Präregistrierung von Studien und öffentliche Datenbereitstellung",
+    "c": "Ausschließliche Nutzung von Laborexperimenten",
+    "d": "Verzicht auf Peer-Review-Verfahren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Problem wird in der „Replikationskrise“ kritisiert?",
+    "a": "Zu viele Studien mit großen Stichproben",
+    "b": "Häufige Falschdarstellungen durch Forschende",
+    "c": "Niedrige Replizierbarkeit psychologischer Befunde",
+    "d": "Übermäßiger Fokus auf Feldstudien",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche ethische Richtlinie gilt nicht für sozialpsychologische Forschung?",
+    "a": "Freiwillige Teilnahme",
+    "b": "Postexperimentelle Aufklärung",
+    "c": "Erzwungene Teilnahme zur Stichprobengröße",
+    "d": "Vermeidung physischer Schädigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Im Experiment von Nadler und Liviatan (2006) führte der Ausdruck von Mitgefühl durch einen Palästinenserführer bei jüdischen Israelis mit geringem Vertrauen zu:",
+    "a": "Erhöhter Versöhnungsbereitschaft",
+    "b": "Keiner Veränderung",
+    "c": "Geringerer Versöhnungsbereitschaft",
+    "d": "Erhöhter Aggression",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was zeigt der „Bystander-Effekt“ nach Latané und Darley?",
+    "a": "Mehr Zeugen erhöhen die Hilfsbereitschaft.",
+    "b": "Einzelpersonen helfen schneller als Gruppen.",
+    "c": "Emotionale Erregung steigt mit der Gruppengröße.",
+    "d": "Persönlichkeit bestimmt Hilfeverhalten vollständig.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Milgrams Gehorsamkeitsstudien demonstrieren vor allem:",
+    "a": "Die Macht der Persönlichkeit über situative Faktoren",
+    "b": "Die Bereitschaft, Autoritäten auch gegen das Gewissen zu folgen",
+    "c": "Die Rolle von Geldanreizen bei Entscheidungen",
+    "d": "Die Überlegenheit von Einzelarbeit gegenüber Gruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Sherifs Konformitätsexperimente (1936) untersuchten:",
+    "a": "Aggression in Gruppen",
+    "b": "Die Entstehung sozialer Normen durch Gruppeneinfluss",
+    "c": "Die Wirkung von Belohnung auf Leistung",
+    "d": "Geschlechtsspezifische Rollenverteilung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf „WEIRD“-Stichproben zu?",
+    "a": "Sie repräsentieren 80% der Weltbevölkerung.",
+    "b": "Sie sind überproportional in psychologischen Studien vertreten.",
+    "c": "Sie stammen ausschließlich aus kollektivistischen Kulturen.",
+    "d": "Sie umfassen nur Kinder und Jugendliche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Individualistische Kulturen betonen typischerweise:",
+    "a": "Soziale Harmonie und Gruppenziele",
+    "b": "Einzigartigkeit und persönliche Autonomie",
+    "c": "Traditionelle Geschlechterrollen",
+    "d": "Kollektive Verantwortung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Evolutionspsychologische Erklärungen betonen:",
+    "a": "Die Rolle natürlicher Selektion bei der Entwicklung sozialer Verhaltensweisen",
+    "b": "Kulturelle Unterschiede als Hauptdeterminante des Verhaltens",
+    "c": "Die Überlegenheit moderner Gesellschaften",
+    "d": "Die Irrelevanz biologischer Faktoren",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was kritisiert das „Thomas-Theorem“?",
+    "a": "Die Vernachlässigung biologischer Faktoren",
+    "b": "Die Annahme, Menschen reagieren auf objektive Realität",
+    "c": "Die Überbetonung von Laborexperimenten",
+    "d": "Die Ablehnung qualitativer Methoden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat eine „Cover Story“ in Experimenten?",
+    "a": "Die eigentlichen Forschungsziele zu verschleiern",
+    "b": "Die externe Validität zu erhöhen",
+    "c": "Störvariablen zu eliminieren",
+    "d": "Die Randomisierung zu vereinfachen",
+    "richtig": "a"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
