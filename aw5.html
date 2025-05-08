@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+    "frage": "Was bezeichnet der Begriff „Selbst“ in der Sozialpsychologie?",
+    "a": "Die Summe aller genetischen Anlagen einer Person.",
+    "b": "Die Gesamtheit des Wissens über sich selbst und den Platz in der sozialen Welt.",
+    "c": "Die bewusste Kontrolle über moralische Entscheidungen.",
+    "d": "Die Fähigkeit zur Empathie.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Unterscheidung traf William James in Bezug auf das Selbst?",
+    "a": "„Real-Selbst“ vs. „Ideal-Selbst“.",
+    "b": "„I-Self“ (aktiver Beobachter) vs. „Me-Self“ (beobachtetes Objekt).",
+    "c": "„Individuelles Selbst“ vs. „Kollektives Selbst“.",
+    "d": "„Körperliches Selbst“ vs. „Geistiges Selbst“.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter „Selbstwertgefühl“?",
+    "a": "Die Fähigkeit, soziale Konflikte zu lösen.",
+    "b": "Die Bewertung des Selbst auf einer positiv-negativ-Dimension.",
+    "c": "Die Anzahl der sozialen Beziehungen einer Person.",
+    "d": "Die kognitive Repräsentation von Gruppenmerkmalen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Problem benennt Immanuel Kant in Bezug auf Introspektion?",
+    "a": "Sie führt zwangsläufig zu Depressionen.",
+    "b": "Sie verzerrt den beobachteten Gegenstand durch die Beobachtung selbst.",
+    "c": "Sie ist nur in westlichen Kulturen relevant.",
+    "d": "Sie ignoriert die Rolle sozialer Vergleiche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Selbstwahrnehmungstheorie von Daryl Bem postuliert, dass Menschen …",
+    "a": "ihre Einstellungen immer durch Introspektion validieren.",
+    "b": "aus ihrem Verhalten auf Einstellungen schließen, wenn externe Anreize fehlen.",
+    "c": "soziale Vergleiche vermeiden, um den Selbstwert zu schützen.",
+    "d": "ihr Selbstkonzept ausschließlich durch Feedback anderer formen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Unter welcher Bedingung ist die „Foot-in-the-Door-Technik“ wirksam?",
+    "a": "Wenn starke externe Anreize vorhanden sind.",
+    "b": "Wenn Menschen ihr Verhalten freiwillig ausführen und auf Einstellungen schließen.",
+    "c": "Wenn soziale Vergleiche mit ähnlichen Personen angestellt werden.",
+    "d": "Wenn das Ideal-Selbst aktiviert ist.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Motiv steht hinter aufwärtsgerichteten sozialen Vergleichen?",
+    "a": "Selbstwertschutz.",
+    "b": "Selbstverbesserung.",
+    "c": "Soziale Konformität.",
+    "d": "Vermeidung kognitiver Dissonanz.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum vergleichen sich Männer im Sport eher mit anderen Männern als mit Frauen?",
+    "a": "Wegen des Einflusses von Geschlechterstereotypen.",
+    "b": "Weil Geschlecht als „kritisches Attribut“ für Leistungsvergleiche gilt.",
+    "c": "Um Abwärtsvergleiche zu vermeiden.",
+    "d": "Aufgrund höherer Selbstkomplexität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie nutzt eine Person, die nach einem Misserfolg ihre Leistung mit einer schlechteren Person vergleicht?",
+    "a": "Aufwärtsvergleich.",
+    "b": "Abwärtsvergleich.",
+    "c": "Selbstbehinderung.",
+    "d": "Promotion-Fokus.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt ein „Selbstschema“ nach Hazel Markus?",
+    "a": "Eine Liste aller sozialen Rollen einer Person.",
+    "b": "Eine kognitive Struktur, die selbstbezogene Informationen organisiert.",
+    "c": "Die Fähigkeit zur Empathie.",
+    "d": "Ein Modell zur Erklärung gruppendynamischer Prozesse.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Hohe Selbstkomplexität nach Linville …",
+    "a": "führt zu stärkeren emotionalen Reaktionen auf Misserfolge.",
+    "b": "wirkt als Puffer gegen Selbstwertbedrohung.",
+    "c": "reduziert die Fähigkeit zur Selbstregulation.",
+    "d": "ist typisch für Personen mit niedrigem Selbstwertgefühl.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Prozess erklärt, warum Menschen inkonsistente Selbstaspekte als situativ bedingt wahrnehmen?",
+    "a": "Selektive Erinnerung.",
+    "b": "Wegattribuierung.",
+    "c": "Soziale Identifikation.",
+    "d": "Kognitive Dissonanz.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Selbstdiskrepanztheorie von Higgins unterscheidet zwischen …",
+    "a": "materiellem und spirituellem Selbst.",
+    "b": "aktuellem Selbst, Ideal-Selbst und Soll-Selbst.",
+    "c": "personaler und sozialer Identität.",
+    "d": "impliziten und expliziten Einstellungen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Eine Diskrepanz zwischen aktuellem Selbst und Ideal-Selbst führt typischerweise zu …",
+    "a": "Schuldgefühlen.",
+    "b": "Traurigkeit und Enttäuschung.",
+    "c": "Aggression.",
+    "d": "erhöhter Selbstüberwachung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet den „Präventionsfokus“ in der Selbstregulation?",
+    "a": "Streben nach positiven Ergebnissen.",
+    "b": "Vermeidung negativer Konsequenzen.",
+    "c": "Nutzung sozialer Vergleiche zur Selbstbestätigung.",
+    "d": "Fokus auf gruppenbezogene Identität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt „soziale Identität“ nach Tajfel und Turner?",
+    "a": "Die Definition des Selbst als einzigartiges Individuum.",
+    "b": "Die Selbstwahrnehmung als austauschbares Gruppenmitglied.",
+    "c": "Die Integration aller sozialen Rollen in ein Schema.",
+    "d": "Die Fähigkeit zur Introspektion.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Beispiel illustriert eine Selbstdefinition auf der Ebene „Mensch“ nach Abb. 7.1?",
+    "a": "„Wir Psycholog*innen“.",
+    "b": "„Ich als Vater“.",
+    "c": "„Wir Menschen im Vergleich zu Schimpansen“.",
+    "d": "„Lisa vs. Max im Debattierclub“.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Warum wird in einer Diskussion über Frauenförderung die soziale Identität als „Mann“ oder „Frau“ salient?",
+    "a": "Wegen der kontextuellen Passung der Gruppenzugehörigkeit.",
+    "b": "Wegen hoher Selbstkomplexität.",
+    "c": "Aufgrund von Selbstbehinderung.",
+    "d": "Wegen des Bedürfnisses nach Selbstkontinuität.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was zeigten die Spiegelversuche mit Rhesusaffen (Chang et al., 2015)?",
+    "a": "Affen erkennen sich nie im Spiegel.",
+    "b": "Affen entfernen Flecken nur am Spiegelbild.",
+    "c": "Affen zeigen Selbstwahrnehmung nach Training.",
+    "d": "Affen nutzen Spiegel zur Kommunikation.",
+    "richtig": "c"
+  },
+  {
+    "frage": "In Markus‘ Studie (1977) entschieden Personen schneller, ob schemakonsistente Begriffe sie beschreiben, weil …",
+    "a": "sie weniger kognitive Ressourcen benötigen.",
+    "b": "Selbstschemata die Verarbeitung konsistenter Informationen erleichtern.",
+    "c": "soziale Vergleiche automatisch aktiviert werden.",
+    "d": "die Begriffe emotional positiv besetzt waren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Ergebnis unterstützt Cooleys „Looking-glass self“-Theorie?",
+    "a": "Menschen sehen sich genau so, wie andere sie sehen.",
+    "b": "Selbstbilder korrelieren stärker mit *geglaubten* Fremdbildern als mit tatsächlichen.",
+    "c": "Soziale Medien verstärken die Selbstkonsistenz.",
+    "d": "Introspektion führt zu objektiver Selbsterkenntnis.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet das „Arbeitsselbstkonzept“?",
+    "a": "Die dauerhafte Repräsentation aller Selbstaspekte.",
+    "b": "Die situativ aktivierten Teile des Selbstkonzepts.",
+    "c": "Die Diskrepanz zwischen Ideal- und Real-Selbst.",
+    "d": "Die Fähigkeit zur Selbstüberwachung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf „Selbstbehinderung“ zu?",
+    "a": "Sie dient der Steigerung des Selbstwerts durch Erfolge.",
+    "b": "Sie schafft externe Attributionen für antizipierte Misserfolge.",
+    "c": "Sie basiert auf aufwärtsgerichteten Vergleichen.",
+    "d": "Sie ist ein Beispiel für Promotion-Fokus.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die Studie von Linville (1985) zur Selbstkomplexität?",
+    "a": "Niedrige Komplexität führt zu stabileren Emotionen.",
+    "b": "Hohe Komplexität mildert emotionale Reaktionen auf Misserfolge.",
+    "c": "Selbstkomplexität ist unabhängig vom Selbstwertgefühl.",
+    "d": "Komplexität reduziert die Fähigkeit zur Selbstregulation.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Mechanismus trägt zur „Selbstkontinuität“ bei?",
+    "a": "Selektives Erinnern konsistenter Erfahrungen.",
+    "b": "Vermeidung sozialer Vergleiche.",
+    "c": "Aktivierung aller Selbstaspekte gleichzeitig.",
+    "d": "Fokus auf situative Einflüsse.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was bedeutet „Wegattribuierung“ im Kontext der Selbstwahrnehmung?",
+    "a": "Die Integration neuer Selbstaspekte in das Selbstschema.",
+    "b": "Die Erklärung von Verhaltensinkonsistenzen durch situative Faktoren.",
+    "c": "Die bewusste Veränderung des Ideal-Selbst.",
+    "d": "Die Ablehnung sozialer Identitäten.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum wird Selbstkontinuität als „kognitive Illusion“ bezeichnet?",
+    "a": "Weil das Selbst konstant bleibt, unabhängig vom Kontext.",
+    "b": "Weil psychische Erkrankungen die Selbstwahrnehmung verzerren.",
+    "c": "Weil Stabilität durch selektive Prozesse (z. B. Erinnerung) konstruiert wird.",
+    "d": "Weil soziale Medien unrealistische Selbstbilder fördern.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Ein Mensch mit „Promotionsfokus“ konzentriert sich primär auf …",
+    "a": "die Vermeidung von Fehlern.",
+    "b": "die Erreichung von Idealen und Wünschen.",
+    "c": "die Einhaltung sozialer Normen.",
+    "d": "die Abwertung von Vergleichspersonen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Emotion löst eine Diskrepanz zwischen aktuellem Selbst und Soll-Selbst aus?",
+    "a": "Traurigkeit.",
+    "b": "Schuldgefühle.",
+    "c": "Stolz.",
+    "d": "Überraschung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet den „Präventionsfokus“?",
+    "a": "Streben nach Selbstverwirklichung.",
+    "b": "Vermeidung von Regelverstößen und negativen Konsequenzen.",
+    "c": "Nutzung von Aufwärtsvergleichen.",
+    "d": "Fokus auf soziale Identität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das Konzept der „Selbsterschöpfung“ nach Baumeister (2002)?",
+    "a": "Eine dauerhafte Schwächung der Selbstregulation.",
+    "b": "Eine vorübergehende Abnahme der Selbstkontrollfähigkeit aufgrund von Ressourcenverbrauch.",
+    "c": "Die Unfähigkeit zur Introspektion.",
+    "d": "Die Überlastung durch soziale Vergleiche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor regeneriert laut Forschung *nicht* die Fähigkeit zur Selbstregulation?",
+    "a": "Schlaf und Erholung.",
+    "b": "Positiver Affekt.",
+    "c": "Hoher Glukosespiegel.",
+    "d": "Vermeidung von Stressoren.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was zeigt die Replikationsstudie von Hagger et al. (2016) zur Selbsterschöpfung?",
+    "a": "Der Effekt ist stark und kulturübergreifend konsistent.",
+    "b": "Die Effekte sind klein und methodisch fragwürdig.",
+    "c": "Selbsterschöpfung existiert nur im Labor.",
+    "d": "Glukosezufuhr hebt Selbsterschöpfung zuverlässig auf.",
+    "richtig": "b"
+  },
+  {
+    "frage": "In kollektivistischen Kulturen ist das Selbstkonzept typischerweise …",
+    "a": "stärker auf individuelle Leistungen fokussiert.",
+    "b": "durch soziale Identitäten und Gruppenzugehörigkeiten geprägt.",
+    "c": "durch hohe Selbstkomplexität charakterisiert.",
+    "d": "unabhängig von familialen Beziehungen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf das „unabhängige Selbstkonzept“ (Markus & Kitayama) zu?",
+    "a": "Es betont die Verbundenheit mit sozialen Gruppen.",
+    "b": "Es definiert das Selbst durch einzigartige Eigenschaften und Ziele.",
+    "c": "Es ist typisch für ostasiatische Kulturen.",
+    "d": "Es ignoriert die Rolle sozialer Vergleiche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist das Bedürfnis nach „Selbstkonsistenz“ in individualistischen Kulturen stärker ausgeprägt?",
+    "a": "Weil Gruppennormen starre Selbstbilder vorgeben.",
+    "b": "Weil die Betonung auf individueller Stabilität und Einzigartigkeit liegt.",
+    "c": "Weil soziale Medien konsistente Selbstdarstellung fördern.",
+    "d": "Weil Introspektion in diesen Kulturen effektiver ist.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Labeling-Theorie (Goffman) besagt, dass …",
+    "a": "Selbstbilder ausschließlich durch Introspektion entstehen.",
+    "b": "soziale Zuschreibungen (z. B. Stigmata) das Selbstkonzept internalisiert werden.",
+    "c": "Selbstschemata unveränderlich sind.",
+    "d": "Abwärtsvergleiche den Selbstwert stabilisieren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Beispiel für „Stigma-Management“ nach Goffman ist …",
+    "a": "die Vermeidung aller sozialen Interaktionen.",
+    "b": "die gezielte Offenlegung des Stigmas zur Kontrolle der Situation.",
+    "c": "die Nutzung von Selbstbehinderung.",
+    "d": "die Ablehnung der eigenen Identität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wirkt sich ein Stigma auf das Selbstbild aus?",
+    "a": "Es erhöht die Selbstkomplexität.",
+    "b": "Es führt zur Internalisierung negativer Fremdzuschreibungen.",
+    "c": "Es aktiviert den Promotionsfokus.",
+    "d": "Es verstärkt die Selbstkontinuität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Personen mit hoher Selbstüberwachung …",
+    "a": "orientieren sich an internen Werten, unabhängig vom Kontext.",
+    "b": "passen ihr Verhalten an situative Erwartungen an.",
+    "c": "vermeiden soziale Vergleiche.",
+    "d": "zeigen geringe Selbstkomplexität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage beschreibt „niedrige Selbstüberwachung“?",
+    "a": "Starke Ausrichtung an Gruppennormen.",
+    "b": "Konsistenz zwischen Einstellungen und Verhalten.",
+    "c": "Häufige Nutzung von Abwärtsvergleichen.",
+    "d": "Hohe Anfälligkeit für Selbsterschöpfung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "In welchem Kontext ist hohe Selbstüberwachung vorteilhaft?",
+    "a": "Bei kreativen Tätigkeiten, die Individualität erfordern.",
+    "b": "In sozialen Situationen mit unklaren Erwartungen.",
+    "c": "Bei der Reflexion des Ideal-Selbst.",
+    "d": "In Phasen der Selbsterschöpfung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie beeinflussen soziale Medien die Selbstwahrnehmung laut Forschung (Cingel et al., 2022)?",
+    "a": "Sie fördern realistische Selbsteinschätzungen.",
+    "b": "Sie verstärken den Fokus auf das Soll-Selbst.",
+    "c": "Sie begünstigen unrealistische Aufwärtsvergleiche.",
+    "d": "Sie reduzieren die Selbstkomplexität.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein Risiko der „sozialen Spiegelung“ in sozialen Medien?",
+    "a": "Die Entwicklung eines stabilen Arbeitsselbstkonzepts.",
+    "b": "Die Übernahme fremder Ideal-Selbst-Vorstellungen.",
+    "c": "Die Stärkung der personalen Identität.",
+    "d": "Die Erhöhung der Selbstkontrollressourcen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum nutzen Menschen selektiv positive Selbstaspekte in sozialen Medien?",
+    "a": "Um das Bedürfnis nach Selbstkonsistenz zu befriedigen.",
+    "b": "Um Selbstwert durch präsentierte Idealbilder zu schützen.",
+    "c": "Um soziale Identitäten zu dekonstruieren.",
+    "d": "Um die Selbstkomplexität zu reduzieren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der Verhaltenstherapie wird die Selbstwahrnehmungstheorie genutzt, um …",
+    "a": "soziale Vergleiche zu eliminieren.",
+    "b": "schrittweise Desensibilisierung durch Erfolgserlebnisse zu erreichen.",
+    "c": "das Ideal-Selbst zu ignorieren.",
+    "d": "die Selbstüberwachung zu reduzieren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie hilft Schülern mit niedrigem Selbstwertgefühl laut pädagogischer Psychologie?",
+    "a": "Temporale Vergleiche („Ich bin besser als früher“).",
+    "b": "Häufige Abwärtsvergleiche mit Klassenkameraden.",
+    "c": "Fokussierung auf das Soll-Selbst.",
+    "d": "Vermeidung aller Leistungsrückmeldungen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie wirkt sich hohe Selbstkomplexität in der Stressbewältigung aus?",
+    "a": "Sie verstärkt die emotionale Belastung.",
+    "b": "Sie puffert negative Auswirkungen durch Diversität der Selbstaspekte.",
+    "c": "Sie fördert die Selbsterschöpfung.",
+    "d": "Sie reduziert die Fähigkeit zur Selbstregulation.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was untersuchte Hazel Markus in ihrer Studie zu Selbstschemata (1977)?",
+    "a": "Die Auswirkung von Spiegelungen auf das Selbstwertgefühl.",
+    "b": "Die Reaktionszeiten bei schemakonsistenten vs. -inkonsistenten Begriffen.",
+    "c": "Die Rolle sozialer Medien in der Selbstwahrnehmung.",
+    "d": "Die Internalisierung von Stigmata.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Experiment von Duval & Wicklund (1972) zur Selbstaufmerksamkeit …",
+    "a": "wurden Teilnehmer durch Spiegel konfrontiert, was negative Emotionen auslöste.",
+    "b": "zeigten Personen mit hoher Selbstkomplexität stärkere Reaktionen.",
+    "c": "wurde die Selbstkontinuität als Illusion entlarvt.",
+    "d": "führte Selbstüberwachung zur Selbsterschöpfung.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was zeigte die Studie von Linville (1985) zur Selbstkomplexität?",
+    "a": "Niedrige Komplexität führt zu emotionaler Stabilität.",
+    "b": "Hohe Komplexität mildert die Auswirkungen negativer Ereignisse.",
+    "c": "Selbstkomplexität ist unabhängig vom kulturellen Kontext.",
+    "d": "Komplexe Selbstbilder reduzieren die Selbstregulationsfähigkeit.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie beeinflusst die soziale Identität das Verhalten in Gruppen?",
+    "a": "Sie reduziert die Konformität zu Gruppennormen.",
+    "b": "Sie fördert die Abwertung von Fremdgruppen.",
+    "c": "Sie verstärkt den Fokus auf das materielle Selbst.",
+    "d": "Sie erhöht die Selbstüberwachung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das „Minimalgruppen-Paradigma“ (Tajfel)?",
+    "a": "Die Bildung von Gruppen basierend auf tiefen sozialen Bindungen.",
+    "b": "Die Tendenz, willkürliche Gruppeneinteilungen zur Selbstwertsteigerung zu nutzen.",
+    "c": "Die Vermeidung sozialer Vergleiche in homogenen Gruppen.",
+    "d": "Die Rolle kritischer Attribute in Leistungssituationen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum definieren Menschen ihr Selbst in intergruppalen Konflikten eher als „Wir“?",
+    "a": "Um die Selbstkomplexität zu erhöhen.",
+    "b": "Um die persönliche Verantwortung zu reduzieren.",
+    "c": "Aufgrund des Bedürfnisses nach sozialer Kohäsion und Abgrenzung.",
+    "d": "Weil Introspektion in Konflikten unmöglich ist.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Kritik wird an der Theorie der Selbsterschöpfung geäußert?",
+    "a": "Sie ignoriert kulturelle Unterschiede in der Selbstregulation.",
+    "b": "Die empirische Evidenz ist inkonsistent und Effekte sind klein.",
+    "c": "Sie überschätzt die Rolle des Ideal-Selbst.",
+    "d": "Sie ist nur in Laborumgebungen anwendbar.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine Limitation der Selbstdiskrepanztheorie?",
+    "a": "Sie berücksichtigt keine sozialen Identitäten.",
+    "b": "Sie vernachlässigt den Einfluss situativer Faktoren auf Diskrepanzen.",
+    "c": "Sie ist nicht auf klinische Kontexte übertragbar.",
+    "d": "Sie unterschätzt die Rolle von Aufwärtsvergleichen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist die Übertragung westlicher Selbstkonzepte auf andere Kulturen problematisch?",
+    "a": "Weil kollektivistische Kulturen keine Selbstschemata entwickeln.",
+    "b": "Weil „Selbstwertgefühl“ in allen Kulturen gleich definiert ist.",
+    "c": "Weil kulturelle Unterschiede in der Selbstdefinition ignoriert werden.",
+    "d": "Weil soziale Medien globale Einheitlichkeit erzeugen.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Eine Person, die nach einer gescheiterten Beziehung ihre Fehler externalisiert („Er/Sie war schuld“), nutzt …",
+    "a": "Selbstbehinderung.",
+    "b": "Wegattribuierung.",
+    "c": "Aufwärtsvergleiche.",
+    "d": "Promotion-Fokus.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Manager mit hoher Selbstüberwachung wird in einem Vorstellungsgespräch …",
+    "a": "seine wahren Einstellungen offenlegen.",
+    "b": "sein Verhalten an die Erwartungen des Interviewers anpassen.",
+    "c": "soziale Vergleiche vermeiden.",
+    "d": "das Ideal-Selbst aktivieren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Eine Schülerin, die nach einer schlechten Note sagt: „Nächstes Mal lerne ich früher“, zeigt …",
+    "a": "Selbsterschöpfung.",
+    "b": "Selbstbehinderung.",
+    "c": "Promotion-Fokus.",
+    "d": "Abwärtsvergleich.",
+    "richtig": "c"
+  }    
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
