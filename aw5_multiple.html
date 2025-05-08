@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selbstkonzept-Quiz</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    .quiz-box {
+      background: #1e1e1e;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    button {
+      background-color: #007aff;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px 10px 0 0;
+    }
+    button:hover {
+      background-color: #005fcc;
+    }
+    #ergebnis {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #232323;
+      border-radius: 10px;
+    }
+    .falsch {
+      color: #ff6b6b;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quiz zum Selbstkonzept</h1>
+
+  <div id="quiz-container"></div>
+
+  <button onclick="auswerten()">Auswerten</button>
+  <button onclick="neustart()">Quiz neu starten</button>
+
+  <div id="ergebnis"></div>
+
+  <script>
+    const questions = [
+      {
+        frage: "An welchen Kriterien kann man erkennen, dass Udo eine geringe Selbstkomplexität nach Linville (1985) aufweist?",
+        a: "Udos Selbstaspekte stehen in einem engen kognitiven Zusammenhang.",
+        b: "Udo weist nur relativ wenige Selbstaspekte auf.",
+        c: "Bei Misserfolg oder negativer Bewertung eines Selbstaspekts wird nicht die Bewertung des gesamten Selbst in Mitleidenschaft gezogen.",
+        d: "Udos Selbstkomplexität fungiert nicht als psychologischer Puffer gegen die selbstwertbedrohlichen Folgen negativer Ereignisse.",
+        e: "Udos geringe Selbstkomplexität resultiert aus relativ voneinander unabhängigen Selbstaspekten.",
+        richtig: ["a", "b", "d"]
+      },
+      {
+        frage: "Welche Strategien könnten Sie laut Tesser (1988) anwenden, um Ihr Selbstwertgefühl aufrechtzuerhalten, wenn Sie erstmals im Tennis von Ihrem engen Freund geschlagen wurden?",
+        a: "Sie könnten versuchen, Ihre eigene Leistung zu verbessern.",
+        b: "Sie könnten sich von Ihrem Freund distanzieren.",
+        c: "Sie werten den Erfolg Ihres Freundes gedanklich ab und konzentrieren sich vielmehr auf die Bereiche, in denen Sie im Vergleich zu Ihrem Freund besser abschneiden.",
+        d: "Sie könnten nun besonders die Nähe ihres Freundes suchen.",
+        e: "Sie vergleichen sich zukünftig nur noch mit Mannschaftskollegen, die schlechter als Sie abschneiden.",
+        richtig: ["a", "b", "c", "e"]
+      },
+      {
+        frage: "Welche der folgenden Aussagen beschreiben laut der Theorie der sozialen Identität bzw. Selbstkategorisierungstheorie die Selbstdefinition im Sinne sozialer Identität?",
+        a: "Jenny und Hillary verbringen den Nachmittag zusammen in einem Café, wobei sie sich über ihre gemeinsamen Hobbys austauschen.",
+        b: "Steve und Jack diskutieren mit Zoe und Stella über die Frauenquote in Unternehmen, wobei die Frauen gemeinsam eine ablehnende und die Männer gemeinsam eine befürwortende Position einnehmen.",
+        c: "Klara und Klaus wollen sich einen Hund kaufen, können sich jedoch nicht einigen, da ihre Präferenzen diesbezüglich zu unterschiedlich sind.",
+        d: "Lucy und Harriet sind mit ihren Freunden Elijah und Benjamin unterwegs. Im Laufe des Abends entbrennt eine hitzige Diskussion über das umstrittene Dieselfahrverbot. Lucy und Elijah, die beide Mitglied bei Greenpeace sind, befürworten Dieselfahrverbote, wohingegen Harriet und Benjamin als langjährige FDP-Mitglieder, gegen die Fahrverbote stimmen.",
+        e: "Mert und Mustafa gehen gerne ins Kino. Daher diskutieren sie häufig über neue Filme und welche sie jeweils besonders gerne mögen.",
+        richtig: ["b", "d"]
+      },
+      {
+        frage: "Welche Aussagen aus dem Studienbrief 1, Kapitel 7 zu Selbst und Identität treffen zu?",
+        a: "Während in Selbstaspekten relativ zeitstabile und zentrale Informationen bezüglich der eigenen Person organisiert sind, beziehen sich Selbstschemata auch auf weniger relevante oder zeitlich fluktuierende Merkmale einer Person.",
+        b: "Experimente von Linville (1985) zeigen, dass eine hohe Selbstkomplexität als psychologischer Puffer gegen die selbstwertdienlichen Folgen negativer Ereignisse fungieren kann.",
+        c: "Gemäß der Theorie der sozialen Vergleichsprozesse (Festinger, 1954) leisten soziale Vergleiche mit anderen Menschen einen wichtigen Beitrag zur Selbsterkenntnis.",
+        d: "Die Selbstwahrnehmungstheorie von Daryl Cooley (1972) besagt, dass sich Menschen in altbekannten Situationen wie eine externe beobachtende Person verhalten, die auf der Grundlage des beobachtbaren Verhaltens auf ihre eigenen individuellen Merkmale und inneren Zustände schließt.",
+        e: "Personale Identität: Der Begriff bezieht sich auf eine Selbstdefinition als austauschbares Gruppenmitglied, die aus einer intergruppalen Differenzierung zwischen Eigen- und Fremdgruppe auf der Basis gruppentypischer Merkmale resultiert („wir“ vs. „die“).",
+        richtig: ["c"]
+      },
+      {
+        frage: "Welche der aufgeführten Begriffe, Konstrukte und Theorien liefern Erklärungsprinzipien zu Quellen selbstbezogenen Wissens?",
+        a: "Introduktion",
+        b: "Selbstwahrnehmungstheorie von Daryl Bem",
+        c: "„Looking-glass self“",
+        d: "Aufwärts gerichtete Vergleiche",
+        e: "Abwärts gerichtete Vergleiche",
+        richtig: ["b", "c", "d", "e"]
+      }
+    ];
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    function renderQuiz() {
+      quizContainer.innerHTML = "";
+      questions.forEach((q, index) => {
+        const box = document.createElement("div");
+        box.classList.add("quiz-box");
+
+        let questionHTML = `<p class="question">${index + 1}. ${q.frage}</p>`;
+
+        // Dynamisch durch Antwortoptionen iterieren
+        Object.entries(q).forEach(([key, value]) => {
+          if (["a", "b", "c", "d", "e", "f", "g"].includes(key)) {
+            questionHTML += `
+              <label><input type="checkbox" name="frage${index}" value="${key}"> ${value}</label>
+            `;
+          }
+        });
+
+        box.innerHTML = questionHTML;
+        quizContainer.appendChild(box);
+      });
+    }
+
+    function auswerten() {
+      let punkte = 0;
+      let ergebnisHTML = "";
+      const gesamt = questions.length;
+
+      questions.forEach((q, index) => {
+        const selected = Array.from(document.querySelectorAll(`input[name=frage${index}]:checked`))
+                              .map(cb => cb.value).sort();
+        const korrekt = [...q.richtig].sort();
+        const istRichtig = JSON.stringify(selected) === JSON.stringify(korrekt);
+
+        if (istRichtig) {
+          punkte++;
+        } else {
+          ergebnisHTML += `
+            <p class="falsch"><strong>Frage ${index + 1}:</strong> ${q.frage}<br>
+            Deine Antwort: ${selected.join(", ") || "(keine Antwort)"}<br>
+            Richtige Antwort: ${korrekt.join(", ")}</p>
+          `;
+        }
+      });
+
+      const prozent = Math.round((punkte / gesamt) * 100);
+
+      document.getElementById("ergebnis").innerHTML = `
+        <h2>Dein Ergebnis</h2>
+        <p>Richtig beantwortet: <strong>${punkte} von ${gesamt}</strong> (${prozent}%)</p>
+        ${punkte === gesamt ? "<p>Super! Alles richtig ✅</p>" : ""}
+        ${ergebnisHTML}
+      `;
+    }
+
+    function neustart() {
+      // Checkboxen zurücksetzen
+      document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      document.getElementById("ergebnis").innerHTML = "";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    renderQuiz();
+  </script>
+
+</body>
+</html>
+
