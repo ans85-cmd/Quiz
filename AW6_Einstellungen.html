@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+        "frage": "Welche drei Komponenten umfasst das klassische Einstellungsmodell?",
+        "a": "Affektiv, evaluativ, reaktiv",
+        "b": "Kognitiv, affektiv, konativ",
+        "c": "Affektiv, konativ, deskriptiv",
+        "d": "Kognitiv, behavioristisch, emotional",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die kognitive Einstellungskomponente?",
+        "a": "Automatische Gefühlsreaktionen",
+        "b": "Überzeugungen/Wissen über das Objekt",
+        "c": "Beobachtetes Verhalten",
+        "d": "Soziale Normen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Ein Umweltaktivist empfindet Ekel beim Anblick von Plastikmüll. Welche Komponente dominiert?",
+        "a": "Affektiv",
+        "b": "Kognitiv",
+        "c": "Konativ",
+        "d": "Ambivalent",
+        "richtig": "a"
+    },
+    {
+        "frage": "Was kennzeichnet eine ambivalente Einstellung?",
+        "a": "Nur schwach ausgeprägt",
+        "b": "Gleichzeitig starke positive und negative Bewertungen",
+        "c": "Rein rational begründet",
+        "d": "Von sozialen Normen geprägt",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welches Verfahren misst explizite Einstellungen?",
+        "a": "IAT",
+        "b": "Likert-Skala",
+        "c": "Reaktionszeit",
+        "d": "FMRT",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist problematisch an dem Item „Lesben passen nicht in unsere Gesellschaft“?",
+        "a": "Soziale Erwünschtheit",
+        "b": "Misst implizite Einstellung",
+        "c": "Keine Mittelkategorie",
+        "d": "Zu positiv formuliert",
+        "richtig": "a"
+    },
+    {
+        "frage": "Warum gilt der IAT als implizites Verfahren?",
+        "a": "Bewusste Reflexion nötig",
+        "b": "Misst unbewusste Assoziationen via Reaktionszeit",
+        "c": "Nutzt verbale Angaben",
+        "d": "Nur für Labore geeignet",
+        "richtig": "b"
+    },
+    {
+        "frage": "Kritiker des IAT argumentieren, dass er ...",
+        "a": "... zu stark mit expliziten Einstellungen korreliert.",
+        "b": "... kulturelle Stereotype statt persönliche Einstellungen misst.",
+        "c": "... keine validen Ergebnisse liefert.",
+        "d": "... zu lang dauert.",
+        "richtig": "b"
+    },
+    {
+        "frage": "Ein Kind entwickelt Angst nach Hundebiss. Mechanismus?",
+        "a": "Operante Konditionierung",
+        "b": "Klassische Konditionierung",
+        "c": "Mere-Exposure",
+        "d": "Sozialer Vergleich",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was besagt der Mere-Exposure-Effekt?",
+        "a": "Wiederholung macht negativ",
+        "b": "Wiederholung neutraler Reize → positiv bewertet",
+        "c": "Nur bei starker Motivation",
+        "d": "Führt zu Dissonanz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Sportwagenwerbung mit Euphorie-Musik nutzt ...",
+        "a": "Mere-Exposure",
+        "b": "Klassische Konditionierung",
+        "c": "Heuristik",
+        "d": "Dissonanz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Laut Selbstwahrnehmungstheorie (Bem, 1972) leiten Menschen Einstellungen ab aus ...",
+        "a": "Normen",
+        "b": "Emotionen",
+        "c": "Eigenem Verhalten",
+        "d": "Genetik",
+        "richtig": "c"
+    },
+    {
+        "frage": "Warum ist der Zusammenhang Einstellung–Verhalten schwach?",
+        "a": "Immer ambivalent",
+        "b": "Situative Faktoren überlagern Verhalten",
+        "c": "Menschen lügen",
+        "d": "Keine validen Methoden",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was fordert das TACT-Korrespondenzprinzip?",
+        "a": "Übereinstimmung in Ziel, Handlung, Kontext & Zeit",
+        "b": "Kombination implizit/explicit",
+        "c": "Gewichtung Normen",
+        "d": "Mehrdimensionale Messung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Zusätzliche Variable der Theorie geplanten Verhaltens?",
+        "a": "Subjektive Norm",
+        "b": "Einstellung zum Verhalten",
+        "c": "Wahrgenommene Verhaltenskontrolle",
+        "d": "Intention",
+        "richtig": "c"
+    },
+    {
+        "frage": "Eine Person mit hoher Selbstüberwachung orientiert sich an ...",
+        "a": "Persönlicher Überzeugung",
+        "b": "Reaktionen anderer",
+        "c": "Impliziten Einstellungen",
+        "d": "Emotionen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Elaboration-Likelihood-Modell unterscheidet ...",
+        "a": "Implizit vs. explizit",
+        "b": "Zentrale vs. periphere Route",
+        "c": "Emotional vs. rational",
+        "d": "Individuell vs. kollektiv",
+        "richtig": "b"
+    },
+    {
+        "frage": "CO₂-Kampagne mit Statistiken → welche Route?",
+        "a": "Peripher",
+        "b": "Zentral",
+        "c": "Heuristisch",
+        "d": "Emotional",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was begünstigt die periphere Route?",
+        "a": "Relevanz",
+        "b": "Geringe kognitive Kapazität",
+        "c": "Expertenstatus",
+        "d": "Ambivalenz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Slogan „Ich bin seit 20 Jahren im Amt!“ aktiviert ...",
+        "a": "Expertenheuristik",
+        "b": "Attraktivitätsheuristik",
+        "c": "Längenheuristik",
+        "d": "Sympathie",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Faktor steigert die Wirkung zentraler Argumente laut ELM?",
+        "a": "Reizintensität",
+        "b": "Hohe persönliche Relevanz",
+        "c": "Attraktiver Kommunikator",
+        "d": "Geringe Motivation",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die Reaktanztheorie?",
+        "a": "Verhalten folgt aus Emotionen",
+        "b": "Einstellungen entstehen durch Gewöhnung",
+        "c": "Widerstand gegen wahrgenommene Einschränkungen der Freiheit",
+        "d": "Beeinflussung durch Experten",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was sind 'Boomerang-Effekte' in der Persuasionsforschung?",
+        "a": "Unerwartete Meinungsänderung in gewünschter Richtung",
+        "b": "Rückkehr zu alter Einstellung nach Persuasion",
+        "c": "Einstellungsänderung in gegenteilige Richtung",
+        "d": "Wechsel zwischen zentraler und peripherer Route",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wodurch können Boomerang-Effekte ausgelöst werden?",
+        "a": "Sympathischer Kommunikator",
+        "b": "Übermäßiger Druck oder Manipulation",
+        "c": "Emotionale Appelle",
+        "d": "Langfristige Wiederholung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt Einstellungsimpfung (Inoculation Theory)?",
+        "a": "Impfung gegen emotionale Appelle",
+        "b": "Verminderung kognitiver Dissonanz",
+        "c": "Widerstand durch Vorwarnung & Gegenargumente",
+        "d": "Verstärkung positiver Einstellungen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Rolle spielt Commitment bei Persuasion?",
+        "a": "Macht Botschaft weniger effektiv",
+        "b": "Verhindert kognitive Dissonanz",
+        "c": "Stärkt Einstellungsstabilität durch Bindung",
+        "d": "Reduziert Motivation zur Verarbeitung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist evaluative Konditionierung?",
+        "a": "Bewertung über Wiederholung",
+        "b": "Verknüpfung neutraler Reize mit positiven/negativen Stimuli",
+        "c": "Verarbeitung widersprüchlicher Argumente",
+        "d": "Einstellung durch operante Verstärkung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was fördert den Erfolg evaluativer Konditionierung?",
+        "a": "Explizite Argumente",
+        "b": "Hohe Aufmerksamkeit",
+        "c": "Unbewusste Reizdarbietung",
+        "d": "Zentrale Verarbeitung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was bedeutet Einstellungsstärke?",
+        "a": "Häufigkeit der Einstellung",
+        "b": "Stabilität, Sicherheit, Verhaltenseinfluss",
+        "c": "Anzahl der Komponenten",
+        "d": "Kognitive Komplexität",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Einstellungskomponenten korrelieren am stärksten mit Verhalten?",
+        "a": "Affektive",
+        "b": "Kognitive",
+        "c": "Konative",
+        "d": "Explizite",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was beschreibt die Balance-Theorie (Heider)?",
+        "a": "Beziehung zwischen kognitiver und emotionaler Einstellung",
+        "b": "Streben nach Konsistenz zwischen Personen und Objekten",
+        "c": "Balance von Pro- und Contra-Argumenten",
+        "d": "Zusammenhang zwischen Handlung und Einstellung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein zentrales Merkmal kognitiver Dissonanz?",
+        "a": "Harmonie zwischen Überzeugung und Handlung",
+        "b": "Unbewusste Einstellungsänderung",
+        "c": "Motivation zur Reduktion unangenehmer Inkonsistenz",
+        "d": "Zufällige Meinungsänderung",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wie kann kognitive Dissonanz reduziert werden?",
+        "a": "Vermeidung sozialer Vergleiche",
+        "b": "Änderung einer Kognition oder Verhalten",
+        "c": "Verdrängung aller Gedanken",
+        "d": "Vermeidung emotionaler Reize",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die Foot-in-the-door-Technik?",
+        "a": "Erst große, dann kleine Bitte",
+        "b": "Erst kleine, dann größere Bitte",
+        "c": "Direkter Appell",
+        "d": "Drohen mit Sanktion",
+        "richtig": "b"
+    },
+    {
+        "frage": "Warum funktioniert Foot-in-the-door?",
+        "a": "Erzeugt emotionale Dissonanz",
+        "b": "Erhöht wahrgenommene Selbstkonsistenz",
+        "c": "Reduziert Reaktanz",
+        "d": "Beruht auf operanter Konditionierung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist der Unterschied zwischen Einstellung und Meinung?",
+        "a": "Meinung ist stabiler",
+        "b": "Einstellung ist kognitiv, Meinung affektiv",
+        "c": "Meinung ist spezifischer und verbalisierbar",
+        "d": "Einstellung ist situationsabhängig",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was misst der IAT primär?",
+        "a": "Explizite Einstellungen",
+        "b": "Soziale Erwünschtheit",
+        "c": "Reaktionszeiten zur Erfassung impliziter Assoziationen",
+        "d": "Kognitive Dissonanz",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welcher Faktor schwächt die Einstellung–Verhaltens-Korrelation?",
+        "a": "Hohe Einstellungsstärke",
+        "b": "Hohe Zeitverzögerung zwischen Messung und Verhalten",
+        "c": "Hohe Motivation",
+        "d": "Niedrige Dissonanz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Ein Auto wird wegen Umweltaspekten abgelehnt – welche Einstellungskomponente?",
+        "a": "Affektiv",
+        "b": "Kognitiv",
+        "c": "Konativ",
+        "d": "Evaluativ",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein Beispiel für periphere Hinweisreize?",
+        "a": "Qualität der Argumente",
+        "b": "Anzahl der Argumente",
+        "c": "Statistische Daten",
+        "d": "Kausalität",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist eine Voraussetzung für zentrale Verarbeitung laut ELM?",
+        "a": "Geringes Interesse",
+        "b": "Ablenkung",
+        "c": "Hohe Motivation und Fähigkeit zur Verarbeitung",
+        "d": "Emotionale Argumente",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was bedeutet 'Konsistenztheorie' im Einstellungskontext?",
+        "a": "Wahrnehmung folgt Motivation",
+        "b": "Einstellungen und Verhalten sind zufällig",
+        "c": "Menschen streben nach Widerspruchsfreiheit in Kognitionen",
+        "d": "Emotionen beeinflussen alle Einstellungen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Wie entsteht laut Selbstwahrnehmungstheorie eine Einstellung?",
+        "a": "Durch Analyse eigener Emotionen",
+        "b": "Durch Beobachtung des eigenen Verhaltens",
+        "c": "Durch soziale Normen",
+        "d": "Durch persuasive Kommunikation",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein zentraler Kritikpunkt an impliziten Einstellungsmessungen?",
+        "a": "Zu teuer",
+        "b": "Zu explizit",
+        "c": "Geringe Validität bei komplexen Einstellungen",
+        "d": "Nur bei Kindern einsetzbar",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was misst ein evaluativer Priming-Test?",
+        "a": "Verhalten",
+        "b": "Emotionale Reaktionen",
+        "c": "Assoziationsstärke zwischen Objekt und Bewertung",
+        "d": "Soziale Erwünschtheit",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist laut Ajzen & Fishbein zentral für die Entstehung von Verhalten?",
+        "a": "Soziale Erwünschtheit",
+        "b": "Intention",
+        "c": "Emotionale Reize",
+        "d": "Konditionierte Reflexe",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die Theorie des geplanten Verhaltens?",
+        "a": "Einstellungen entstehen durch Gruppenzwang",
+        "b": "Verhalten ist zufällig",
+        "c": "Intention wird durch Einstellung, subjektive Norm und wahrgenommene Kontrolle bestimmt",
+        "d": "Verhalten wird primär durch Gene bestimmt",
+        "richtig": "c"
+    },
+    {
+        "frage": "Welche Komponente der Theorie des geplanten Verhaltens berücksichtigt externale Einflüsse?",
+        "a": "Einstellung",
+        "b": "Subjektive Norm",
+        "c": "Wahrgenommene Verhaltenskontrolle",
+        "d": "Intention",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was ist eine Moderatorvariable im Einstellungs-Verhaltens-Zusammenhang?",
+        "a": "Variable, die eine Einstellung direkt beeinflusst",
+        "b": "Variable, die den Zusammenhang zwischen Einstellung und Verhalten beeinflusst",
+        "c": "Unabhängige Variable",
+        "d": "Latente Variable",
+        "richtig": "b"
+    },
+    {
+        "frage": "Wie kann man laut MODE-Modell Verhalten vorhersagen?",
+        "a": "Nur über Gewohnheiten",
+        "b": "Nur über bewusste Intentionen",
+        "c": "Durch spontane oder überlegte Prozesse je nach Motivation und Gelegenheit",
+        "d": "Nur bei stark ausgeprägten Einstellungen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was fördert laut MODE-Modell eine spontane Verhaltenssteuerung?",
+        "a": "Hohe Motivation",
+        "b": "Fehlende Gelegenheit zur Reflexion",
+        "c": "Geringe Einstellung",
+        "d": "Hohe kognitive Kontrolle",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was bezeichnet 'Affektives Priming'?",
+        "a": "Emotionsausdruck nach Verhalten",
+        "b": "Automatische Bewertung durch vorausgehende emotionale Reize",
+        "c": "Intentionales Denken über Gefühle",
+        "d": "Bewusstes Kategorisieren emotionaler Begriffe",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Rolle spielt Zugänglichkeit bei Einstellungen?",
+        "a": "Keine Rolle",
+        "b": "Beeinflusst Geschwindigkeit und Wahrscheinlichkeit von Verhaltensauslösung",
+        "c": "Erhöht soziale Erwünschtheit",
+        "d": "Reduziert Reaktanz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist 'Attitude-Accessibility'?",
+        "a": "Verfügbarkeit einer Einstellung im Gedächtnis",
+        "b": "Emotionale Bewertung eines Objekts",
+        "c": "Soziale Norm über Einstellungen",
+        "d": "Wertigkeit von Argumenten",
+        "richtig": "a"
+    },
+    {
+        "frage": "Wie wirkt Wiederholung auf Einstellungen?",
+        "a": "Reduziert Glaubwürdigkeit",
+        "b": "Kann Einstellung verstärken",
+        "c": "Löst Reaktanz aus",
+        "d": "Erhöht Kontraargumentation",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist die zentrale Idee des 'Sleeper-Effekts'?",
+        "a": "Informationen von unglaubwürdigen Quellen wirken später stärker",
+        "b": "Einstellung bleibt konstant",
+        "c": "Vergessen führt zu Einstellungsverlust",
+        "d": "Nur emotionale Botschaften wirken langfristig",
+        "richtig": "a"
+    },
+    {
+        "frage": "Wie lässt sich der Sleeper-Effekt erklären?",
+        "a": "Über Aufmerksamkeit",
+        "b": "Entkopplung der Botschaft von der Quelle über Zeit",
+        "c": "Durch Verstärkung",
+        "d": "Über Reaktanz",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein häufiges Maß zur Erfassung expliziter Einstellungen?",
+        "a": "IAT",
+        "b": "Fragebogen mit Likert-Skala",
+        "c": "Physiologische Reaktion",
+        "d": "Reaktionszeit-Messung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein Nachteil von expliziten Messverfahren?",
+        "a": "Keine Standardisierung",
+        "b": "Nicht valide",
+        "c": "Anfällig für soziale Erwünschtheit",
+        "d": "Unzureichend für Kinder",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was unterscheidet duale Einstellungsmodelle?",
+        "a": "Unterscheidung zwischen zentralen und peripheren Einstellungen",
+        "b": "Unterscheidung zwischen affektiven und kognitiven Komponenten",
+        "c": "Unterscheidung zwischen bewussten (expliziten) und automatischen (impliziten) Einstellungen",
+        "d": "Unterscheidung zwischen starken und schwachen Einstellungen",
+        "richtig": "c"
+    },
+    {
+        "frage": "Was bezeichnet die Theory of Reasoned Action?",
+        "a": "Verhalten wird primär durch genetische Faktoren bestimmt",
+        "b": "Verhalten hängt von Einstellungen und subjektiven Normen ab",
+        "c": "Verhalten wird durch zufällige äußere Reize ausgelöst",
+        "d": "Verhalten folgt direkten reflexiven Prozessen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist die Rolle von subjektiven Normen laut der Theory of Reasoned Action?",
+        "a": "Sie beeinflussen lediglich die Motivation zur Veränderung",
+        "b": "Sie bestimmen, ob ein Verhalten beabsichtigt wird",
+        "c": "Sie haben keine Rolle in der Theorie",
+        "d": "Sie erhöhen die Kontrolle über Verhalten",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was versteht man unter einer 'Selbstwahrnehmung' der Einstellung?",
+        "a": "Die Beobachtung des eigenen Verhaltens zur Bestimmung der eigenen Einstellung",
+        "b": "Die bewusste Reflektion der eigenen Gefühle",
+        "c": "Die bewusste Manipulation von Einstellungen",
+        "d": "Die unbewusste Einstellungskonditionierung",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welches Phänomen beschreibt die 'Kognitionsdissonanztheorie'?",
+        "a": "Menschen vermeiden kognitive Dissonanz, indem sie ihre Einstellungen ändern",
+        "b": "Menschen bevorzugen eine hohe Dissonanz in ihren Überzeugungen",
+        "c": "Einstellungen sind weniger stabil bei niedriger Dissonanz",
+        "d": "Kognitive Dissonanz hat keine Auswirkungen auf Einstellungen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Welcher Ansatz geht davon aus, dass Einstellungen durch Verhalten verändert werden können?",
+        "a": "Selbstwahrnehmungstheorie",
+        "b": "Kognitionsdissonanztheorie",
+        "c": "Modell der sozialen Normen",
+        "d": "Theorie der geplanten Verhaltensänderung",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt der Begriff 'Einstellungskongruenz'?",
+        "a": "Die Inkonsistenz zwischen Verhalten und Einstellung",
+        "b": "Die Stimmigkeit von Einstellungen mit den eigenen Überzeugungen",
+        "c": "Die Wechselwirkung zwischen emotionalen und kognitiven Komponenten",
+        "d": "Die Übereinstimmung von Einstellung und sozialer Norm",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was ist ein Beispiel für ein implizites Einstellungsmessverfahren?",
+        "a": "Fragebogen mit Likert-Skala",
+        "b": "Reaktionszeit-basierter Test",
+        "c": "Direkte Befragung",
+        "d": "Soziale Netzwerkanalyse",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Rolle spielt die 'Selbstwahrnehmung' in der Einstellungsbildung?",
+        "a": "Selbstwahrnehmung verändert ausschließlich kognitive Einstellungen",
+        "b": "Selbstwahrnehmung beeinflusst die Änderung von Einstellungen durch eigenes Verhalten",
+        "c": "Selbstwahrnehmung hat keinen Einfluss auf die Einstellungsbildung",
+        "d": "Selbstwahrnehmung führt zur Stärkung von Einstellungen",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was bedeutet der Begriff 'soziale Erwünschtheit' im Zusammenhang mit Einstellungsmessungen?",
+        "a": "Die Neigung, sozial akzeptierte Antworten zu geben",
+        "b": "Die Tendenz, eigene Einstellungen zu ändern",
+        "c": "Die Neigung, das Verhalten anderer zu analysieren",
+        "d": "Das bewusste Verbergen von negativen Einstellungen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Was ist eine typische Methode, um soziale Erwünschtheit zu kontrollieren?",
+        "a": "Verwendung von impliziten Messverfahren",
+        "b": "Verwendung offener Fragebögen",
+        "c": "Verwendung von anonymen Interviews",
+        "d": "Verwendung von Physiologie-Messungen",
+        "richtig": "a"
+    },
+    {
+        "frage": "Was bedeutet 'Reaktanz' im Zusammenhang mit Einstellungsänderung?",
+        "a": "Eine Vermeidung von Konfrontation",
+        "b": "Die Tendenz, die eigene Meinung zu verstärken, wenn sie bedroht wird",
+        "c": "Die Neigung, den Status quo zu akzeptieren",
+        "d": "Ein unbewusstes Verhalten, das Einstellungen beeinflusst",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche Theorie erklärt, warum Menschen in der Regel ihre Einstellungen ändern, um Dissonanz zu reduzieren?",
+        "a": "Selbstwahrnehmungstheorie",
+        "b": "Kognitionsdissonanztheorie",
+        "c": "Theorie der sozialen Vergleichsprozesse",
+        "d": "Theorie des sozialen Lernens",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die 'Theorie des kognitiven Lernens' im Hinblick auf Einstellungen?",
+        "a": "Einstellungen entstehen vorwiegend durch Wahrnehmung von Lernprozessen",
+        "b": "Verhaltensänderung führt nicht zwangsläufig zu einer Änderung von Einstellungen",
+        "c": "Verhalten wird von inneren Einstellungen direkt beeinflusst",
+        "d": "Einstellungen entstehen durch unbewusste Lernprozesse",
+        "richtig": "a"
+    },
+    {
+        "frage": "Was ist der Unterschied zwischen expliziten und impliziten Einstellungen?",
+        "a": "Explizite Einstellungen sind spontan, implizite sind reflektiert",
+        "b": "Explizite Einstellungen sind bewusst und über Sprache zugänglich, implizite sind unbewusst und nicht direkt zugänglich",
+        "c": "Explizite Einstellungen ändern sich schneller als implizite",
+        "d": "Es gibt keinen Unterschied",
+        "richtig": "b"
+    },
+    {
+        "frage": "Welche der folgenden Aussagen beschreibt die 'Zwei-Faktoren-Theorie' von Schachter & Singer?",
+        "a": "Emotionen sind ausschließlich biologisch bedingt",
+        "b": "Emotionen entstehen durch die Kombination von physiologischer Erregung und kognitiver Bewertung",
+        "c": "Emotionen sind das Ergebnis sozialer Normen",
+        "d": "Einstellungen entstehen durch soziale Einflüsse",
+        "richtig": "b"
+    },
+    {
+        "frage": "Was beschreibt die 'Selbstbestimmungstheorie' in Bezug auf Motivation?",
+        "a": "Motivation entsteht durch soziale Vergleiche",
+        "b": "Motivation ist ein rein kognitiver Prozess",
+        "c": "Motivation wird durch die Erfüllung von Grundbedürfnissen wie Autonomie, Kompetenz und sozialer Eingebundenheit beeinflusst",
+        "d": "Motivation ist immer extrinsisch",
+        "richtig": "c"
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
