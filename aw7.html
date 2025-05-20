@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Welche Definition trifft auf 'prosoziales Verhalten' am besten zu?",
+    "a": "Verhalten, das ausschließlich der eigenen Familie zugutekommt",
+    "b": "Verhalten, das gesellschaftlich als vorteilhaft für andere angesehen wird",
+    "c": "Verhalten, das nur in Notfallsituationen gezeigt wird",
+    "d": "Verhalten, das immer mit finanziellen Belohnungen verbunden ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Altruismus unterscheidet sich von egoistischem Helfen durch:",
+    "a": "Die Höhe der materiellen Kosten",
+    "b": "Die primäre Motivation, das Wohlergehen anderer zu verbessern",
+    "c": "Die Anwesenheit von Zuschauern",
+    "d": "Die Art der Hilfeleistung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zur Empathie-Altruismus-Hypothese (Batson) ist korrekt?",
+    "a": "Empathie führt nur bei Verwandten zu Hilfeverhalten",
+    "b": "Empathie motiviert altruistisches Helfen unabhängig von den Kosten",
+    "c": "Empathie verstärkt ausschließlich egoistische Motive",
+    "d": "Empathie ist irrelevant für Hilfeverhalten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das 'Negative-State-Relief-Modell' besagt, dass Menschen helfen, um:",
+    "a": "Soziale Anerkennung zu erhalten",
+    "b": "Eigene negative Gefühle zu reduzieren",
+    "c": "Die Kosten-Nutzen-Bilanz zu optimieren",
+    "d": "Genetische Verwandte zu schützen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Experiment von Darley & Batson (1973) zum 'guten Samariter' hatte welcher Faktor den stärksten Einfluss auf Hilfeverhalten?",
+    "a": "Die religiöse Überzeugung der Teilnehmer",
+    "b": "Der Zeitdruck der Teilnehmer",
+    "c": "Das Geschlecht der hilfebedürftigen Person",
+    "d": "Die Tageszeit des Experiments",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Batson's 'Elaine-Experiment' halfen Teilnehmer unter der Bedingung 'hohe Empathie':",
+    "a": "Nur bei hohen Kosten des Nicht-Helfens",
+    "b": "Unabhängig von den Kosten des Nicht-Helfens",
+    "c": "Ausschließlich bei finanzieller Belohnung",
+    "d": "Nur wenn andere Personen anwesend waren",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der Studie von Siem & Stürmer (2019) führte hoher Status des Helfenden zu:",
+    "a": "Höherer Attribution altruistischer Motive",
+    "b": "Höherer Attribution egoistischer Motive",
+    "c": "Keinem Einfluss auf die Motivation",
+    "d": "Erhöhter Spendenbereitschaft",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Meta-Analyse von Jung et al. (2020) zum prosozialen Modelllernen zeigte:",
+    "a": "Einen großen Effekt (g = 0.80)",
+    "b": "Einen moderaten Effekt (g = 0.45)",
+    "c": "Keinen signifikanten Effekt",
+    "d": "Nur Effekte bei Kindern",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Mechanismus erklärt am ehesten, warum Statushohe Helfer als egoistisch wahrgenommen werden?",
+    "a": "Verhaltensmimikry",
+    "b": "Attribution auf Publicity-Ziele",
+    "c": "Kognitive Dissonanz",
+    "d": "Soziale Normen",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der Studie zu HIV-Beratung (Mehnert et al.) war die Akzeptanz der Beratung am höchsten, wenn:",
+    "a": "Die Beraterin Hepatitis hatte",
+    "b": "Die Beraterin HIV-positiv war",
+    "c": "Die Beraterin keine Krankheit hatte",
+    "d": "Die Beraterin männlich war",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor moderierte den Effekt der Ähnlichkeit in der HIV-Studie am stärksten?",
+    "a": "Alter der Teilnehmerinnen",
+    "b": "Wahrgenommene Stigmatisierung",
+    "c": "Bildungsgrad",
+    "d": "Art der Erkrankung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Meta-Analyse zum Modelllernen war der stärkste Effekt zu beobachten, wenn:",
+    "a": "Das Modell bestraft wurde",
+    "b": "Die Hilfe dem Modell selbst galt",
+    "c": "Die Hilfe materiell war",
+    "d": "Die Beobachtung medial vermittelt war",
+    "richtig": "b"
+  },
+  {
+    "frage": "Hilfe anzunehmen kann für die Empfangenden bedrohlich sein, weil:",
+    "a": "Es immer Kosten verursacht",
+    "b": "Es die Autonomie und das Selbstwertgefühl beeinträchtigt",
+    "c": "Es gesetzlich verboten ist",
+    "d": "Es soziale Normen verstärkt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Stigmatisierung hemmt die Hilfesuche insbesondere bei:",
+    "a": "Personen mit hohem Bildungsgrad",
+    "b": "Gruppen mit bestehenden Stigmatisierungserfahrungen",
+    "c": "Kindern und Jugendlichen",
+    "d": "Männern in Führungspositionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der Studie zu Frauen mit HIV war der Mediator zwischen Ähnlichkeit und Hilfsakzeptanz:",
+    "a": "Finanzielle Ressourcen",
+    "b": "Wahrgenommenes Vertrauen und Empathie",
+    "c": "Soziale Unterstützung",
+    "d": "Krankheitsdauer",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum nehmen Männer seltener psychologische Hilfe in Anspruch?",
+    "a": "Sie haben seltener psychische Erkrankungen",
+    "b": "Traditionelle Maskulinitätsnormen behindern die Hilfesuche",
+    "c": "Therapeuten sind überwiegend männlich",
+    "d": "Psychotherapie ist für Männer unattraktiv gestaltet",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche psychische Störung ist bei Männern häufiger diagnostiziert?",
+    "a": "Depressionen",
+    "b": "Substanzmissbrauch",
+    "c": "Angststörungen",
+    "d": "Essstörungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Suizidrate ist in Russland bei Männern besonders hoch aufgrund:",
+    "a": "Geringerer Alkoholkonsum",
+    "b": "Traditioneller Geschlechtsrollen und Stigmatisierung",
+    "c": "Höherer Lebenserwartung",
+    "d": "Besseren Gesundheitssystems",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut systematischem Review (Yousaf et al.) ist ein Hauptgrund für verzögerte Hilfesuche bei Männern:",
+    "a": "Geringe Intelligenz",
+    "b": "Eingeschränkter emotionaler Ausdruck",
+    "c": "Fehlende Therapeuten",
+    "d": "Hohe Behandlungskosten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Theorie der Verwandtenselektion (Hamilton) erklärt Hilfeverhalten durch:",
+    "a": "Reziproke Altruismusnormen",
+    "b": "Maximierung der indirekten Fitness",
+    "c": "Soziale Lernprozesse",
+    "d": "Kulturelle Traditionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Reziproker Altruismus (Trivers) setzt voraus:",
+    "a": "Genetische Verwandtschaft",
+    "b": "Gegenseitige Hilfe über Zeit",
+    "c": "Öffentliche Anerkennung",
+    "d": "Staatliche Regulation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Reziprozitätsnorm beinhaltet:",
+    "a": "Hilfe nur für Familienmitglieder",
+    "b": "Gegenseitigkeit in Hilfebeziehungen",
+    "c": "Strafe für Nicht-Helfen",
+    "d": "Finanzielle Entlohnung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das Modell von Piliavin et al. (1981) sagt direkte Hilfe voraus, wenn:",
+    "a": "Kosten des Helfens hoch und Kosten des Nicht-Helfens niedrig sind",
+    "b": "Kosten des Helfens niedrig und Kosten des Nicht-Helfens hoch sind",
+    "c": "Beide Kosten hoch sind",
+    "d": "Beide Kosten niedrig sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Kostenklasse umfasst 'soziale Sanktionen für Nicht-Helfen'?",
+    "a": "Materielle Konsequenzen",
+    "b": "Soziale Konsequenzen",
+    "c": "Körperliche Konsequenzen",
+    "d": "Psychische Konsequenzen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der Bystander-Effekt beschreibt:",
+    "a": "Erhöhte Hilfsbereitschaft bei vielen Zeugen",
+    "b": "Verringerte Hilfsbereitschaft bei vielen Zeugen",
+    "c": "Hilfe nur durch medizinische Fachkräfte",
+    "d": "Keinen Einfluss der Zeugenanzahl",
+    "richtig": "b"
+  },
+  {
+    "frage": "Pluralistische Ignoranz bezieht sich auf:",
+    "a": "Fehlende medizinische Kenntnisse",
+    "b": "Kollektive Fehlinterpretation eines Notfalls",
+    "c": "Individuelle Verantwortungsübernahme",
+    "d": "Kulturelle Unterschiede im Helfen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Verantwortungsdiffusion tritt auf, weil:",
+    "a": "Einzelne sich überfordert fühlen",
+    "b": "Verantwortung auf mehrere Schultern verteilt wird",
+    "c": "Helfer bestraft werden",
+    "d": "Notfälle selten sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "Trainings zur Zivilcourage basieren oft auf dem Modell von:",
+    "a": "Bandura",
+    "b": "Latané & Darley",
+    "c": "Batson",
+    "d": "Cialdini",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die 'prosoziale Persönlichkeit' nach Penner umfasst:",
+    "a": "Extraversion und Neurotizismus",
+    "b": "Empathie und Hilfsbereitschaft",
+    "c": "Intelligenz und Kreativität",
+    "d": "Risikobereitschaft und Dominanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "'Prekäre Männlichkeit' bezieht sich auf:",
+    "a": "Biologische Unterschiede zwischen Geschlechtern",
+    "b": "Fragilität traditioneller Männlichkeitsnormen",
+    "c": "Höhere Suizidraten bei Frauen",
+    "d": "Gesellschaftliche Anerkennung von Heldenhaftigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Darley & Batsons Studie war das Design:",
+    "a": "2x2 faktoriell",
+    "b": "2x3 faktoriell",
+    "c": "Korrelational",
+    "d": "Qualitativ",
+    "richtig": "b"
+  },
+  {
+    "frage": "Eine Meta-Analyse:",
+    "a": "Ist eine Einzelfallstudie",
+    "b": "Fasst Ergebnisse mehrerer Studien quantitativ zusammen",
+    "c": "Untersucht nur Laborstudien",
+    "d": "Ignoriert kulturelle Unterschiede",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Meta-Analyse von Jung et al. (2020) variierte der Modellierungseffekt signifikant mit:",
+    "a": "Der Art der Belohnung",
+    "b": "Kulturellen Werten wie Kollektivismus/Individualismus",
+    "c": "Dem Alter der Teilnehmer",
+    "d": "Der Tageszeit der Studie",
+    "richtig": "b"
+  },
+  {
+    "frage": "In individualistischen Kulturen ist prosoziales Verhalten häufiger motiviert durch:",
+    "a": "Familienbindungen",
+    "b": "Persönliche Werte und Selbstbild",
+    "c": "Staatliche Vorschriften",
+    "d": "Religiöse Normen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Variable verstärkte den Modellierungseffekt in der Meta-Analyse am stärksten?",
+    "a": "Niedriges Alter der Teilnehmer",
+    "b": "Positive Verstärkung des Modells",
+    "c": "Geschlecht des Beobachters",
+    "d": "Mediale Vermittlung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Modelllernen ist besonders prägend in:",
+    "a": "Der späten Adoleszenz",
+    "b": "Der frühen Kindheit",
+    "c": "Dem mittleren Erwachsenenalter",
+    "d": "Dem Seniorenalter",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum nimmt Hilfeverhalten im höheren Alter oft ab?",
+    "a": "Geringere kognitive Fähigkeiten",
+    "b": "Reduzierte physische Ressourcen und Mobilität",
+    "c": "Fehlende Empathie",
+    "d": "Höhere egoistische Motivation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Hyperkinetische Störungen (z.B. ADHS) treten im Kindesalter häufiger auf bei:",
+    "a": "Mädchen",
+    "b": "Jungen",
+    "c": "Beiden Geschlechtern gleich",
+    "d": "Kindern mit hohem sozioökonomischem Status",
+    "richtig": "b"
+  },
+  {
+    "frage": "Um Hilfe in Notfallsituationen zu fördern, sollte man:",
+    "a": "Die Verantwortung diffus lassen",
+    "b": "Eine spezifische Person direkt ansprechen",
+    "c": "Passive Zuschauer ermutigen, wegzugehen",
+    "d": "Die Situation unkommentiert lassen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Trainings zur Zivilcourage betonen häufig:",
+    "a": "Finanzielle Anreize",
+    "b": "Aufklärung über den Bystander-Effekt",
+    "c": "Stärkung egoistischer Motive",
+    "d": "Vermeidung von Risikosituationen",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der HIV-Studie von Mehnert et al. war die Akzeptanz der Beratung am höchsten bei:",
+    "a": "Niedriger Stigmatisierung und hoher sozialer Unterstützung",
+    "b": "Hoher Stigmatisierung und niedriger sozialer Unterstützung",
+    "c": "Neutraler Stigmatisierung",
+    "d": "Unabhängig von Stigmatisierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Smith et al. (2008) vermittelt traditionelle Maskulinitätsideologie die Hilfesuche durch:",
+    "a": "Direkte physiologische Effekte",
+    "b": "Negative Einstellungen gegenüber psychologischer Hilfe",
+    "c": "Geringere Intelligenz",
+    "d": "Fehlende Therapieangebote",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Theorie der geplanten Handlung betont die Rolle von:",
+    "a": "Genetischer Veranlagung",
+    "b": "Einstellungen, subjektiven Normen und wahrgenommener Kontrolle",
+    "c": "Kulturellen Tabus",
+    "d": "Finanziellen Ressourcen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Reziproker Altruismus ist neuronal assoziiert mit Aktivität im:",
+    "a": "Hippocampus",
+    "b": "Limbischen System",
+    "c": "Kleinhirn",
+    "d": "Frontallappen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Empathie-basiertes Helfen korreliert mit Aktivierung in:",
+    "a": "Motorischen Arealen",
+    "b": "Spiegelneuronen-Netzwerken",
+    "c": "Visuellen Cortex",
+    "d": "Sprachzentren",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der Studie von Siem & Stürmer (2019) führte Publicity des Helfens zu:",
+    "a": "Höherer Spendenbereitschaft",
+    "b": "Attribution egoistischer Motive",
+    "c": "Geringerer Empathie",
+    "d": "Neutraler Bewertung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Teilnehmer in Darley & Batsons Experiment waren:",
+    "a": "Medizinstudierende",
+    "b": "Theologiestudierende",
+    "c": "Psychologiestudierende",
+    "d": "Jurastudierende",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Batson’s Elaine-Experiment wurde Empathie manipuliert durch:",
+    "a": "Finanzielle Anreize",
+    "b": "Wahrgenommene Ähnlichkeit zur hilfebedürftigen Person",
+    "c": "Anwesenheit von Autoritätspersonen",
+    "d": "Zeitdruck",
+    "richtig": "b"
+  },
+  {
+    "frage": "Frauen zeigen häufiger Hilfeverhalten in Form von:",
+    "a": "Körperlichem Eingreifen in Notfällen",
+    "b": "Emotionaler Unterstützung und Pflege",
+    "c": "Finanziellen Spenden",
+    "d": "Öffentlichen Reden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Männer helfen häufiger in Situationen, die:",
+    "a": "Langfristige Bindungen erfordern",
+    "b": "Heldentum und Risikobereitschaft betonen",
+    "c": "Heimlich durchgeführt werden",
+    "d": "Keine Zeugen haben",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die höhere Suizidrate bei Männern wird u.a. erklärt durch:",
+    "a": "Geringere genetische Belastung",
+    "b": "Präferenz für tödliche Methoden",
+    "c": "Höhere Inanspruchnahme von Therapie",
+    "d": "Fehlende soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein 2x3-faktorielles Design (wie in Darley & Batson) ermöglicht die Überprüfung von:",
+    "a": "Nur Haupteffekten",
+    "b": "Haupteffekten und Interaktionen",
+    "c": "Nur Korrelationen",
+    "d": "Qualitativen Unterschieden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Eine Mediationsanalyse in der HIV-Studie zeigte, dass der Effekt von Ähnlichkeit auf Hilfsakzeptanz vermittelt wurde durch:",
+    "a": "Alter und Bildung",
+    "b": "Vertrauen und Empathie",
+    "c": "Krankheitsdauer",
+    "d": "Geschlecht der Beraterin",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Theorie betont die Rolle der Selbstwertsteigerung durch Helfen?",
+    "a": "Empathie-Altruismus-Hypothese",
+    "b": "Negative-State-Relief-Modell",
+    "c": "Theorie der Verwandtenselektion",
+    "d": "Bystander-Effekt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die 'Gesamtfitness' (Hamilton) umfasst:",
+    "a": "Nur eigene Nachkommen",
+    "b": "Direkte und indirekte Fitness",
+    "c": "Soziale Anerkennung",
+    "d": "Materielle Ressourcen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Prominenter, der öffentlich spendet, wird oft als egoistisch wahrgenommen wegen:",
+    "a": "Geringer finanzieller Mittel",
+    "b": "Unterstellter Imagepflege",
+    "c": "Fehlender Empathie",
+    "d": "Neutraler Medienberichte",
+    "richtig": "b"
+  },
+  {
+    "frage": "In einer Notsituation mit vielen Zeugen sollte man zur Hilfe auffordern durch:",
+    "a": "Allgemeine Hilferufe",
+    "b": "Direkte Ansprache einer Einzelperson",
+    "c": "Schweigen, um Panik zu vermeiden",
+    "d": "Delegation an Autoritätspersonen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Kritik an der Empathie-Altruismus-Hypothese betont:",
+    "a": "Fehlende evolutionäre Grundlage",
+    "b": "Vermeintliche 'Einheit' von Helfer und Hilfebedürftigen",
+    "c": "Überbetonung kultureller Normen",
+    "d": "Geringe praktische Relevanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Eine Limitation der Studie von Darley & Batson ist:",
+    "a": "Fehlende Randomisierung",
+    "b": "Spezifische Stichprobe (Theologiestudierende)",
+    "c": "Zu große Stichprobengröße",
+    "d": "Fehlende statistische Signifikanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Konzept erklärt sowohl Hilfeverhalten bei Verwandten als auch reziproken Altruismus?",
+    "a": "Soziale Normen",
+    "b": "Evolutionäre Fitnessmaximierung",
+    "c": "Kognitive Dissonanz",
+    "d": "Emotionale Ansteckung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Dimensionen verwendet Pearce & Amato (1980) zur Klassifikation von Hilfeverhalten?",
+    "a": "Dauer, Intensität, Sichtbarkeit",
+    "b": "Planungsgrad, Schweregrad, Art des Kontakts",
+    "c": "Kosten, Nutzen, Empathie",
+    "d": "Alter, Geschlecht, Kultur",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche kulturelle Dimension nach Hofstede (2011) moderiert den Effekt von prosozialem Modelllernen laut der Meta-Analyse von Jung et al. (2020)?",
+    "a": "Machtdistanz",
+    "b": "Lang- vs. Kurzzeitorientierung",
+    "c": "Unsicherheitsvermeidung",
+    "d": "Femininität vs. Maskulinität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Piliavin et al. (1981) ist indirekte Hilfe wahrscheinlicher, wenn:",
+    "a": "Die Kosten des Helfens niedrig und die des Nicht-Helfens hoch sind",
+    "b": "Die Kosten des Helfens hoch und die des Nicht-Helfens niedrig sind",
+    "c": "Beide Kosten hoch sind",
+    "d": "Beide Kosten niedrig sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "Empathie-basiertes Helfen ist stärker ausgeprägt, wenn Helfer und Hilfebedürftige:",
+    "a": "Unterschiedlichen sozialen Gruppen angehören",
+    "b": "Eine gemeinsame soziale Identität teilen",
+    "c": "Keine persönliche Verbindung haben",
+    "d": "In Konkurrenz zueinander stehen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wirkt sich „prekäre Männlichkeit“ laut Forschung auf Hilfeverhalten aus?",
+    "a": "Sie erhöht die Bereitschaft zu emotionaler Unterstützung",
+    "b": "Sie fördert risikoreiches Helfen zur Bestätigung der Männlichkeit",
+    "c": "Sie reduziert Hilfeverhalten in allen Kontexten",
+    "d": "Sie hat keinen Einfluss auf geschlechtsspezifisches Helfen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was charakterisierte laut Oliner & Oliner (1988) Personen, die Juden während des Holocaust retteten?",
+    "a": "Hohe Risikobereitschaft und Extrovertiertheit",
+    "b": "Starke empathische Veranlagung und internalisierte prosoziale Werte",
+    "c": "Religiöse Dogmatik und Autoritätsgläubigkeit",
+    "d": "Geringe Bildung und ländlicher Hintergrund",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Schritt folgt *nach* der Interpretation des Ereignisses als Notfall laut Latané & Darley?",
+    "a": "Ereignis bemerken",
+    "b": "Verantwortung übernehmen",
+    "c": "Art der Hilfe auswählen",
+    "d": "Entscheidung umsetzen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wirkte sich die Aufklärung über den Bystander-Effekt laut Beaman et al. (1978) aus?",
+    "a": "Reduzierte Hilfsbereitschaft durch Überinformation",
+    "b": "Erhöhte Hilfsbereitschaft durch Bewusstsein für Barrieren",
+    "c": "Kein Effekt auf das Verhalten",
+    "d": "Führte zu übertriebenem Risikoverhalten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Form der Empathie ist primär mit altruistischem Helfen verbunden?",
+    "a": "Kognitive Empathie (Verstehen der Perspektive)",
+    "b": "Affektive Empathie (Mitgefühl und emotionale Resonanz)",
+    "c": "Beide gleich stark",
+    "d": "Keine der beiden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Um Verantwortungsdiffusion zu verhindern, sollte man:",
+    "a": "Die Anzahl der Zeugen erhöhen",
+    "b": "Eine Einzelperson direkt ansprechen",
+    "c": "Die Situation öffentlich diskutieren",
+    "d": "Auf Autoritätspersonen warten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche beiden Dimensionen definieren die prosoziale Persönlichkeit nach Penner?",
+    "a": "Intelligenz und Kreativität",
+    "b": "Empathische Veranlagung und dispositionelle Hilfsbereitschaft",
+    "c": "Extraversion und Offenheit",
+    "d": "Risikobereitschaft und Selbstvertrauen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Hilfeverhalten fördert eine langfristige kulturelle Orientierung laut Jung et al. (2020)?",
+    "a": "Spontane, emotionale Hilfe",
+    "b": "Nachhaltige und planvolle Unterstützung",
+    "c": "Öffentlich sichtbare Heldentaten",
+    "d": "Hilfe ausschließlich innerhalb der Familie",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
