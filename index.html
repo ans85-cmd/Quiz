@@ -1,129 +1,195 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jenny's Sozialpsychologie Quiz</title>
   <style>
-    * {
+    /* Grund-Reset */
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: "Helvetica Neue", sans-serif;
-      background: linear-gradient(to right, #6dd5ed, #2193b0);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(120deg, #6dd5ed, #2193b0);
       color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       min-height: 100vh;
-      padding: 2rem 1rem;
-      animation: fadeIn 1.5s ease-in;
+      padding: 2rem 1rem 3rem;
+      animation: fadeIn 1.5s ease forwards;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
     .logo {
-      font-size: 3rem;
+      font-size: 4rem;
+      line-height: 1;
       margin-bottom: 0.3rem;
+      user-select: none;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
     }
 
     h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      font-size: 2rem;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
+      margin: 0;
     }
 
-    h4 {
-      text-align: center;
-    } 
-    
-    .button-container {
+    /* Container für Buttons */
+    main {
       width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
+      max-width: 440px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 1rem;
+      margin-bottom: 2rem;
     }
 
-    button {
-      padding: 1rem;
-      font-size: 1rem;
-      background-color: white;
-      color: #2193b0;
-      border: none;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-weight: 600;
+    /* Buttons als Links für bessere Accessibility */
+   main a.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0.8rem;
+  background-color: white;
+  color: #2193b0;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  user-select: none;
+  transition: background-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
+  will-change: transform;
+  cursor: pointer;
+  text-align: center;       /* Hier hinzugefügt */
+  line-height: 1.2;         /* Optional, sorgt für gute vertikale Zentrierung */
+}
+
+
+    main a.button:hover,
+    main a.button:focus-visible {
+      background-color: #f0f8ff;
+      box-shadow: 0 8px 20px rgba(33, 147, 176, 0.5);
+      outline: none;
     }
 
-    button:hover {
-      background-color: #f1f1f1;
+    main a.button:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 10px rgba(33, 147, 176, 0.6);
     }
 
+    /* Responsive: Eine Spalte auf sehr kleinen Displays */
     @media (max-width: 400px) {
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      button {
-        font-size: 0.95rem;
-        padding: 0.9rem;
+      main {
+        grid-template-columns: 1fr;
+        max-width: 320px;
       }
 
       .logo {
-        font-size: 2.2rem;
+        font-size: 3rem;
       }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      main a.button {
+        font-size: 0.95rem;
+        padding: 0.85rem 0;
+      }
+    }
+
+    /* Footer / Info-Bereich */
+    footer {
+      max-width: 440px;
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: rgba(255 255 255 / 0.85);
+      user-select: none;
+    }
+
+    footer a {
+      color: #ffecb3;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+
+    footer a:hover,
+    footer a:focus-visible {
+      color: #fff176;
+      outline: none;
+    }
+
+    footer h4 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    footer h6 {
+      margin-top: 1rem;
+      font-weight: 400;
+      font-size: 0.8rem;
+      color: rgba(255 255 255 / 0.6);
     }
   </style>
 </head>
 <body>
+  <header>
+    <div class="logo" aria-hidden="true">🧠</div>
+    <h1>Jenny's Sozialpsychologie Quiz</h1>
+  </header>
 
-  <div class="logo">🧠</div>
-  <h1>Jenny's Sozialpsychologie Quiz</h1>
+  <main>
+    <a href="Sozialpsychologie.html" class="button" role="button" tabindex="0">Sozialpsychologie</a>
+    <a href="Wahrnehmung.html" class="button" role="button" tabindex="0">Soziale Wahrnehmung</a>
+    <a href="Kognition.html" class="button" role="button" tabindex="0">Soziale Kognition &amp; Attribution</a>
+    <a href="Interpersonale.html" class="button" role="button" tabindex="0">Interpersonale Beziehungen</a>
+    <a href="Geschichte.html" class="button" role="button" tabindex="0">Geschichte der Sozialpsychologie</a>
+    <a href="Extraversion.html" class="button" role="button" tabindex="0">Studie 1 Extraversion</a>
+    <a href="Bildungstheorie.html" class="button" role="button" tabindex="0">Bindungstheorie &amp; Sozialpsychologie</a>
+    <a href="Kapitel6.html" class="button" role="button" tabindex="0">Kapitel 6 Kommunikation</a>
+    <a href="aw5.html" class="button" role="button" tabindex="0">AW 5 - Selbst &amp; Identität</a>
+    <a href="aw5_multiple.html" class="button" role="button" tabindex="0">AW 5 - Multiple Choice</a>
+    <a href="AW6_Einstellungen.html" class="button" role="button" tabindex="0">AW 6 - Einstellungen</a>
+    <a href="aw7.html" class="button" role="button" tabindex="0">AW 7 - Prosoziales Verhalten/Altruismus</a>
+    <a href="aw8.html" class="button" role="button" tabindex="0">AW 8 - Aggressives Verhalten</a>
+    <a href="Paper2.html" class="button" role="button" tabindex="0">Paper 2 - Parent-child Communication</a>
+    <a href="AggressionundKonflikt.html" class="button" role="button" tabindex="0">Aggression und Konflikt</a>
+  </main>
 
-  <div class="button-container">
-    <button onclick="window.location.href='Sozialpsychologie.html';">Sozialpsychologie</button>
-    <button onclick="window.location.href='Wahrnehmung.html';">Soziale Wahrnehmung</button>
-    <button onclick="window.location.href='Kognition.html';">Soziale Kognition & Attribution</button>
-    <button onclick="window.location.href='Interpersonale.html';">Interpersonale Beziehungen</button>
-    <button onclick="window.location.href='Geschichte.html';">Geschichte der Sozialpsychologie</button>
-    <button onclick="window.location.href='Extraversion.html';">Studie 1 Extraversion</button>
-    <button onclick="window.location.href='Bildungstheorie.html';">Bindungstheorie & Sozialpsychologie</button>
-    <button onclick="window.location.href='Kapitel6.html';">Kapitel 6 Kommunikation</button>
-    <button onclick="window.location.href='aw5.html';">AW 5 - Selbst & Identität</button>
-    <button onclick="window.location.href='aw5_multiple.html';">AW 5 - Multiple Choice</button>
-    <button onclick="window.location.href='AW6_Einstellungen.html';">AW 6 - Einstellungen</button>
-    <button onclick="window.location.href='aw7.html';">AW 7 - Prosoziales Verhalten/Altruismus</button>
-    <button onclick="window.location.href='aw8.html';">AW 8 - Aggressives Verhalten</button>
-    <button onclick="window.location.href='Paper2.html';">Paper 2 - Parent-child Communication</button>
-    <button onclick="window.location.href='AggressionundKonflikt.html';">Aggression und Konflikt</button>
-  </div>
-
-  <script>
-    function startQuiz(topic) {
-      window.location.href = `quiz-${topic}.html`;
-    }
-  </script>
-
-<h4>📚✨ Dieses Lernquiz wurde mit viel Mühe (und einer ordentlichen Portion Kaffee) erstellt – damit das Lernen ein bisschen leichter fällt. Falls es dir geholfen hat und du mir einen virtuellen Kaffee ☕️ spendieren möchtest:</h4>
-  
-<h4>
-  <a href="https://paypal.me/virtualCoffeee?country.x=AT&locale.x=de_DE" target="_blank" rel="noopener noreferrer">
-    👉 https://paypal.me/virtualCoffeee?country.x=AT&locale.x=de_DE
-  </a>
-</h4>
-  
-<h6>by ans85-cmd</h6>
-
+  <footer>
+    <h4>📚✨ Dieses Lernquiz wurde mit viel Mühe (und einer ordentlichen Portion Kaffee) erstellt – damit das Lernen ein bisschen leichter fällt. Falls es dir geholfen hat und du mir einen virtuellen Kaffee ☕️ spendieren möchtest:</h4>
+    <h4>
+      <a href="https://paypal.me/virtualCoffeee?country.x=AT&locale.x=de_DE" target="_blank" rel="noopener noreferrer">
+        👉 paypal.me/virtualCoffeee
+      </a>
+    </h4>
+    <h6>by ans85-cmd</h6>
+  </footer>
 </body>
 </html>
