@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Welche Theorie betont die Rolle von Eltern-Kind-Kommunikation bei der Vermittlung von Normen?",
+    "a": "Theorie der geplanten Handlung",
+    "b": "Kommunikationsrahmen nach Jaccard et al. (2002)",
+    "c": "Sozialkognitive Theorie",
+    "d": "Fokustheorie normativen Verhaltens",
+    "richtig": "b"
+  },
+  {
+    "frage": "Injunktive Normen beziehen sich auf:",
+    "a": "Die wahrgenommene Häufigkeit eines Verhaltens in einer Gruppe",
+    "b": "Die Erwartungen wichtiger Bezugspersonen an das Verhalten",
+    "c": "Die individuelle Einstellung zu aggressivem Verhalten",
+    "d": "Die gesellschaftliche Akzeptanz von Cyber-Aggression",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedürfnisse werden durch Konformität mit sozialen Normen befriedigt?",
+    "a": "Biologische Grundbedürfnisse",
+    "b": "Soziale Akzeptanz und Koordination",
+    "c": "Materielle Sicherheit",
+    "d": "Kognitive Dissonanzreduktion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut dem Paper sinkt die Qualität der Eltern-Kind-Kommunikation zu Beginn der Adoleszenz aufgrund von:",
+    "a": "Technologienutzung",
+    "b": "Autonomiebestrebungen der Jugendlichen",
+    "c": "Peer-Einfluss",
+    "d": "Schulstress",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie viele Erhebungszeitpunkte umfasste die Studie?",
+    "a": "2",
+    "b": "3",
+    "c": "4",
+    "d": "6",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welches Instrument wurde zur Messung von Cyber-Aggression verwendet?",
+    "a": "Cyberbullying Inventory",
+    "b": "Adaptierte Version des ECIPQ",
+    "c": "Strengths and Difficulties Questionnaire",
+    "d": "Buss-Perry Aggression Questionnaire",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Skala zur Eltern-Kind-Kommunikation von Guilamo-Ramos et al. (2006) misst:",
+    "a": "Häufigkeit der Gespräche",
+    "b": "Expertise, Vertrauen und Verfügbarkeit der Eltern",
+    "c": "Strenge der Erziehungsregeln",
+    "d": "Zeitaufwand für digitale Kommunikation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum wurden einige ECIPQ-Items ausgeschlossen?",
+    "a": "Platzbeschränkungen im Fragebogen",
+    "b": "Fehlende Reliabilität",
+    "c": "Kulturelle Unangemessenheit",
+    "d": "Fokus auf physische Aggression",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche statistische Methode wurde zur Analyse der Längsschnittdaten genutzt?",
+    "a": "Faktorenanalyse",
+    "b": "Multilevel-Wachstumsmodelle",
+    "c": "Clusteranalyse",
+    "d": "Korrelationsmatrix",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das Alter der Teilnehmer:innen zu Studienbeginn lag bei durchschnittlich:",
+    "a": "10,5 Jahre",
+    "b": "11,5 Jahre",
+    "c": "12,5 Jahre",
+    "d": "13,5 Jahre",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie entwickelte sich Cyber-Aggression über die Zeit?",
+    "a": "Signifikante Abnahme",
+    "b": "Leichter Anstieg um 11 %",
+    "c": "Keine Veränderung",
+    "d": "Starker Anstieg nach dem dritten Messzeitpunkt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage zu Elternnormen trifft zu?",
+    "a": "Sie verlieren ab der frühen Adoleszenz an Einfluss",
+    "b": "Sie korrelierten stärker mit Cyber-Aggression als Peernormen",
+    "c": "Sie hatten keinen signifikanten Effekt auf die Aggressionsrate",
+    "d": "Sie nahmen im Studienverlauf deutlich ab",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die wahrgenommene Peer-Missbilligung von Aggression:",
+    "a": "Stieg im Studienverlauf an",
+    "b": "Wurde im Laufe der Zeit toleranter wahrgenommen",
+    "c": "Blieb stabil",
+    "d": "War irrelevant für Cyber-Aggression",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor moderierte den Zusammenhang zwischen Elternnormen und Cyber-Aggression?",
+    "a": "Geschlecht",
+    "b": "Sozioökonomischer Status",
+    "c": "Keiner – die Interaktion war nicht signifikant",
+    "d": "Schulklima",
+    "richtig": "c"
+  },
+  {
+    "frage": "Die Qualität der Eltern-Kind-Kommunikation war assoziiert mit:",
+    "a": "Höherer Cyber-Aggression",
+    "b": "Geringerer Cyber-Aggression",
+    "c": "Stärkerem Peer-Einfluss",
+    "d": "Keinem Effekt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein zentrales Problem bei der Messung der Kommunikationsqualität war:",
+    "a": "Unterschiedliche Skalen zu T1 und T2–T4",
+    "b": "Fehlende Validität der Items",
+    "c": "Zu kleine Stichprobe",
+    "d": "Kulturelle Verzerrung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Verzerrung könnte die niedrigen Cyber-Aggression-Werte erklären?",
+    "a": "Selektionsbias",
+    "b": "Soziale Erwünschtheit",
+    "c": "Recall-Bias",
+    "d": "Confounding durch Geschlecht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist der Beobachtungszeitraum kritisch zu sehen?",
+    "a": "Zu kurz, um langfristige Trends zu erfassen",
+    "b": "Zu viele Messzeitpunkte",
+    "c": "Fehlende Vergleichsgruppe",
+    "d": "Unklare Altersspanne",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Variable wurde NICHT als Kontrollvariable einbezogen?",
+    "a": "Traditionelle Aggression",
+    "b": "Geschlecht",
+    "c": "Sozioökonomischer Status",
+    "d": "Ethnische Zugehörigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Autoren empfehlen zukünftige Forschung zu:",
+    "a": "Geschlechterunterschieden in der Eltern-Kind-Kommunikation",
+    "b": "Genetischen Einflüssen",
+    "c": "Politischen Maßnahmen",
+    "d": "Mediennutzungsdauer",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Dimension der Eltern-Kind-Kommunikation wurde NICHT erfasst?",
+    "a": "Expertise",
+    "b": "Vertrauen",
+    "c": "Autoritäre Erziehung",
+    "d": "Verfügbarkeit",
+    "richtig": "c"
+  },
+  {
+    "frage": "Die Studie wurde in welchem Land durchgeführt?",
+    "a": "Deutschland",
+    "b": "Schweiz",
+    "c": "Niederlande",
+    "d": "USA",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Art von Cyber-Aggression wurde NICHT im ECIPQ abgefragt?",
+    "a": "Verbale Aggression",
+    "b": "Hacking von Accounts",
+    "c": "Verbreitung von Gerüchten",
+    "d": "Posten peinlicher Bilder",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die wahrgenommene Eltern-Missbilligung von Aggression zeigte im Verlauf:",
+    "a": "Linearen Anstieg",
+    "b": "Kein klares Muster",
+    "c": "Stetigen Rückgang",
+    "d": "Spitzenwert zu T3",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Hypothese wurde widerlegt?",
+    "a": "Elternnormen beeinflussen die Aggressionsrate",
+    "b": "Peernormen haben stärkeren Effekt auf die Veränderungsrate als Elternnormen",
+    "c": "Kommunikationsqualität reduziert Aggression",
+    "d": "Eltern-Kind-Kommunikation interagiert mit Normen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum sind injunktive Normen laut Theorie wirksamer als deskriptive?",
+    "a": "Sie basieren auf Statistiken",
+    "b": "Sie beinhalten soziale Sanktionen bei Nichtbefolgung",
+    "c": "Sie sind leichter zu messen",
+    "d": "Sie gelten nur für Gleichaltrige",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein zentraler Mechanismus der Eltern-Kind-Kommunikation ist:",
+    "a": "Vermittlung von Selbstwirksamkeit",
+    "b": "Finanzielle Belohnungen",
+    "c": "Strafen bei Regelverstößen",
+    "d": "Kontrolle der Online-Aktivitäten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum ist die frühe Adoleszenz für die Studie relevant?",
+    "a": "Übergang von Eltern- zu Peer-Einfluss",
+    "b": "Höchste Prävalenz von Cyber-Aggression",
+    "c": "Vollständige Autonomie der Jugendlichen",
+    "d": "Fehlende Normenentwicklung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was kennzeichnet \"relationale Aggression\"?",
+    "a": "Physische Gewalt",
+    "b": "Schädigung sozialer Beziehungen",
+    "c": "Diebstahl digitaler Daten",
+    "d": "Öffentliche Bloßstellung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Konzept erklärt die Stabilität elterlicher Normen trotz Adoleszenz?",
+    "a": "Kognitive Dissonanz",
+    "b": "Kontinuierliche Exposition gegenüber elterlichen Werten",
+    "c": "Genetische Prädisposition",
+    "d": "Schulische Interventionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist die Generalisierbarkeit der Ergebnisse eingeschränkt?",
+    "a": "Homogene Stichprobe (Schweizer Mittelschüler)",
+    "b": "Zu viele Messzeitpunkte",
+    "c": "Fehlende statistische Signifikanz",
+    "d": "Verwendung von Selbstberichten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Limitation betrifft die ECIPQ-Adaption?",
+    "a": "Unterrepräsentation medienbezogener Aggression",
+    "b": "Zu viele Items",
+    "c": "Fehlende Reliabilität",
+    "d": "Kulturelle Anpassung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Ein möglicher Confounder in der Studie ist:",
+    "a": "Traditionelle Aggression (nicht kontrolliert)",
+    "b": "Alter der Eltern",
+    "c": "Geschlecht der Lehrkräfte",
+    "d": "Urbanisierungsgrad",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum wurde die Interaktion zwischen Elternnormen und Kommunikation getestet?",
+    "a": "Theorie von Jaccard et al. (2002) postuliert sie",
+    "b": "Annahme, dass Kommunikation Normenvermittlung verstärkt",
+    "c": "Vorherige Studien zeigten signifikante Effekte",
+    "d": "Reduktion von Messfehlern",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Autoren schlagen vor, zukünftige Studien sollten:",
+    "a": "Längere Beobachtungszeiträume einbeziehen",
+    "b": "Ausschließlich qualitative Methoden nutzen",
+    "c": "Auf Peernormen verzichten",
+    "d": "Nur weibliche Teilnehmer rekrutieren",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Antwortskala wurde für die Messung von Cyber-Aggression verwendet?",
+    "a": "5-stufige Likert-Skala",
+    "b": "4-stufige Skala (\"Nie\" bis \"Oft\")",
+    "c": "Binäre Ja/Nein-Antworten",
+    "d": "10-stufige Skala",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Cronbach’s Alpha-Werte für Cyber-Aggression lagen zwischen:",
+    "a": "0,50–0,70",
+    "b": "0,70–0,83",
+    "c": "0,85–0,95",
+    "d": "Variierten je nach Messzeitpunkt nicht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis zu Peernormen?",
+    "a": "Sie hatten keinen Einfluss auf Cyber-Aggression",
+    "b": "Sie korrelierten positiv mit der Aggressionsentwicklung",
+    "c": "Sie waren stabiler als Elternnormen",
+    "d": "Sie wurden nur indirekt gemessen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Variable wurde NICHT im Analysemodell berücksichtigt?",
+    "a": "Alter",
+    "b": "Mediennutzungsdauer",
+    "c": "Elternnormen",
+    "d": "Peer-Missbilligung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Studie betont die Bedeutung von:",
+    "a": "Eltern als Schutzfaktor trotz Peer-Einfluss",
+    "b": "Schulischen Anti-Mobbing-Programmen",
+    "c": "Strafrechtlichen Maßnahmen",
+    "d": "Technologischen Lösungen",
+    "richtig": "a"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
