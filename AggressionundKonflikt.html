@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "1. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression?",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "2. Welche Handlung stellt nach dieser Definition *keine* Aggression dar?",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "3. Welche Kombination ist korrekt?",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "4. Was ist laut Forschung über Serotonin korrekt?",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "5. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese?",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "6. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten?",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "7. Welche Aussage zum feindseligen Attributionsstil trifft zu?",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "8. Was zeigte die Meta-Analyse von Geniole et al. (2020)?",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "9. Was besagt die soziale Rollentheorie von Eagly & Wood?",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "10. Welche Aussage zur Partnerschaftsgewalt trifft zu?",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  },
+  {
+    "frage": "11. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression? (Variante 2)",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "12. Welche Handlung stellt nach dieser Definition *keine* Aggression dar? (Variante 2)",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "13. Welche Kombination ist korrekt? (Variante 2)",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "14. Was ist laut Forschung über Serotonin korrekt? (Variante 2)",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "15. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese? (Variante 2)",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "16. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten? (Variante 2)",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "17. Welche Aussage zum feindseligen Attributionsstil trifft zu? (Variante 2)",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "18. Was zeigte die Meta-Analyse von Geniole et al. (2020)? (Variante 2)",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "19. Was besagt die soziale Rollentheorie von Eagly & Wood? (Variante 2)",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "20. Welche Aussage zur Partnerschaftsgewalt trifft zu? (Variante 2)",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  },
+  {
+    "frage": "21. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression? (Variante 3)",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "22. Welche Handlung stellt nach dieser Definition *keine* Aggression dar? (Variante 3)",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "23. Welche Kombination ist korrekt? (Variante 3)",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "24. Was ist laut Forschung über Serotonin korrekt? (Variante 3)",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "25. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese? (Variante 3)",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "26. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten? (Variante 3)",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "27. Welche Aussage zum feindseligen Attributionsstil trifft zu? (Variante 3)",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "28. Was zeigte die Meta-Analyse von Geniole et al. (2020)? (Variante 3)",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "29. Was besagt die soziale Rollentheorie von Eagly & Wood? (Variante 3)",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "30. Welche Aussage zur Partnerschaftsgewalt trifft zu? (Variante 3)",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  },
+  {
+    "frage": "31. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression? (Variante 4)",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "32. Welche Handlung stellt nach dieser Definition *keine* Aggression dar? (Variante 4)",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "33. Welche Kombination ist korrekt? (Variante 4)",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "34. Was ist laut Forschung über Serotonin korrekt? (Variante 4)",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "35. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese? (Variante 4)",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "36. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten? (Variante 4)",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "37. Welche Aussage zum feindseligen Attributionsstil trifft zu? (Variante 4)",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "38. Was zeigte die Meta-Analyse von Geniole et al. (2020)? (Variante 4)",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "39. Was besagt die soziale Rollentheorie von Eagly & Wood? (Variante 4)",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "40. Welche Aussage zur Partnerschaftsgewalt trifft zu? (Variante 4)",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  },
+  {
+    "frage": "41. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression? (Variante 5)",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "42. Welche Handlung stellt nach dieser Definition *keine* Aggression dar? (Variante 5)",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "43. Welche Kombination ist korrekt? (Variante 5)",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "44. Was ist laut Forschung über Serotonin korrekt? (Variante 5)",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "45. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese? (Variante 5)",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "46. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten? (Variante 5)",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "47. Welche Aussage zum feindseligen Attributionsstil trifft zu? (Variante 5)",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "48. Was zeigte die Meta-Analyse von Geniole et al. (2020)? (Variante 5)",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "49. Was besagt die soziale Rollentheorie von Eagly & Wood? (Variante 5)",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "50. Welche Aussage zur Partnerschaftsgewalt trifft zu? (Variante 5)",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  },
+  {
+    "frage": "51. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression? (Variante 6)",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "52. Welche Handlung stellt nach dieser Definition *keine* Aggression dar? (Variante 6)",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "53. Welche Kombination ist korrekt? (Variante 6)",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "54. Was ist laut Forschung über Serotonin korrekt? (Variante 6)",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "55. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese? (Variante 6)",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "56. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten? (Variante 6)",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "57. Welche Aussage zum feindseligen Attributionsstil trifft zu? (Variante 6)",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "58. Was zeigte die Meta-Analyse von Geniole et al. (2020)? (Variante 6)",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "59. Was besagt die soziale Rollentheorie von Eagly & Wood? (Variante 6)",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "60. Welche Aussage zur Partnerschaftsgewalt trifft zu? (Variante 6)",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  },
+  {
+    "frage": "61. Welche der folgenden Aussagen entspricht der sozialpsychologischen Definition von Aggression? (Variante 7)",
+    "a": "Jede körperliche Schädigung eines anderen Menschen",
+    "b": "Jedes Verhalten, das negative Emotionen auslöst",
+    "c": "Jedes intendierte Verhalten, das darauf abzielt, einem anderen Lebewesen zu schaden",
+    "d": "Verhalten, das gesellschaftlich als aggressiv gilt",
+    "richtig": "c"
+  },
+  {
+    "frage": "62. Welche Handlung stellt nach dieser Definition *keine* Aggression dar? (Variante 7)",
+    "a": "Ein versuchter Schlag, der das Ziel verfehlt",
+    "b": "Eine körperliche Bestrafung durch ein Elternteil",
+    "c": "Einvernehmliche sadomasochistische Praktiken",
+    "d": "Eine Beleidigung",
+    "richtig": "c"
+  },
+  {
+    "frage": "63. Welche Kombination ist korrekt? (Variante 7)",
+    "a": "Feindselige Aggression – kalt, strategisch",
+    "b": "Instrumentelle Aggression – spontan, emotional",
+    "c": "Verbale Aggression – kann verdeckt auftreten",
+    "d": "Offene Aggression – ausschließlich physisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "64. Was ist laut Forschung über Serotonin korrekt? (Variante 7)",
+    "a": "Hohe Serotoninwerte begünstigen impulsive Gewalt",
+    "b": "Niedrige Serotoninwerte stehen im Zusammenhang mit impulsiver Aggression",
+    "c": "Serotonin ist für instrumentelle Aggression verantwortlich",
+    "d": "Es gibt eindeutige Beweise für kausale Effekte von Serotonin",
+    "richtig": "b"
+  },
+  {
+    "frage": "65. Welche Aussage gehört zur Frustrations-Aggressions-Hypothese? (Variante 7)",
+    "a": "Aggression entsteht ausschließlich aus genetischen Dispositionen",
+    "b": "Frustration erhöht die Wahrscheinlichkeit aggressiven Verhaltens",
+    "c": "Frustration führt immer zu Aggression",
+    "d": "Frustration ist nur bei Kindern relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "66. Welches Prinzip beschreibt Banduras Forschung zum Modelllernen am besten? (Variante 7)",
+    "a": "Lernen durch klassische Konditionierung",
+    "b": "Lernen durch Versuch und Irrtum",
+    "c": "Lernen durch stellvertretende Verstärkung",
+    "d": "Lernen durch Einsicht",
+    "richtig": "c"
+  },
+  {
+    "frage": "67. Welche Aussage zum feindseligen Attributionsstil trifft zu? (Variante 7)",
+    "a": "Personen mit diesem Stil vermeiden Konflikte",
+    "b": "Er wird meist im Kindesalter erlernt",
+    "c": "Menschen mit diesem Stil unterstellen anderen häufiger Absicht zur Schädigung",
+    "d": "Er hängt direkt mit Testosteronspiegeln zusammen",
+    "richtig": "c"
+  },
+  {
+    "frage": "68. Was zeigte die Meta-Analyse von Geniole et al. (2020)? (Variante 7)",
+    "a": "Testosteron erklärt stark die Unterschiede im Aggressionsverhalten",
+    "b": "Es besteht ein schwacher, aber signifikanter Zusammenhang zwischen Testosteron und Aggression",
+    "c": "Testosteron hat keinen Einfluss auf menschliches Verhalten",
+    "d": "Nur Frauen reagieren empfindlich auf Testosteronveränderungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "69. Was besagt die soziale Rollentheorie von Eagly & Wood? (Variante 7)",
+    "a": "Geschlechterrollen beruhen rein auf genetischen Unterschieden",
+    "b": "Unterschiede im Aggressionsverhalten beruhen auf biologischen Gegebenheiten",
+    "c": "Sozialstruktur und Arbeitsteilung formen geschlechtsspezifische Verhaltensnormen",
+    "d": "Männer sind evolutionsbedingt aggressiver",
+    "richtig": "c"
+  },
+  {
+    "frage": "70. Welche Aussage zur Partnerschaftsgewalt trifft zu? (Variante 7)",
+    "a": "Männer sind häufiger Opfer als Täter",
+    "b": "80 % der Opfer sind Frauen, meist durch (Ex-)Partner",
+    "c": "Die meisten Opfer sind minderjährig",
+    "d": "Partnerschaftsgewalt ist rückläufig",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
