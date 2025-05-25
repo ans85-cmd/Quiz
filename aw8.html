@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was definiert aggressives Verhalten laut Studienbrief?",
+    "a": "Jede Handlung, die Schaden verursacht.",
+    "b": "Intendiertes Verhalten mit dem Ziel, Schaden zuzufügen, den das Opfer vermeiden will.",
+    "c": "Nur körperliche Gewalt.",
+    "d": "Verhalten, das in jedem Kontext antisozial ist.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Feindselige Aggression ist gekennzeichnet durch:",
+    "a": "Strategische Schädigung zum Erreichen eines Ziels.",
+    "b": "Schädigung aus negativen Emotionen wie Ärger.",
+    "c": "Indirekte Methoden wie Gerüchte streuen.",
+    "d": "Verstöße gegen soziale Normen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Instrumentelle Aggression dient primär:",
+    "a": "Der emotionalen Entlastung.",
+    "b": "Als Mittel zum Erreichen eines Ziels (z. B. Machtgewinn).",
+    "c": "Der Verteidigung eigener Interessen.",
+    "d": "Der Demonstration von Stärke.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Form der Aggression ist in Partnerschaften am häufigsten?",
+    "a": "Vergewaltigung.",
+    "b": "Vorsätzliche einfache Körperverletzung (ca. 60 %).",
+    "c": "Mord und Totschlag.",
+    "d": "Bedrohung und Stalking.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Meta-Analyse von Archer (2004):",
+    "a": "Frauen üben mehr physische Aggression aus als Männer.",
+    "b": "Männer zeigen signifikant mehr physische Aggression.",
+    "c": "Geschlechtsunterschiede existieren nur bei indirekter Aggression.",
+    "d": "Frauen sind in allen Aggressionsformen gleichauf mit Männern.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Indirekte Aggression ist am stärksten ausgeprägt bei:",
+    "a": "Männern im Jugendalter.",
+    "b": "Frauen in später Kindheit und Adoleszenz.",
+    "c": "Älteren Erwachsenen.",
+    "d": "Personen mit hohem Testosteronspiegel.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Evolutionspsychologisch erklärt sich höhere männliche Aggression durch:",
+    "a": "Höhere elterliche Investition.",
+    "b": "Geringere elterliche Investition und Konkurrenz um Partner.",
+    "c": "Biologische Unfähigkeit zur Kooperation.",
+    "d": "Genetische Determinierung durch Testosteron.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor reduziert Geschlechtsunterschiede in physischer Partnerschaftsgewalt?",
+    "a": "Traditionelle Rollenbilder.",
+    "b": "Hohe Gleichberechtigung (Gender Empowerment Index).",
+    "c": "Religiöse Normen.",
+    "d": "Strikte Gesetze gegen Gewalt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Meta-Analyse von Geniole et al. (2020):",
+    "a": "Testosteron hat keinen Einfluss auf Aggression.",
+    "b": "Basales Testosteron zeigt schwache Korrelation mit Aggression (r ≈ 0,05).",
+    "c": "Exogenes Testosteron erhöht Aggression bei Frauen stärker.",
+    "d": "Testosteron erklärt 50 % der Aggressionsvarianz.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf Serotonin zu?",
+    "a": "Hohe Serotoninspiegel fördern impulsive Aggression.",
+    "b": "Niedrige Serotoninspiegel korrelieren mit impulsiver Gewalt.",
+    "c": "Serotonin hat keinen Zusammenhang mit Aggression.",
+    "d": "Serotonin wirkt ausschließlich bei Frauen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Tierexperimenten führt Testosterongabe zu:",
+    "a": "Reduzierter Aggression.",
+    "b": "Erhöhter Aggression.",
+    "c": "Keiner Verhaltensänderung.",
+    "d": "Ausschließlich gesteigerter Fürsorge.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut BKA-Statistik (2021) sind ___ der Opfer von Partnerschaftsgewalt weiblich.",
+    "a": "50 %",
+    "b": "80,3 %",
+    "c": "65 %",
+    "d": "95 %",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Delikt ist in Partnerschaften am seltensten?",
+    "a": "Gefährliche Körperverletzung.",
+    "b": "Mord und Totschlag (0,3 %).",
+    "c": "Bedrohung und Stalking.",
+    "d": "Vergewaltigung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die meisten Tatverdächtigen in Partnerschaftsgewalt sind:",
+    "a": "Weiblich.",
+    "b": "Männlich (78,8 %).",
+    "c": "Gleichverteilt.",
+    "d": "Unbekannt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Bindungsstil ist ein Protektionsfaktor gegen Gewalt in Partnerschaften?",
+    "a": "Ängstlich-vermeidend.",
+    "b": "Sicher.",
+    "c": "Desorganisiert.",
+    "d": "Ambivalent.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Spencer et al. (2021) korreliert unsicherer Bindungsstil mit:",
+    "a": "Geringerer Wahrscheinlichkeit, Täter zu werden.",
+    "b": "Höherer Wahrscheinlichkeit, Opfer oder Täter zu werden.",
+    "c": "Ausschließlich Opferrolle.",
+    "d": "Keinem Zusammenhang.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der stärkste Prädiktor für Kindesmisshandlung ist:",
+    "a": "Niedriger sozioökonomischer Status.",
+    "b": "Eigene Misshandlungserfahrung der Eltern.",
+    "c": "Hohes Bildungsniveau.",
+    "d": "Urbane Wohnumgebung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher neurobiologische Faktor erhöht das Risiko?",
+    "a": "Hohe Serotoninspiegel.",
+    "b": "Hohe basale Aktivität des autonomen Nervensystems.",
+    "c": "Niedriges Testosteron.",
+    "d": "Geringe Stressreaktivität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Frustrations-Aggressions-Hypothese besagt:",
+    "a": "Aggression ist immer intentional.",
+    "b": "Frustration erhöht die Wahrscheinlichkeit von Aggression.",
+    "c": "Nur körperliche Frustration löst Aggression aus.",
+    "d": "Aggression ist unabhängig von Emotionen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Beim „Waffeneffekt“ nach Berkowitz und LePage (1967):",
+    "a": "Waffen reduzieren Aggression durch Abschreckung.",
+    "b": "Anwesenheit von Waffen erhöht aggressives Verhalten.",
+    "c": "Nur Männer reagieren auf Waffen.",
+    "d": "Waffen haben keinen Einfluss.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Modelllernen nach Bandura zeigt:",
+    "a": "Kinder imitieren nie aggressives Verhalten.",
+    "b": "Belohnte Aggression wird häufiger imitiert.",
+    "c": "Sanktionierte Aggression wird bevorzugt.",
+    "d": "Nur Erwachsene lernen durch Beobachtung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Cyber-Beziehungsaggression umfasst:",
+    "a": "Posten von „Revenge Porn“.",
+    "b": "Ausschließlich verbale Beleidigungen.",
+    "c": "Physische Angriffe online.",
+    "d": "Nur anonymes Mobbing.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Persönlichkeitsfaktoren begünstigen Cyber-Aggression?",
+    "a": "Hohe Selbstkontrolle.",
+    "b": "Sadismus und Machiavellismus.",
+    "c": "Empathie.",
+    "d": "Introvertiertheit.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Effektive Bestrafung setzt voraus:",
+    "a": "Hohe Wahrscheinlichkeit und Unmittelbarkeit.",
+    "b": "Willkürliche Anwendung.",
+    "c": "Keine Alternativen zum bestraften Verhalten.",
+    "d": "Starke externe Attribution.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Entschuldigungen wirken am besten, wenn:",
+    "a": "Sie nicht ernst gemeint sind.",
+    "b": "Sie glaubwürdig und situationsangemessen sind.",
+    "c": "Sie öffentlich gemacht werden.",
+    "d": "Sie keine Verantwortung einräumen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Archer (2004) ist der Geschlechtsunterschied in Aggression am stärksten bei:",
+    "a": "Indirekter Aggression.",
+    "b": "Physischer Aggression.",
+    "c": "Verbaler Aggression.",
+    "d": "Cyber-Aggression.",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Gesellschaften mit hohem Gender Empowerment Index:",
+    "a": "Männliche Gewalt in Partnerschaften nimmt zu.",
+    "b": "Geschlechtsunterschiede in Partnerschaftsgewalt verringern sich.",
+    "c": "Frauen werden häufiger Täterinnen.",
+    "d": "Gewalt wird generell tabuisiert.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach Trivers (1972) konkurrieren Männer um Partner aufgrund:",
+    "a": "Höherer elterlicher Investition.",
+    "b": "Geringerer elterlicher Investition.",
+    "c": "Biologischer Überlegenheit.",
+    "d": "Sozialer Normen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Campbell (1999) erklärt geringere weibliche Aggression mit:",
+    "a": "Höherem Testosteron.",
+    "b": "Größerer elterlicher Investition und Risikovermeidung.",
+    "c": "Sozialer Unterdrückung.",
+    "d": "Genetischen Unterschieden.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Geschlechterrollen entstehen laut Eagly & Wood (1999) durch:",
+    "a": "Arbeitsteilung und physische Spezialisierung.",
+    "b": "Ausschließlich biologische Faktoren.",
+    "c": "Zufällige kulturelle Entwicklungen.",
+    "d": "Genetische Determination.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Militärdienst als „männliche Pflicht“ spiegelt wider:",
+    "a": "Essentialistische Geschlechtervorstellungen (Beschützerrolle).",
+    "b": "Biologische Überlegenheit von Männern.",
+    "c": "Fehlende Gleichberechtigung.",
+    "d": "Ausschließlich historische Traditionen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Aussage zur Aggressionsverschiebung trifft zu?",
+    "a": "Aggression richtet sich immer direkt an den Verursacher.",
+    "b": "Aggression wird auf schwächere Ziele umgelenkt.",
+    "c": "Sie ist nur bei Tieren beobachtbar.",
+    "d": "Sie erfordert hohe Impulskontrolle.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Negative Affekte im Berkowitz-Modell führen zu:",
+    "a": "Aktivierung aggressionsbezogener Schemata.",
+    "b": "Ausschließlich Fluchtverhalten.",
+    "c": "Sofortiger Handlungsunterdrückung.",
+    "d": "Keiner Verhaltensänderung.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Laut van Lizendoorn et al. (2020) reduzieren Interventionen bei Kindesmisshandlung das Risiko um:",
+    "a": "50 %",
+    "b": "23–27 % (d ≈ 0,23–0,27).",
+    "c": "10 %",
+    "d": "75 %",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
