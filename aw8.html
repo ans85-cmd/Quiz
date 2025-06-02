@@ -87,275 +87,603 @@
 <script>
   const questions = [
   {
-    "frage": "Was definiert aggressives Verhalten laut Studienbrief?",
-    "a": "Jede Handlung, die Schaden verursacht.",
-    "b": "Intendiertes Verhalten mit dem Ziel, Schaden zuzufügen, den das Opfer vermeiden will.",
-    "c": "Nur körperliche Gewalt.",
-    "d": "Verhalten, das in jedem Kontext antisozial ist.",
+    "frage": "Welche Aussage beschreibt am besten den generellen Geschlechtsunterschied im aggressiven Verhalten?",
+    "a": "Frauen zeigen häufiger physische Aggression als Männer.",
+    "b": "Männer zeigen häufiger physische Aggression als Frauen.",
+    "c": "Es gibt keinen Geschlechtsunterschied in aggressivem Verhalten.",
+    "d": "Frauen zeigen häufiger verbale Aggression als Männer.",
     "richtig": "b"
   },
   {
-    "frage": "Feindselige Aggression ist gekennzeichnet durch:",
-    "a": "Strategische Schädigung zum Erreichen eines Ziels.",
-    "b": "Schädigung aus negativen Emotionen wie Ärger.",
-    "c": "Indirekte Methoden wie Gerüchte streuen.",
-    "d": "Verstöße gegen soziale Normen.",
+    "frage": "Welcher evolutionspsychologische Mechanismus erklärt laut Darwin (1871) die höhere Aggressionsneigung bei Männern?",
+    "a": "Kulturelle Prägung",
+    "b": "Sexuelle Selektion",
+    "c": "Sozialisation durch Eltern",
+    "d": "Hormonelle Unterschiede",
     "richtig": "b"
   },
   {
-    "frage": "Instrumentelle Aggression dient primär:",
-    "a": "Der emotionalen Entlastung.",
-    "b": "Als Mittel zum Erreichen eines Ziels (z. B. Machtgewinn).",
-    "c": "Der Verteidigung eigener Interessen.",
-    "d": "Der Demonstration von Stärke.",
+    "frage": "Nach Trivers (1972) ist das kompetitive Verhalten von Männern vor allem zurückzuführen auf:",
+    "a": "Höhere elterliche Investition der Männer",
+    "b": "Geringere elterliche Investition der Männer",
+    "c": "Geringere elterliche Investition der Frauen",
+    "d": "Gleichverteilung elterlicher Investitionen",
     "richtig": "b"
   },
   {
-    "frage": "Welche Form der Aggression ist in Partnerschaften am häufigsten?",
-    "a": "Vergewaltigung.",
-    "b": "Vorsätzliche einfache Körperverletzung (ca. 60 %).",
-    "c": "Mord und Totschlag.",
-    "d": "Bedrohung und Stalking.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Laut Meta-Analyse von Archer (2004):",
-    "a": "Frauen üben mehr physische Aggression aus als Männer.",
-    "b": "Männer zeigen signifikant mehr physische Aggression.",
-    "c": "Geschlechtsunterschiede existieren nur bei indirekter Aggression.",
-    "d": "Frauen sind in allen Aggressionsformen gleichauf mit Männern.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Indirekte Aggression ist am stärksten ausgeprägt bei:",
-    "a": "Männern im Jugendalter.",
-    "b": "Frauen in später Kindheit und Adoleszenz.",
-    "c": "Älteren Erwachsenen.",
-    "d": "Personen mit hohem Testosteronspiegel.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Evolutionspsychologisch erklärt sich höhere männliche Aggression durch:",
-    "a": "Höhere elterliche Investition.",
-    "b": "Geringere elterliche Investition und Konkurrenz um Partner.",
-    "c": "Biologische Unfähigkeit zur Kooperation.",
-    "d": "Genetische Determinierung durch Testosteron.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Welcher Faktor reduziert Geschlechtsunterschiede in physischer Partnerschaftsgewalt?",
-    "a": "Traditionelle Rollenbilder.",
-    "b": "Hohe Gleichberechtigung (Gender Empowerment Index).",
-    "c": "Religiöse Normen.",
-    "d": "Strikte Gesetze gegen Gewalt.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Laut Meta-Analyse von Geniole et al. (2020):",
-    "a": "Testosteron hat keinen Einfluss auf Aggression.",
-    "b": "Basales Testosteron zeigt schwache Korrelation mit Aggression (r ≈ 0,05).",
-    "c": "Exogenes Testosteron erhöht Aggression bei Frauen stärker.",
-    "d": "Testosteron erklärt 50 % der Aggressionsvarianz.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Welche Aussage trifft auf Serotonin zu?",
-    "a": "Hohe Serotoninspiegel fördern impulsive Aggression.",
-    "b": "Niedrige Serotoninspiegel korrelieren mit impulsiver Gewalt.",
-    "c": "Serotonin hat keinen Zusammenhang mit Aggression.",
-    "d": "Serotonin wirkt ausschließlich bei Frauen.",
-    "richtig": "b"
-  },
-  {
-    "frage": "In Tierexperimenten führt Testosterongabe zu:",
-    "a": "Reduzierter Aggression.",
-    "b": "Erhöhter Aggression.",
-    "c": "Keiner Verhaltensänderung.",
-    "d": "Ausschließlich gesteigerter Fürsorge.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Laut BKA-Statistik (2021) sind ___ der Opfer von Partnerschaftsgewalt weiblich.",
-    "a": "50 %",
-    "b": "80,3 %",
-    "c": "65 %",
-    "d": "95 %",
-    "richtig": "b"
-  },
-  {
-    "frage": "Welches Delikt ist in Partnerschaften am seltensten?",
-    "a": "Gefährliche Körperverletzung.",
-    "b": "Mord und Totschlag (0,3 %).",
-    "c": "Bedrohung und Stalking.",
-    "d": "Vergewaltigung.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Die meisten Tatverdächtigen in Partnerschaftsgewalt sind:",
-    "a": "Weiblich.",
-    "b": "Männlich (78,8 %).",
-    "c": "Gleichverteilt.",
-    "d": "Unbekannt.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Welcher Bindungsstil ist ein Protektionsfaktor gegen Gewalt in Partnerschaften?",
-    "a": "Ängstlich-vermeidend.",
-    "b": "Sicher.",
-    "c": "Desorganisiert.",
-    "d": "Ambivalent.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Laut Spencer et al. (2021) korreliert unsicherer Bindungsstil mit:",
-    "a": "Geringerer Wahrscheinlichkeit, Täter zu werden.",
-    "b": "Höherer Wahrscheinlichkeit, Opfer oder Täter zu werden.",
-    "c": "Ausschließlich Opferrolle.",
-    "d": "Keinem Zusammenhang.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Der stärkste Prädiktor für Kindesmisshandlung ist:",
-    "a": "Niedriger sozioökonomischer Status.",
-    "b": "Eigene Misshandlungserfahrung der Eltern.",
-    "c": "Hohes Bildungsniveau.",
-    "d": "Urbane Wohnumgebung.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Welcher neurobiologische Faktor erhöht das Risiko?",
-    "a": "Hohe Serotoninspiegel.",
-    "b": "Hohe basale Aktivität des autonomen Nervensystems.",
-    "c": "Niedriges Testosteron.",
-    "d": "Geringe Stressreaktivität.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Die Frustrations-Aggressions-Hypothese besagt:",
-    "a": "Aggression ist immer intentional.",
-    "b": "Frustration erhöht die Wahrscheinlichkeit von Aggression.",
-    "c": "Nur körperliche Frustration löst Aggression aus.",
-    "d": "Aggression ist unabhängig von Emotionen.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Beim „Waffeneffekt“ nach Berkowitz und LePage (1967):",
-    "a": "Waffen reduzieren Aggression durch Abschreckung.",
-    "b": "Anwesenheit von Waffen erhöht aggressives Verhalten.",
-    "c": "Nur Männer reagieren auf Waffen.",
-    "d": "Waffen haben keinen Einfluss.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Modelllernen nach Bandura zeigt:",
-    "a": "Kinder imitieren nie aggressives Verhalten.",
-    "b": "Belohnte Aggression wird häufiger imitiert.",
-    "c": "Sanktionierte Aggression wird bevorzugt.",
-    "d": "Nur Erwachsene lernen durch Beobachtung.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Cyber-Beziehungsaggression umfasst:",
-    "a": "Posten von „Revenge Porn“.",
-    "b": "Ausschließlich verbale Beleidigungen.",
-    "c": "Physische Angriffe online.",
-    "d": "Nur anonymes Mobbing.",
+    "frage": "Was ist laut Campbell (1999) der Hauptgrund für weniger risikoreiche und gewalttätige Aggressionen bei Frauen?",
+    "a": "Größere elterliche Investitionen der Frauen",
+    "b": "Hormonelle Unterschiede",
+    "c": "Sozialisation",
+    "d": "Weniger Ressourcen",
     "richtig": "a"
   },
   {
-    "frage": "Welche Persönlichkeitsfaktoren begünstigen Cyber-Aggression?",
-    "a": "Hohe Selbstkontrolle.",
-    "b": "Sadismus und Machiavellismus.",
-    "c": "Empathie.",
-    "d": "Introvertiertheit.",
-    "richtig": "b"
-  },
-  {
-    "frage": "Effektive Bestrafung setzt voraus:",
-    "a": "Hohe Wahrscheinlichkeit und Unmittelbarkeit.",
-    "b": "Willkürliche Anwendung.",
-    "c": "Keine Alternativen zum bestraften Verhalten.",
-    "d": "Starke externe Attribution.",
+    "frage": "Was ist das Grundprinzip evolutionspsychologischer Erklärungen für Aggression?",
+    "a": "Kosten-Nutzen-Analyse",
+    "b": "Kulturelle Prägung",
+    "c": "Soziale Rollen",
+    "d": "Erlernte Hilflosigkeit",
     "richtig": "a"
   },
   {
-    "frage": "Entschuldigungen wirken am besten, wenn:",
-    "a": "Sie nicht ernst gemeint sind.",
-    "b": "Sie glaubwürdig und situationsangemessen sind.",
-    "c": "Sie öffentlich gemacht werden.",
-    "d": "Sie keine Verantwortung einräumen.",
+    "frage": "Welche Aussage trifft laut Archer (2009) auf Geschlechtsunterschiede in Aggression zu?",
+    "a": "Frauen haben einen höheren potenziellen Reproduktionserfolg.",
+    "b": "Männer haben höhere potenzielle Kosten bei aggressivem Verhalten.",
+    "c": "Männer haben einen höheren potenziellen Reproduktionserfolg.",
+    "d": "Frauen profitieren mehr von Aggression.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist laut sozialer Rollentheorie (Eagly & Wood, 1999) entscheidend für Geschlechtsunterschiede in Aggression?",
+    "a": "Biologische Unterschiede",
+    "b": "Soziale Erwartungen und Rollenverteilung",
+    "c": "Hormonelle Unterschiede",
+    "d": "Genetische Disposition",
     "richtig": "b"
   },
   {
-    "frage": "Laut Archer (2004) ist der Geschlechtsunterschied in Aggression am stärksten bei:",
-    "a": "Indirekter Aggression.",
-    "b": "Physischer Aggression.",
-    "c": "Verbaler Aggression.",
-    "d": "Cyber-Aggression.",
+    "frage": "Welche empirische Beobachtung stützt die soziale Rollentheorie in Bezug auf Partnerschaftsgewalt?",
+    "a": "Geschlechtsunterschiede bleiben konstant über Kulturen hinweg.",
+    "b": "Geschlechtsunterschiede nehmen mit zunehmender Gleichberechtigung ab.",
+    "c": "Männer sind immer häufiger Opfer.",
+    "d": "Frauen sind immer häufiger Täterinnen.",
     "richtig": "b"
   },
   {
-    "frage": "In Gesellschaften mit hohem Gender Empowerment Index:",
-    "a": "Männliche Gewalt in Partnerschaften nimmt zu.",
-    "b": "Geschlechtsunterschiede in Partnerschaftsgewalt verringern sich.",
-    "c": "Frauen werden häufiger Täterinnen.",
-    "d": "Gewalt wird generell tabuisiert.",
+    "frage": "Was zeigt die Polizeiliche Kriminalstatistik 2022 in Bezug auf Tatverdächtige nach Geschlecht?",
+    "a": "Frauen sind häufiger tatverdächtig.",
+    "b": "Männer sind häufiger tatverdächtig.",
+    "c": "Männer und Frauen sind gleich häufig tatverdächtig.",
+    "d": "Es gibt keine Daten dazu.",
     "richtig": "b"
   },
   {
-    "frage": "Nach Trivers (1972) konkurrieren Männer um Partner aufgrund:",
-    "a": "Höherer elterlicher Investition.",
-    "b": "Geringerer elterlicher Investition.",
-    "c": "Biologischer Überlegenheit.",
-    "d": "Sozialer Normen.",
+    "frage": "In welchem Bereich sind Männer und Frauen laut Studien ähnlich häufig Täter und Opfer?",
+    "a": "Schwere Körperverletzung",
+    "b": "Mord",
+    "c": "Leichte Partnerschaftsgewalt",
+    "d": "Sexualstraftaten",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein zentraler Risikofaktor für die Ausübung von Partnerschaftsgewalt?",
+    "a": "Sicherer Bindungsstil",
+    "b": "Eigene Erfahrungen von Kindesmisshandlung",
+    "c": "Hohe Bildung",
+    "d": "Hohe soziale Unterstützung",
     "richtig": "b"
   },
   {
-    "frage": "Campbell (1999) erklärt geringere weibliche Aggression mit:",
-    "a": "Höherem Testosteron.",
-    "b": "Größerer elterlicher Investition und Risikovermeidung.",
-    "c": "Sozialer Unterdrückung.",
-    "d": "Genetischen Unterschieden.",
+    "frage": "Welche Aussage trifft auf den Zusammenhang zwischen Gender Empowerment und Partnerschaftsgewalt zu?",
+    "a": "Mit mehr Gleichberechtigung steigt Partnerschaftsgewalt.",
+    "b": "Mit mehr Gleichberechtigung sinken Geschlechtsunterschiede bei Partnerschaftsgewalt.",
+    "c": "Gleichberechtigung hat keinen Einfluss.",
+    "d": "Frauen werden häufiger Täterinnen.",
     "richtig": "b"
   },
   {
-    "frage": "Geschlechterrollen entstehen laut Eagly & Wood (1999) durch:",
-    "a": "Arbeitsteilung und physische Spezialisierung.",
-    "b": "Ausschließlich biologische Faktoren.",
-    "c": "Zufällige kulturelle Entwicklungen.",
-    "d": "Genetische Determination.",
+    "frage": "Welche Form von Gewalt üben Männer in Partnerschaften häufiger aus als Frauen?",
+    "a": "Leichte körperliche Gewalt",
+    "b": "Schwere Gewalt wie Mord und schwere Körperverletzung",
+    "c": "Psychische Gewalt",
+    "d": "Verbale Gewalt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Archer (2006) ein Prädiktor für Unterschiede in physischer Aggression zwischen Partnern in verschiedenen Kulturen?",
+    "a": "Bildungsniveau",
+    "b": "Gender Empowerment Index",
+    "c": "Wirtschaftliche Lage",
+    "d": "Urbanisierungsgrad",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein sicherer Bindungsstil ist in Bezug auf Partnerschaftsgewalt:",
+    "a": "Ein Risikofaktor",
+    "b": "Ein Protektionsfaktor",
+    "c": "Ohne Einfluss",
+    "d": "Ein Prädiktor für Täterrollen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bindungsdimensionen werden nach Shaver et al. (1988) unterschieden?",
+    "a": "Sicher, unsicher, ambivalent",
+    "b": "Sicher, ängstlich, vermeidend, ängstlich-vermeidend",
+    "c": "Offen, geschlossen, ambivalent",
+    "d": "Sicher, unsicher, desorganisiert",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was charakterisiert einen ängstlich-vermeidenden Bindungsstil?",
+    "a": "Geringe Ängstlichkeit, geringe Vermeidung",
+    "b": "Hohe Ängstlichkeit, hohe Vermeidung",
+    "c": "Hohe Ängstlichkeit, geringe Vermeidung",
+    "d": "Geringe Ängstlichkeit, hohe Vermeidung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Bindungsstil ist am stärksten mit Partnerschaftsgewalt assoziiert?",
+    "a": "Sicher",
+    "b": "Ängstlich-vermeidend",
+    "c": "Vermeidend",
+    "d": "Ambivalent",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die Meta-Analyse von Spencer et al. (2021) bezüglich Bindungsstilen und Partnerschaftsgewalt?",
+    "a": "Kein Zusammenhang",
+    "b": "Sichere Bindung schützt vor Gewalt",
+    "c": "Unsichere Bindung schützt vor Gewalt",
+    "d": "Bindungsstil ist irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Bindungsstil ist ein Risikofaktor für die Ausübung und das Erleiden von Partnerschaftsgewalt?",
+    "a": "Sicher",
+    "b": "Ängstlich-vermeidend",
+    "c": "Offener Bindungsstil",
+    "d": "Desorganisierter Bindungsstil",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut IJzendoorn et al. (2020) ein zentraler Risikofaktor für Kindesmisshandlung?",
+    "a": "Hohe elterliche Investition",
+    "b": "Eigene Misshandlungserfahrungen der Eltern",
+    "c": "Sicherer Bindungsstil der Eltern",
+    "d": "Hohe soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Perspektive betont die unterschiedliche Anfälligkeit für Risiko und Resilienz bei Kindesmisshandlung?",
+    "a": "Sozialpsychologische Perspektive",
+    "b": "Differential Susceptibility Perspective",
+    "c": "Kognitive Perspektive",
+    "d": "Behavioristische Perspektive",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Meta-Analysen ein Schutzfaktor gegen Kindesmisshandlung?",
+    "a": "Hohe elterliche Belastung",
+    "b": "Sicherer Bindungsstil",
+    "c": "Eigene Misshandlungserfahrung",
+    "d": "Geringe soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf die Prävention von Kindesmisshandlung zu?",
+    "a": "Interventionsprogramme sind unwirksam.",
+    "b": "Interventionsprogramme können Risiko reduzieren.",
+    "c": "Prävention ist nicht möglich.",
+    "d": "Nur rechtliche Maßnahmen helfen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein häufiger Prädiktor für Misshandlung eigener Kinder?",
+    "a": "Hohe Bildung der Eltern",
+    "b": "Eigene Misshandlungserfahrung in der Kindheit",
+    "c": "Sicherer Bindungsstil",
+    "d": "Geringe elterliche Investition",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Theorie erklärt Geschlechtsunterschiede in Aggression vor allem durch gesellschaftliche Erwartungen?",
+    "a": "Evolutionspsychologie",
+    "b": "Soziale Rollentheorie",
+    "c": "Lerntheorie",
+    "d": "Kognitive Dissonanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der Meta-Analyse von Archer (2004)?",
+    "a": "Frauen sind generell aggressiver als Männer.",
+    "b": "Männer zeigen in realen Settings mehr physische Aggression.",
+    "c": "Es gibt keine Geschlechtsunterschiede in Aggression.",
+    "d": "Frauen sind häufiger Opfer.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die Forschung zu Testosteron und Aggression?",
+    "a": "Es gibt keinen Zusammenhang.",
+    "b": "Ein Zusammenhang besteht, ist aber komplex und nicht eindeutig.",
+    "c": "Testosteron senkt Aggression.",
+    "d": "Testosteron ist nur bei Frauen relevant.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Daly & Wilson (1988, 1990) für Männer mit geringen Ressourcen besonders relevant?",
+    "a": "Kooperation mit anderen Männern",
+    "b": "Konkurrenz um Fortpflanzungschancen durch Aggression",
+    "c": "Vermeidung von Konflikten",
+    "d": "Höhere elterliche Investition",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Campbell (1999) für Frauen bei aggressiven Auseinandersetzungen besonders riskant?",
+    "a": "Verlust an Ressourcen",
+    "b": "Verlust der reproduktiven Fitness",
+    "c": "Soziale Isolation",
+    "d": "Geringe elterliche Investition",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die Einführung der Wehrpflicht in Lettland im Kontext von Geschlechterrollen?",
+    "a": "Gleichberechtigung wird gestärkt.",
+    "b": "Traditionelle Rollenbilder werden betont.",
+    "c": "Frauen werden bevorzugt.",
+    "d": "Es gibt keine Auswirkungen auf Geschlechterrollen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie beeinflusst gesellschaftlicher Wandel die Geschlechtsunterschiede bei Aggression?",
+    "a": "Sie bleiben konstant.",
+    "b": "Sie nehmen mit mehr Gleichberechtigung ab.",
+    "c": "Sie nehmen mit mehr Gleichberechtigung zu.",
+    "d": "Sie verschwinden vollständig.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Archer (2006) ein wichtiger Prädiktor für Unterschiede in Partnerschaftsgewalt zwischen Ländern?",
+    "a": "Wirtschaftliche Lage",
+    "b": "Gender Empowerment Index",
+    "c": "Durchschnittsalter",
+    "d": "Religionszugehörigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der sozialpsychologischen Forschung zu Aggression?",
+    "a": "Aggression ist ausschließlich biologisch determiniert.",
+    "b": "Sowohl biologische als auch soziale Faktoren spielen eine Rolle.",
+    "c": "Nur soziale Faktoren sind relevant.",
+    "d": "Aggression ist ausschließlich kulturell bedingt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wird der Zusammenhang zwischen Geschlecht und Aggression in der Sozialpsychologie erklärt?",
+    "a": "Nur durch biologische Unterschiede",
+    "b": "Durch das Zusammenspiel von Biologie und sozialer Rolle",
+    "c": "Nur durch Sozialisation",
+    "d": "Nur durch individuelle Erfahrungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Meta-Analysen ein Prädiktor für die Weitergabe von Gewalt in Familien?",
+    "a": "Sicherer Bindungsstil",
+    "b": "Eigene Misshandlungserfahrung",
+    "c": "Hohe Bildung",
+    "d": "Geringe soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ziel von Interventionsprogrammen gegen Kindesmisshandlung?",
+    "a": "Elterliche Investition zu reduzieren",
+    "b": "Risiko- und Schutzfaktoren zu adressieren",
+    "c": "Kinder zu isolieren",
+    "d": "Nur rechtliche Maßnahmen zu setzen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bindungsdimension ist mit geringem Risiko für Gewalt assoziiert?",
+    "a": "Hohe Ängstlichkeit",
+    "b": "Geringe Vermeidung und geringe Ängstlichkeit",
+    "c": "Hohe Vermeidung",
+    "d": "Hohe Ängstlichkeit und Vermeidung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Forschung ein Schutzfaktor gegen das Opferwerden in Partnerschaften?",
+    "a": "Ängstlich-vermeidender Bindungsstil",
+    "b": "Sicherer Bindungsstil",
+    "c": "Hohe elterliche Investition",
+    "d": "Geringe soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut empirischer Forschung ein Risikofaktor für die Ausübung von Gewalt in Partnerschaften?",
+    "a": "Sicherer Bindungsstil",
+    "b": "Unsicherer Bindungsstil",
+    "c": "Hohe Bildung",
+    "d": "Hohe soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist das Ziel einer Meta-Analyse?",
+    "a": "Einzelstudien zu widerlegen",
+    "b": "Ergebnisse vieler Studien zusammenzufassen",
+    "c": "Neue Experimente zu entwickeln",
+    "d": "Theorien zu formulieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die Meta-Analyse von Geniole et al. (2020) zu Testosteron und Aggression?",
+    "a": "Einfache Kausalität",
+    "b": "Komplexer, nicht eindeutiger Zusammenhang",
+    "c": "Kein Zusammenhang",
+    "d": "Testosteron reduziert Aggression",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Archer (2004) ein zentrales Ergebnis zu Geschlechtsunterschieden in realen Settings?",
+    "a": "Frauen sind häufiger aggressiv",
+    "b": "Männer zeigen häufiger physische Aggression",
+    "c": "Keine Unterschiede",
+    "d": "Frauen sind häufiger Opfer",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Vorteil von Meta-Analysen in der Psychologie?",
+    "a": "Sie ignorieren Einzelstudien",
+    "b": "Sie bieten eine höhere Aussagekraft durch größere Stichproben",
+    "c": "Sie sind weniger zuverlässig",
+    "d": "Sie ersetzen Experimente",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Nachteil von Meta-Analysen?",
+    "a": "Sie berücksichtigen zu viele Variablen",
+    "b": "Sie sind anfällig für Publikationsbias",
+    "c": "Sie sind immer objektiv",
+    "d": "Sie liefern keine neuen Erkenntnisse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein gesellschaftlicher Trend im Umgang mit Partnerschaftsgewalt?",
+    "a": "Zunehmende Tabuisierung",
+    "b": "Mehr öffentliche Aufmerksamkeit und Präventionsmaßnahmen",
+    "c": "Rückgang der Forschung",
+    "d": "Weniger rechtliche Konsequenzen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Ziel von Gender Empowerment?",
+    "a": "Stärkung traditioneller Rollen",
+    "b": "Förderung von Gleichberechtigung",
+    "c": "Reduzierung von Frauenrechten",
+    "d": "Förderung von Gewalt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine Konsequenz von mehr Gleichberechtigung laut sozialer Rollentheorie?",
+    "a": "Zunahme von Geschlechtsunterschieden",
+    "b": "Abnahme von Geschlechtsunterschieden",
+    "c": "Keine Veränderung",
+    "d": "Verstärkung traditioneller Rollen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Ziel von Präventionsprogrammen gegen Kindesmisshandlung?",
+    "a": "Erhöhung der elterlichen Belastung",
+    "b": "Förderung sicherer Bindungsstile",
+    "c": "Reduzierung sozialer Unterstützung",
+    "d": "Förderung von Gewalt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Forschung ein protektiver Faktor gegen das Täterwerden in Beziehungen?",
+    "a": "Unsicherer Bindungsstil",
+    "b": "Sicherer Bindungsstil",
+    "c": "Eigene Misshandlungserfahrung",
+    "d": "Hohe elterliche Investition",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was vereint die evolutionspsychologische und die soziale Rollentheorie in Bezug auf Aggression?",
+    "a": "Beide ignorieren biologische Faktoren",
+    "b": "Beide erkennen die Bedeutung von Kosten und Nutzen an",
+    "c": "Beide betonen nur individuelle Unterschiede",
+    "d": "Beide lehnen kulturelle Einflüsse ab",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein typisches Beispiel für einen Kosten-Nutzen-Mechanismus bei männlicher Aggression?",
+    "a": "Soziale Isolation",
+    "b": "Erhöhte Fortpflanzungschancen bei erfolgreicher Aggression",
+    "c": "Reduzierte soziale Unterstützung",
+    "d": "Höhere elterliche Investition",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Forschung ein typischer Unterschied zwischen männlicher und weiblicher Aggression?",
+    "a": "Frauen sind häufiger physisch aggressiv",
+    "b": "Männer sind häufiger physisch aggressiv",
+    "c": "Frauen sind häufiger verbal aggressiv",
+    "d": "Männer sind häufiger Opfer",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der Meta-Analyse von Archer (2006) zu Partnerschaftsgewalt?",
+    "a": "Keine kulturellen Unterschiede",
+    "b": "Kulturelle Unterschiede hängen mit Gender Empowerment zusammen",
+    "c": "Frauen sind immer häufiger Täterinnen",
+    "d": "Männer sind immer Opfer",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut sozialpsychologischer Forschung ein Schutzfaktor gegen Gewalt in Partnerschaften?",
+    "a": "Unsicherer Bindungsstil",
+    "b": "Sicherer Bindungsstil",
+    "c": "Hohe elterliche Belastung",
+    "d": "Geringe soziale Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was könnte eine Maßnahme zur Reduktion von Partnerschaftsgewalt sein?",
+    "a": "Förderung traditioneller Geschlechterrollen",
+    "b": "Förderung von Gleichberechtigung",
+    "c": "Reduzierung von Interventionsprogrammen",
+    "d": "Stärkung von Tabuisierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist bei der Prävention von Kindesmisshandlung besonders wirksam?",
+    "a": "Förderung sicherer Bindungsstile",
+    "b": "Erhöhung elterlicher Belastung",
+    "c": "Stärkung traditioneller Rollen",
+    "d": "Reduzierung sozialer Unterstützung",
     "richtig": "a"
   },
   {
-    "frage": "Militärdienst als „männliche Pflicht“ spiegelt wider:",
-    "a": "Essentialistische Geschlechtervorstellungen (Beschützerrolle).",
-    "b": "Biologische Überlegenheit von Männern.",
-    "c": "Fehlende Gleichberechtigung.",
-    "d": "Ausschließlich historische Traditionen.",
-    "richtig": "a"
-  },
-  {
-    "frage": "Welche Aussage zur Aggressionsverschiebung trifft zu?",
-    "a": "Aggression richtet sich immer direkt an den Verursacher.",
-    "b": "Aggression wird auf schwächere Ziele umgelenkt.",
-    "c": "Sie ist nur bei Tieren beobachtbar.",
-    "d": "Sie erfordert hohe Impulskontrolle.",
+    "frage": "Was ist ein Ziel von Gender Empowerment in Bezug auf Gewaltprävention?",
+    "a": "Erhöhung von Geschlechtsunterschieden",
+    "b": "Abbau von Geschlechtsunterschieden bei Gewalt",
+    "c": "Förderung von männlicher Aggression",
+    "d": "Reduzierung von Präventionsprogrammen",
     "richtig": "b"
   },
   {
-    "frage": "Negative Affekte im Berkowitz-Modell führen zu:",
-    "a": "Aktivierung aggressionsbezogener Schemata.",
-    "b": "Ausschließlich Fluchtverhalten.",
-    "c": "Sofortiger Handlungsunterdrückung.",
-    "d": "Keiner Verhaltensänderung.",
+    "frage": "Was ist ein zentrales Ziel der Forschung zu Aggression und Gewalt?",
+    "a": "Erhöhung von Gewalt",
+    "b": "Entwicklung von Präventions- und Interventionsmaßnahmen",
+    "c": "Förderung traditioneller Rollen",
+    "d": "Reduzierung von Gleichberechtigung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Forschung ein wichtiger Ansatzpunkt zur Prävention von Gewalt in sozialen Beziehungen?",
+    "a": "Förderung sicherer Bindungsstile und Gleichberechtigung",
+    "b": "Stärkung traditioneller Rollen",
+    "c": "Reduzierung von Gender Empowerment",
+    "d": "Tabuisierung von Gewalt",
     "richtig": "a"
   },
   {
-    "frage": "Laut van Lizendoorn et al. (2020) reduzieren Interventionen bei Kindesmisshandlung das Risiko um:",
-    "a": "50 %",
-    "b": "23–27 % (d ≈ 0,23–0,27).",
-    "c": "10 %",
-    "d": "75 %",
+    "frage": "Welche Altersgruppe ist laut Polizeilicher Kriminalstatistik 2022 am häufigsten Opfer von Partnerschaftsgewalt?",
+    "a": "18–21 Jahre",
+    "b": "21–40 Jahre",
+    "c": "41–60 Jahre",
+    "d": "Über 60 Jahre",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Altersbereich ist bei Tatverdächtigen von Partnerschaftsgewalt in der PKS 2022 am stärksten vertreten?",
+    "a": "Unter 18 Jahre",
+    "b": "18–21 Jahre",
+    "c": "21–40 Jahre",
+    "d": "Über 60 Jahre",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist eine zentrale methodische Limitation der Polizeilichen Kriminalstatistik bei der Erfassung von Partnerschaftsgewalt?",
+    "a": "Zu viele Falschmeldungen",
+    "b": "Sie erfasst nur angezeigte Fälle und nicht das Dunkelfeld",
+    "c": "Sie berücksichtigt keine männlichen Opfer",
+    "d": "Sie unterscheidet nicht zwischen verschiedenen Gewaltformen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist das Dunkelfeld bei Partnerschaftsgewalt besonders relevant für die Interpretation kriminalstatistischer Daten?",
+    "a": "Weil es keine männlichen Täter gibt",
+    "b": "Weil viele Fälle nicht angezeigt werden",
+    "c": "Weil alle Fälle erfasst werden",
+    "d": "Weil die Polizei keine Daten erhebt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die Meta-Analyse von Geniole et al. (2020) zum Zusammenhang von Testosteron und Aggression?",
+    "a": "Es gibt einen starken, eindeutigen Zusammenhang",
+    "b": "Es gibt keinen Zusammenhang",
+    "c": "Der Zusammenhang ist komplex und nicht eindeutig",
+    "d": "Testosteron reduziert Aggression",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welches Ergebnis fand Archer (2004) in seiner Meta-Analyse zu Geschlechtsunterschieden in Aggression in realen Settings?",
+    "a": "Frauen sind häufiger physisch aggressiv",
+    "b": "Männer sind häufiger physisch aggressiv",
+    "c": "Es gibt keinen Unterschied",
+    "d": "Frauen sind häufiger Opfer",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie könnte die Wiedereinführung der Wehrpflicht in Lettland laut sozialpsychologischer Theorie die Geschlechterrollen beeinflussen?",
+    "a": "Sie führt zu mehr Gleichberechtigung",
+    "b": "Sie verstärkt traditionelle Rollenbilder von Männern als Beschützer und Frauen als Beschützte",
+    "c": "Sie macht Frauen zu Soldaten",
+    "d": "Sie hat keinen Einfluss auf Geschlechterrollen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher gesellschaftliche Kontext kann laut sozialpsychologischer Forschung die Geschlechtsunterschiede in Aggression beeinflussen?",
+    "a": "Wirtschaftskrisen",
+    "b": "Zunahme von Gender Empowerment",
+    "c": "Technologischer Fortschritt",
+    "d": "Migration",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was besagt die Differential Susceptibility Perspective im Kontext von Kindesmisshandlung?",
+    "a": "Alle Kinder sind gleichermaßen anfällig für negative Einflüsse",
+    "b": "Manche Kinder sind besonders empfindlich für Risiko- und Schutzfaktoren",
+    "c": "Nur genetische Faktoren sind entscheidend",
+    "d": "Resilienz ist unwichtig",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wird die Differential Susceptibility Perspective in Meta-Analysen zu Kindesmisshandlung genutzt?",
+    "a": "Sie wird ignoriert",
+    "b": "Sie erklärt, warum Interventionen bei manchen Kindern besser wirken",
+    "c": "Sie betont nur biologische Einflüsse",
+    "d": "Sie ist nur für Erwachsene relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Zusammenhang zwischen Klimawandel und sozialpsychologischer Aggressionsforschung wird auf den Folien thematisiert?",
+    "a": "Klimawandel führt zu weniger Konflikten",
+    "b": "Klimawandel kann soziale Spannungen und damit Konflikte und Aggressionen verstärken",
+    "c": "Klimawandel hat keinen Einfluss auf Aggression",
+    "d": "Klimawandel betrifft nur die Biologie",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Kritikpunkt wird häufig an der evolutionspsychologischen Erklärung von Aggression geäußert?",
+    "a": "Sie berücksichtigt keine biologischen Unterschiede",
+    "b": "Sie vernachlässigt gesellschaftliche und kulturelle Einflüsse",
+    "c": "Sie ist zu komplex",
+    "d": "Sie ist rein deskriptiv",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was unterscheidet die soziale Rollentheorie grundlegend von der Evolutionspsychologie?",
+    "a": "Die soziale Rollentheorie betont gesellschaftliche Prägung und Erwartungen",
+    "b": "Die soziale Rollentheorie ignoriert Geschlechterrollen",
+    "c": "Die Evolutionspsychologie betont gesellschaftliche Faktoren",
+    "d": "Beide sind identisch",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Form der Intervention gilt laut Meta-Analysen als besonders wirksam zur Prävention von Kindesmisshandlung?",
+    "a": "Isolierte rechtliche Maßnahmen",
+    "b": "Programme, die Bindung und elterliche Kompetenzen fördern",
+    "c": "Strafen für Kinder",
+    "d": "Keine Intervention",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ziel von Präventionsprogrammen gegen Kindesmisshandlung laut aktueller Forschung?",
+    "a": "Reduzierung sozialer Unterstützung",
+    "b": "Stärkung von Resilienz und Schutzfaktoren bei Kindern",
+    "c": "Förderung traditioneller Rollen",
+    "d": "Reduzierung von Bildung",
     "richtig": "b"
   }
   ];
