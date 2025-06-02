@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Wie definiert die Sozialpsychologie eine 'soziale Gruppe'?",
+    "a": "Eine Ansammlung von Menschen mit direkter Face-to-Face-Interaktion.",
+    "b": "Individuen, die sich selbst als Mitglieder derselben sozialen Kategorie wahrnehmen und emotionale Bindung teilen.",
+    "c": "Eine formelle Organisation mit festgelegten Hierarchien.",
+    "d": "Menschen, die physisch am selben Ort anwesend sind.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist der zentrale Unterschied zwischen Eigengruppe und Fremdgruppe?",
+    "a": "Die Eigengruppe hat mehr Mitglieder.",
+    "b": "Die Fremdgruppe dient als relevante Vergleichsgruppe im sozialen Kontext.",
+    "c": "Die Eigengruppe wird immer positiv bewertet.",
+    "d": "Die Fremdgruppe ist durch emotionale Bindung gekennzeichnet.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'Entitativität'?",
+    "a": "Die emotionale Bindung innerhalb einer Gruppe.",
+    "b": "Die Wahrnehmung einer Personengruppe als kohärente soziale Einheit.",
+    "c": "Die Fähigkeit einer Gruppe, Ziele zu erreichen.",
+    "d": "Die Anzahl der Mitglieder in einer Gruppe.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion erfüllen soziale Normen nicht?",
+    "a": "Aufrechterhaltung der Gruppenkohäsion.",
+    "b": "Definition individueller Persönlichkeitsmerkmale.",
+    "c": "Koordination von Gruppenverhalten.",
+    "d": "Schaffung eines gemeinsamen Interpretationsrahmens.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Experiment diente als Grundlage für die Entwicklung der Theorie der sozialen Identität?",
+    "a": "Das Stanford-Prison-Experiment.",
+    "b": "Die Minimalgruppenexperimente von Tajfel.",
+    "c": "Das Milgram-Experiment.",
+    "d": "Das Cyberball-Paradigma.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist das zentrale motivationale Prinzip der SIT?",
+    "a": "Streben nach individueller Autonomie.",
+    "b": "Streben nach positiver Distinktheit der Eigengruppe.",
+    "c": "Vermeidung von Konflikten.",
+    "d": "Maximierung materieller Ressourcen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Hirnregion ist bei sozialem Ausschluss (Cyberball-Experiment) aktiv und korreliert mit selbstberichtetem Distress?",
+    "a": "Amygdala.",
+    "b": "Hippocampus.",
+    "c": "Anteriorer cingulärer Kortex (ACC).",
+    "d": "Präfrontaler Cortex.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was beschreibt 'Depersonalisierung' im Kontext der SCT?",
+    "a": "Der Verlust der persönlichen Identität durch Gruppenzwang.",
+    "b": "Die Selbstwahrnehmung als austauschbares Gruppenmitglied.",
+    "c": "Die Auflösung einer Gruppe aufgrund mangelnder Kohäsion.",
+    "d": "Die Ablehnung von Gruppennormen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie wählen Gruppenmitglieder bei negativer sozialer Identität und undurchlässigen Gruppengrenzen?",
+    "a": "Soziale Mobilität.",
+    "b": "Sozialer Wettbewerb.",
+    "c": "Soziale Kreativität.",
+    "d": "Individuelle Leistungssteigerung.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Laut der Meta-Analyse von Holt-Lunstad et al. (2010) erhöht soziale Eingebundenheit die Überlebenswahrscheinlichkeit um:",
+    "a": "10 %.",
+    "b": "30 %.",
+    "c": "50 %.",
+    "d": "70 %.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welcher Effekt wurde in der Studie von Terry & Hogg (1999) zur Rolle von Gruppennormen gefunden?",
+    "a": "Gruppennormen beeinflussen nur Niedrigidentifizierte.",
+    "b": "Gruppennormen beeinflussen nur Hochidentifizierte.",
+    "c": "Gruppennormen haben keinen Einfluss auf Verhalten.",
+    "d": "Gruppennormen ersetzen individuelle Einstellungen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum sind Selbsthilfegruppen effektiv?",
+    "a": "Sie bieten finanzielle Unterstützung.",
+    "b": "Ähnlichkeit fördert Vertrauen und reduziert Stigmatisierungsängste.",
+    "c": "Sie setzen auf autoritäre Führung.",
+    "d": "Sie fokussieren auf individuelle Leistung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die Studie von Oyserman et al. (2007) zu identitätsbasierter Motivation?",
+    "a": "Gesundheitsverhalten ist unabhängig von sozialer Identität.",
+    "b": "Ethnische Minderheiten sehen gesundheitsförderndes Verhalten als 'weiß' an.",
+    "c": "Europäischstämmige Amerikaner ignorieren Gesundheitsnormen.",
+    "d": "Identität hat keinen Einfluss auf Risikoverhalten.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Cyberball-Experiment von Eisenberger et al. (2003) wurde sozialer Ausschluss simuliert durch:",
+    "a": "Verbale Ablehnung.",
+    "b": "Ausgrenzung in einem virtuellen Ballspiel.",
+    "c": "Finanzielle Benachteiligung.",
+    "d": "Physische Isolation.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie wählten Teilnehmer in Tajfels Minimalgruppenexperiment am häufigsten?",
+    "a": "Maximierung des gemeinsamen Profits (MJP).",
+    "b": "Maximierung des Eigengruppenprofits (MIP).",
+    "c": "Maximierung der Differenz (MD).",
+    "d": "Faire Aufteilung (F).",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was misst das Konzept 'Perceiver Readiness' in der SCT?",
+    "a": "Die Bereitschaft, Normen zu brechen.",
+    "b": "Die chronische Identifikation mit einer sozialen Kategorie.",
+    "c": "Die Fähigkeit zur Empathie.",
+    "d": "Die Tendenz zur Konformität.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist der Unterschied zwischen injunktiven und deskriptiven Normen?",
+    "a": "Injunktive Normen beschreiben, was getan wird; deskriptive Normen, was getan werden soll.",
+    "b": "Injunktive Normen beschreiben, was getan werden soll; deskriptive Normen, was getan wird.",
+    "c": "Beide beziehen sich auf gesetzliche Vorschriften.",
+    "d": "Deskriptive Normen sind immer informell.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Phase der Gruppensozialisation nach Moreland & Levine folgt auf die Sozialisationsphase?",
+    "a": "Erkundung.",
+    "b": "Aufrechterhaltung.",
+    "c": "Resozialisierung.",
+    "d": "Erinnerung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kennzeichnet Rollenambiguität?",
+    "a": "Klare Definition der Aufgaben.",
+    "b": "Unklare oder mehrdeutige Rollenerwartungen.",
+    "c": "Hohe Identifikation mit der Rolle.",
+    "d": "Konflikte zwischen formellen und informellen Normen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Argument widerlegt Floyd Allports Aussage 'Es gibt keine Psychologie der Gruppen, die nicht eine Psychologie der Individuen ist'?",
+    "a": "Gruppenverhalten lässt sich nicht aus individuellen Eigenschaften extrapolieren.",
+    "b": "Individuen handeln immer rational.",
+    "c": "Gruppen sind stets kooperativ.",
+    "d": "Soziale Normen existieren nicht.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum ist die ACC-Aktivität bei physischem und sozialem Schmerz ähnlich?",
+    "a": "Beide sind evolutionär bedeutsame Schutzmechanismen.",
+    "b": "Soziale Bindung ist für das Überleben irrelevant.",
+    "c": "Physischer Schmerz wird sozial konstruiert.",
+    "d": "Die ACC ist nur für motorische Funktionen zuständig.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Aussage trifft auf die Theorie des realistischen Gruppenkonflikts zu?",
+    "a": "Konflikte entstehen durch kulturelle Unterschiede.",
+    "b": "Konflikte resultieren aus wahrgenommener negativer Interdependenz.",
+    "c": "Konflikte sind immer irrational.",
+    "d": "Konflikte basieren auf Persönlichkeitsunterschieden.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das Meta-Kontrast-Prinzip in der SCT?",
+    "a": "Die Tendenz, intergruppale Unterschiede zu minimieren.",
+    "b": "Das Verhältnis zwischen interkategorialen und intrakategorialen Unterschieden.",
+    "c": "Die Priorisierung individueller über gruppenbezogene Merkmale.",
+    "d": "Die Ablehnung sozialer Vergleiche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Faktoren bestimmen die Salienz einer sozialen Kategorie nach der SCT?",
+    "a": "Fit (Passung) und Perceiver Readiness.",
+    "b": "Gruppengröße und Hierarchie.",
+    "c": "Emotionale Bindung und Ressourcen.",
+    "d": "Kulturelle Normen und Gesetze.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Aussage trifft auf Führungsverhalten in Gruppen zu?",
+    "a": "Führung ist immer auf formelle Autorität zurückzuführen.",
+    "b": "Effektive Führungskräfte unterdrücken individuelle Meinungen.",
+    "c": "Führung kann durch prototypisches Gruppenverhalten entstehen.",
+    "d": "Führung ist unabhängig von sozialer Identifikation.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist eine häufige Ursache für Produktivitätsverluste in Arbeitsgruppen?",
+    "a": "Hohe Gruppenkohäsion.",
+    "b": "Rollenkonflikte und unklare Aufgabenteilung.",
+    "c": "Geringe Gruppengröße.",
+    "d": "Fehlende formelle Normen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Beispiel für soziale Kreativität ist:",
+    "a": "Der Wechsel in eine höherstatusige Gruppe.",
+    "b": "Die Umdeutung negativer Stereotype in Stolz (z.B. 'Black is Beautiful').",
+    "c": "Die Ablehnung aller Gruppennormen.",
+    "d": "Die Imitation von Fremdgruppenverhalten.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Soziale Mobilität ist am ehesten möglich, wenn:",
+    "a": "Gruppengrenzen als undurchlässig wahrgenommen werden.",
+    "b": "Die Identifikation mit der Eigengruppe hoch ist.",
+    "c": "Gruppengrenzen als durchlässig gelten (z.B. durch Bildung).",
+    "d": "Es keine relevanten Fremdgruppen gibt.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein Hauptunterschied zwischen Austauschtheorien und dem sozialen Identitätsansatz (SIT)?",
+    "a": "Austauschtheorien betonen Kategorisierung, SIT Interdependenz.",
+    "b": "SIT betont Kategorisierung, Austauschtheorien Interdependenz.",
+    "c": "Beide Theorien sind identisch in ihren Annahmen.",
+    "d": "Austauschtheorien ignorieren individuelle Bedürfnisse.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage passt zur Interdependenztheorie?",
+    "a": "Gruppenbildung erfordert keine Interaktion.",
+    "b": "Menschen bleiben in Gruppen, wenn der Nutzen die Kosten übersteigt.",
+    "c": "Soziale Identität ist irrelevant für Gruppenverhalten.",
+    "d": "Intergruppale Konflikte entstehen immer durch Vorurteile.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was fügt die TPB (Theorie des geplanten Handeln) im Vergleich zur Theorie des überlegten Handelns hinzu?",
+    "a": "Subjektive Normen.",
+    "b": "Wahrgenommene Verhaltenskontrolle.",
+    "c": "Emotionale Intelligenz.",
+    "d": "Soziale Identifikation.",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der Studie von Terry & Hogg (1999) war der Effekt der Gruppennorm auf die Verhaltensintention:",
+    "a": "Unabhängig von der Identifikation.",
+    "b": "Nur bei Hochidentifizierten signifikant.",
+    "c": "Stärker als der Effekt der Einstellung.",
+    "d": "Durch Rollenambiguität vermittelt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum sehen ethnische Minderheiten Gesundheitsverhalten oft als 'weiß' an (Oyserman et al., 2007)?",
+    "a": "Aufgrund genetischer Unterschiede.",
+    "b": "Weil gesundheitsfördernde Normen mit der Mehrheitsgruppe assoziiert werden.",
+    "c": "Aufgrund mangelnder Bildung.",
+    "d": "Weil sie keine eigenen Gesundheitskonzepte haben.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie beeinflusst Identifikation mit der ethnischen Gruppe das Gesundheitsverhalten?",
+    "a": "Sie erhöht die Compliance mit medizinischen Ratschlägen.",
+    "b": "Sie kann normenkonformes, aber gesundheitsschädliches Verhalten fördern.",
+    "c": "Sie hat keinen Einfluss.",
+    "d": "Sie reduziert soziale Unterstützung.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Zusammenhang besteht zwischen Gruppenkohäsion und Leistung?",
+    "a": "Kohäsion führt immer zu höherer Leistung.",
+    "b": "Kohäsion kann Leistung steigern, aber nur bei klaren Zielen.",
+    "c": "Kohäsion reduziert Leistung durch Konformitätsdruck.",
+    "d": "Es gibt keinen nachweisbaren Zusammenhang.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Risiko hoher Gruppenkohäsion?",
+    "a": "Gruppen denken kritischer (Groupthink).",
+    "b": "Gruppen entwickeln keine Normen.",
+    "c": "Mitglieder verlassen die Gruppe häufiger.",
+    "d": "Es entstehen automatisch Rollenkonflikte.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Hirnregion ist für die Regulation von sozialem Distress (z.B. im Cyberball-Experiment) verantwortlich?",
+    "a": "Amygdala.",
+    "b": "Rechtsventraler präfrontaler Cortex (RVPFC).",
+    "c": "Hippocampus.",
+    "d": "Okzipitallappen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum wird sozialer Ausschluss neuropsychologisch mit physischem Schmerz verglichen?",
+    "a": "Beide aktivieren die gleichen motorischen Areale.",
+    "b": "Beide sind für das Überleben in Gruppen evolutionär relevant.",
+    "c": "Beide werden durch Dopamin reguliert.",
+    "d": "Soziale Schmerzen sind eine kulturelle Konstruktion.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie sollten Gesundheitskampagnen gestaltet sein, um soziale Identitäten zu berücksichtigen?",
+    "a": "Sie sollten universelle Botschaften ohne Gruppenbezug nutzen.",
+    "b": "Sie sollten an gruppenspezifische Normen und Werte anknüpfen.",
+    "c": "Sie sollten ausschließlich auf individueller Ebene ansetzen.",
+    "d": "Sie sollten Fremdgruppen stigmatisieren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum scheitern individuelle Interventionen oft bei der Förderung von Gesundheitsverhalten?",
+    "a": "Weil sie Gruppennormen und soziale Identitäten ignorieren.",
+    "b": "Weil sie zu stark auf finanzielle Anreize setzen.",
+    "c": "Weil sie biologische Faktoren überbetonen.",
+    "d": "Weil sie nur Hochidentifizierte ansprechen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was war die unabhängige Variable im Cyberball-Experiment von Eisenberger et al. (2003)?",
+    "a": "Die Dauer des Spiels.",
+    "b": "Die Anzahl der Mitspieler.",
+    "c": "Die Inklusion vs. Exklusion der Teilnehmer.",
+    "d": "Die Art des Balls.",
+    "richtig": "c"
+  },
+  {
+    "frage": "In Tajfels Minimalgruppenexperimenten erhielten Teilnehmer Geld für:",
+    "a": "Eigengruppen- und Fremdgruppenmitglieder.",
+    "b": "Nur sich selbst.",
+    "c": "Zufällig ausgewählte Personen.",
+    "d": "Die Versuchsleiter.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Kritik wird an der Theorie der sozialen Identität häufig geäußert?",
+    "a": "Sie vernachlässigt individuelle Unterschiede.",
+    "b": "Sie ist zu stark auf Kleingruppen fokussiert.",
+    "c": "Sie ignoriert kulturelle Variabilität.",
+    "d": "Alle genannten Punkte.",
+    "richtig": "d"
+  },
+  {
+    "frage": "Warum ist die Generalisierbarkeit von Minimalgruppenexperimenten begrenzt?",
+    "a": "Sie nutzen nur Kinder als Teilnehmer.",
+    "b": "Künstliche Laborsettings erfassen keine realen Gruppenprozesse.",
+    "c": "Sie berücksichtigen keine neuropsychologischen Daten.",
+    "d": "Sie dauern zu kurz.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bedeutet 'normativer Fit' in der SCT?",
+    "a": "Die Übereinstimmung einer Kategorie mit situativen Erwartungen.",
+    "b": "Die physische Attraktivität von Gruppenmitgliedern.",
+    "c": "Die Anzahl der Gruppenmitglieder.",
+    "d": "Die emotionale Stabilität der Gruppe.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Rolle spielt 'Depersonalisierung' für prosoziales Gruppenverhalten?",
+    "a": "Sie fördert Egoismus.",
+    "b": "Sie ermöglicht die Übernahme gruppenbezogener Normen.",
+    "c": "Sie führt zur Auflösung der Gruppe.",
+    "d": "Sie verstärkt interpersonale Konflikte.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Putnam (2000) reduziert der Beitritt zu einer Gruppe das Mortalitätsrisiko um:",
+    "a": "10 %.",
+    "b": "25 %.",
+    "c": "50 %.",
+    "d": "75 %.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage trifft auf Selbsthilfegruppen zu (Omoto & Snyder, 2010)?",
+    "a": "Sie ersetzen professionelle Therapie.",
+    "b": "Ähnliche Erfahrungen fördern Vertrauen und Bewältigung.",
+    "c": "Sie sind nur bei physischen Erkrankungen effektiv.",
+    "d": "Sie basieren auf Wettbewerb zwischen Mitgliedern.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage fasst den sozialen Identitätsansatz am besten zusammen?",
+    "a": "Gruppenverhalten ist rein rational und nutzenorientiert.",
+    "b": "Selbstdefinition durch Gruppenzugehörigkeit reguliert Erleben und Verhalten.",
+    "c": "Individuelle Persönlichkeit dominiert Gruppenprozesse.",
+    "d": "Soziale Normen sind immer explizit formuliert.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist sozialer Ausschluss ein zentrales Thema der Gesundheitspsychologie?",
+    "a": "Er führt direkt zu physischen Verletzungen.",
+    "b": "Er korreliert mit erhöhtem Risiko für psychische Erkrankungen.",
+    "c": "Er ist ein seltenes Phänomen.",
+    "d": "Er betrifft nur Kinder und Jugendliche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Phänomen beschreibt die Tendenz von Gruppen, extremere Entscheidungen zu treffen als Einzelpersonen?",
+    "a": "Gruppenpolarisierung.",
+    "b": "Soziale Faulheit (Social Loafing).",
+    "c": "Gruppendenken (Groupthink).",
+    "d": "Deindividuation.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was ist eine zentrale methodische Einschränkung von fMRI-Studien wie dem Cyberball-Experiment?",
+    "a": "Sie können keine kausalen Zusammenhänge belegen.",
+    "b": "Sie messen nur bewusste Verarbeitungsprozesse.",
+    "c": "Sie ignorieren kulturelle Unterschiede.",
+    "d": "Sie sind zu kostspielig für breite Anwendung.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie unterscheiden sich kollektivistische Kulturen in der Gruppenbildung von individualistischen?",
+    "a": "Sie betonen stärker die emotionale Bindung an Eigengruppen.",
+    "b": "Sie lehnen soziale Identitäten grundsätzlich ab.",
+    "c": "Sie priorisieren individuelle Leistung über Gruppennormen.",
+    "d": "Sie nutzen keine informellen Rollen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welches ethische Problem ist mit Experimenten zum sozialen Ausschluss (z.B. Cyberball) verbunden?",
+    "a": "Risiko langfristiger psychischer Belastung für Teilnehmer.",
+    "b": "Fehlende informed consent-Prozeduren.",
+    "c": "Verletzung der Privatsphäre durch Gehirnscans.",
+    "d": "Alle genannten Punkte.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Eine Intervention zur Steigerung körperlicher Aktivität in einer Community nutzt lokale Sportvereine als Bezugsgruppe. Welches Konzept wird hier angewendet?",
+    "a": "Soziale Mobilität.",
+    "b": "Identitätsbasierte Motivation.",
+    "c": "Deskriptive Normen.",
+    "d": "Kognitive Dissonanz.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum sind langfristige Freundschaften laut Meta-Analysen ein stärkerer Gesundheitsprotektionsfaktor als lockere Bekanntschaften?",
+    "a": "Sie bieten stabilere emotionale Unterstützung.",
+    "b": "Sie erhöhen den sozialen Status.",
+    "c": "Sie reduzieren die Anzahl benötigter Gruppen.",
+    "d": "Sie sind einfacher zu pflegen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was ist ein Hauptunterschied zwischen der Theorie der sozialen Identität und der realistischen Konflikttheorie?",
+    "a": "SIT betont kognitive Kategorisierung, RCT fokussiert auf Ressourcenkonkurrenz.",
+    "b": "RCT ignoriert die Rolle von Emotionen.",
+    "c": "SIT ist nur auf Kleingruppen anwendbar.",
+    "d": "RCT erklärt keine intergruppalen Konflikte.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Kritik lässt sich an der Generalisierbarkeit von Tajfels Minimalgruppenexperimenten üben?",
+    "a": "Künstliche Laborsituationen bilden reale Machtungleichgewichte nicht ab.",
+    "b": "Teilnehmer waren ausschließlich Kinder.",
+    "c": "Es wurden keine neuropsychologischen Daten erhoben.",
+    "d": "Die Ergebnisse sind statistisch insignifikant.",
+    "richtig": "a"
+  },
+  {
+    "frage": "In einer Studie zeigten Ostdeutsche nach der Wiedervereinigung verstärkt Solidarität untereinander. Welches SIT-Konzept erklärt dies?",
+    "a": "Soziale Kreativität durch Umbewertung von Vergleichsdimensionen.",
+    "b": "Soziale Mobilität durch Annäherung an Westnormen.",
+    "c": "Depersonalisierung durch politischen Druck.",
+    "d": "Negative soziale Identität als Dauerzustand.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum könnte eine Gesundheitskampagne scheitern, die Raucher als 'unverantwortlich' stigmatisiert?",
+    "a": "Sie verstärkt die soziale Identität als Raucher und fördert Widerstand.",
+    "b": "Sie ignoriert individuelle Biografien.",
+    "c": "Sie setzt zu stark auf finanzielle Anreize.",
+    "d": "Sie überschätzt die Rolle deskriptiver Normen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Phase der Gruppensozialisation beschreibt die Verhandlung über Rollen und Positionen innerhalb der Gruppe?",
+    "a": "Erkundung",
+    "b": "Aufrechterhaltung",
+    "c": "Resozialisierung",
+    "d": "Erinnerung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Putnam (2000) reduziert der Beitritt zu einer Gruppe das Mortalitätsrisiko um ca. 50 %. Welcher Mechanismus erklärt dies nicht?",
+    "a": "Emotionale Unterstützung durch Gruppenzugehörigkeit.",
+    "b": "Verbesserter Zugang zu materiellen Ressourcen.",
+    "c": "Stärkere Identifikation mit individuellen Zielen.",
+    "d": "Reduktion von Stress durch soziale Einbindung.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Im Transkript wird die Solidarität unter Ostdeutschen nach der Wiedervereinigung als Beispiel für welche Strategie genannt?",
+    "a": "Soziale Mobilität.",
+    "b": "Soziale Kreativität durch Umbewertung von Vergleichsdimensionen.",
+    "c": "Depersonalisierung.",
+    "d": "Realistischen Gruppenkonflikt.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das 'Meta-Kontrast-Prinzip' in der SCT?",
+    "a": "Die Tendenz, intergruppale Unterschiede zu maximieren.",
+    "b": "Das Verhältnis von Unterschieden zwischen Kategorien zu Unterschieden innerhalb einer Kategorie.",
+    "c": "Die Priorisierung individueller Merkmale über Gruppenmerkmale.",
+    "d": "Die Ablehnung sozialer Vergleiche.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Beispiel aus dem Transkript veranschaulicht Depersonalisierung?",
+    "a": "Bayer-Leverkusen-Fans, die sich primär über Vereinszugehörigkeit definieren.",
+    "b": "Ein Einzelner, der sich gegen Gruppennormen stellt.",
+    "c": "Die Auflösung einer Arbeitsgruppe aufgrund mangelnder Kohäsion.",
+    "d": "Die Übernahme einer Führungsrolle durch Expertise.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welcher Effekt entsteht, wenn formelle und informelle Normen in Organisationen im Konflikt stehen?",
+    "a": "Steigerung der Produktivität durch klare Regeln.",
+    "b": "Unterminierung der Wirksamkeit formeller Regelungen.",
+    "c": "Erhöhung der Gruppenkohäsion.",
+    "d": "Automatische Anpassung der informellen an formelle Normen.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum können neue Gruppenmitglieder mit Kritik an der Gruppe auf Widerstand stoßen (Hornsey et al., 2007)?",
+    "a": "Kritik wird als Bedrohung der Gruppenidentität wahrgenommen.",
+    "b": "Neue Mitglieder haben keine formelle Autorität.",
+    "c": "Gruppen bevorzugen immer den Status quo.",
+    "d": "Kritik verstößt gegen injunktive Normen.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welches Konzept erklärt die Aktivierung des ACC bei sozialem Ausschluss?",
+    "a": "Evolutionäre Bedeutung sozialer Bindung.",
+    "b": "Kognitive Dissonanz.",
+    "c": "Soziale Faulheit.",
+    "d": "Deindividuation.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie beeinflusst die 'Perceiver Readiness' die Salienz einer sozialen Kategorie?",
+    "a": "Sie bestimmt die physische Attraktivität der Gruppe.",
+    "b": "Sie reflektiert die chronische Identifikation mit der Kategorie.",
+    "c": "Sie reduziert intergruppale Konflikte.",
+    "d": "Sie priorisiert individuelle über gruppenbezogene Merkmale.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf organisationalen Wandel durch Normenkonflikte zu?",
+    "a": "Informelle Normen werden immer durch formelle ersetzt.",
+    "b": "Konflikte können zur Anpassung formeller Regelungen führen.",
+    "c": "Rollenambiguität verhindert Innovation.",
+    "d": "Gruppenkohäsion hemmt Wandel.",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
