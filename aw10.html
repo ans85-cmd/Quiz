@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was beschreibt 'informationalen Einfluss' nach Deutsch und Gerard?",
+    "a": "Anpassung aus Angst vor Ablehnung",
+    "b": "Orientierung an anderen zur akkuraten Realitätswahrnehmung",
+    "c": "Gehorsam gegenüber Autoritäten",
+    "d": "Rebellion gegen Gruppennormen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Sherifs Experiment zum autokinetischen Effekt demonstriert:",
+    "a": "Normativen Einfluss",
+    "b": "Entstehung sozialer Normen durch informellen Einfluss",
+    "c": "Gehorsam gegenüber Autoritäten",
+    "d": "Minoritätseinfluss",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Asch-Experiment gaben ~37% der Teilnehmer falsche Antworten, weil:",
+    "a": "Sie die Linien tatsächlich falsch sahen",
+    "b": "Sie Angst vor sozialer Ablehnung hatten (normativer Einfluss)",
+    "c": "Die Aufgabe zu schwer war",
+    "d": "Sie bezahlt wurden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der 'False-Consensus-Effekt' bezieht sich auf:",
+    "a": "Überschätzung der Übereinstimmung mit eigenen Einstellungen",
+    "b": "Unterschätzung der Gruppenkohäsion",
+    "c": "Genauigkeit von Mehrheitsurteilen",
+    "d": "Einfluss von Autoritäten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Minoritätseinfluss nach Moscovici ist am wirksamsten, wenn die Minorität:",
+    "a": "Große Größe hat",
+    "b": "Inkonsistente Positionen vertritt",
+    "c": "Konsistent und einstimmig auftritt",
+    "d": "Hohen Status hat",
+    "richtig": "c"
+  },
+  {
+    "frage": "Milgrams Gehorsamsexperiment zeigte, dass Gehorsam abnahm, wenn:",
+    "a": "Das 'Opfer' unsichtbar war",
+    "b": "Die Autoritätsperson nicht anwesend war",
+    "c": "Andere Teilnehmer den Gehorsam verweigerten",
+    "d": "Die Schocks stärker wurden",
+    "richtig": "c"
+  },
+  {
+    "frage": "Gruppenpolarisation bedeutet, dass Gruppen nach Diskussionen:",
+    "a": "Extremere Positionen einnehmen als der individuelle Durchschnitt",
+    "b": "Immer Kompromisse finden",
+    "c": "Sich in Untergruppen aufspalten",
+    "d": "Ihre ursprüngliche Position aufgeben",
+    "richtig": "a"
+  },
+  {
+    "frage": "Gruppendenken (Janis) tritt besonders in Gruppen auf mit:",
+    "a": "Geringer Kohäsion und offener Kommunikation",
+    "b": "Hoher Kohäsion, Isolation und direktiver Führung",
+    "c": "Heterogener Zusammensetzung",
+    "d": "Keinem Zeitdruck",
+    "richtig": "b"
+  },
+  {
+    "frage": "Soziale Erleichterung (Zajonc) beschreibt:",
+    "a": "Leistungssteigerung bei einfachen Aufgaben in Anwesenheit anderer",
+    "b": "Leistungsminderung bei einfachen Aufgaben",
+    "c": "Immer positive Effekte von Gruppenarbeit",
+    "d": "Verminderte Erregung in Gruppen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Beim 'Trittbrettfahren' in sozialen Dilemmata:",
+    "a": "Engagieren sich alle Mitglieder stark",
+    "b": "Nutzen Einzelne kollektive Güter ohne Beitrag",
+    "c": "Werden Ressourcen gleichmäßig verteilt",
+    "d": "Entstehen keine Konflikte",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der 'Köhler-Effekt' in Gruppen besagt, dass:",
+    "a": "Schwächere Mitglieder sich weniger anstrengen",
+    "b": "Schwächere Mitglieder sich mehr anstrengen, um nicht aufzufallen",
+    "c": "Stärkere Mitglieder sich zurücklehnen",
+    "d": "Gruppen immer schlechter abschneiden als Einzelpersonen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Transaktives Gedächtnis bezieht sich auf:",
+    "a": "Verteilung von Erinnerungsaufgaben in einer Gruppe",
+    "b": "Individuelles Gedächtnistraining",
+    "c": "Vergessen von Gruppenentscheidungen",
+    "d": "Konfliktlösungsstrategien",
+    "richtig": "a"
+  },
+  {
+    "frage": "Devianz ist definiert als:",
+    "a": "Anpassung an Normen",
+    "b": "Verstoß gegen etablierte soziale Normen (Sumner)",
+    "c": "Förderung von Gruppenzielen",
+    "d": "Identifikation mit Autoritäten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches ist KEIN Typ sozialer Normen?",
+    "a": "Bräuche",
+    "b": "Gesetze",
+    "c": "Sitten",
+    "d": "Emotionen",
+    "richtig": "d"
+  },
+  {
+    "frage": "‘Konsensverbrechen’ (Hagan) sind gekennzeichnet durch:",
+    "a": "Geringe Schwere und hohen Bewertungskonsens",
+    "b": "Hohe Schwere und hohen Bewertungskonsens (z. B. Mord)",
+    "c": "Keine gesetzliche Sanktionierung",
+    "d": "Tolerierung in der Gesellschaft",
+    "richtig": "b"
+  },
+  {
+    "frage": "Therapeutische soziale Kontrolle (Foucault) zielt auf:",
+    "a": "Bestrafung von Devianz",
+    "b": "Anpassung devianten Verhaltens durch Psychotherapie",
+    "c": "Finanzielle Entschädigung von Opfern",
+    "d": "Förderung von Rebellion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im DSM-I (1952) wurde Homosexualität klassifiziert als:",
+    "a": "Normale sexuelle Orientierung",
+    "b": "Sexuelle Devianzstörung",
+    "c": "Keine Erwähnung",
+    "d": "Biologische Normvariante",
+    "richtig": "b"
+  },
+  {
+    "frage": "Evolutionspsychologische Erklärungen für Sanktionierung von Devianz betonen:",
+    "a": "Vermeidung 'schlechter Austauschpartner'",
+    "b": "Kulturelle Relativität",
+    "c": "Politische Ideologien",
+    "d": "Wirtschaftliche Faktoren",
+    "richtig": "a"
+  },
+  {
+    "frage": "Rechtsgerichteter Autoritarismus (Altemeyer) umfasst NICHT:",
+    "a": "Autoritäre Aggression",
+    "b": "Autoritäre Unterwürfigkeit",
+    "c": "Konventionalismus",
+    "d": "Soziale Gleichheit",
+    "richtig": "d"
+  },
+  {
+    "frage": "Soziale Dominanzorientierung (Pratto) beinhaltet die Überzeugung, dass:",
+    "a": "Alle Menschen gleichwertig sind",
+    "b": "Soziale Hierarchien notwendig sind",
+    "c": "Demokratie die beste Regierungsform ist",
+    "d": "Autoritäten infrage gestellt werden sollten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach dem Dual-Process-Motivational-Modell (Duckitt) entsteht Autoritarismus primär durch:",
+    "a": "Wahrgenommene Wettbewerbssituationen",
+    "b": "Wahrgenommene Bedrohung und Unsicherheit",
+    "c": "Genetische Faktoren",
+    "d": "Wirtschaftlichen Wohlstand",
+    "richtig": "b"
+  },
+  {
+    "frage": "Linksgerichteter Autoritarismus unterscheidet sich vom rechtsgerichteten durch:",
+    "a": "Ablehnung aller Autoritäten",
+    "b": "Moralischen Absolutismus für progressive Werte",
+    "c": "Unterstützung traditioneller Normen",
+    "d": "Fokus auf individuelle Freiheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Metaanalysen (Hu et al.) zeigen: Gender-nonkonforme Personen werden häufiger Opfer von:",
+    "a": "Finanzieller Förderung",
+    "b": "Verbale Gewalt (besonders in Peer Groups)",
+    "c": "Sozialer Anerkennung",
+    "d": "Beruflichem Aufstieg",
+    "richtig": "b"
+  },
+  {
+    "frage": "Männer mit gender-nonkonformem Verhalten sind stärker von Viktimisierung betroffen als Frauen, weil:",
+    "a": "Weibliche Genderrollen flexibler sind",
+    "b": "Männliche Genderrollen enger sanktioniert werden",
+    "c": "Frauen seltener Opfer werden",
+    "d": "Gesellschaft Frauen stärker schützt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der 'Black-Sheep-Effekt' (Marques) beschreibt:",
+    "a": "Belohnung von Normverstößen",
+    "b": "Strengere Bestrafung von Abweichlern in der Eigengruppe",
+    "c": "Gleichbehandlung aller Gruppenmitglieder",
+    "d": "Förderung von Innovationen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach der Selbstkategorisierungstheorie üben Minoritäten nur dann Einfluss aus, wenn sie:",
+    "a": "Als Fremdgruppe wahrgenommen werden",
+    "b": "Als Teil der Eigengruppe re-kategorisiert werden",
+    "c": "Wirtschaftliche Macht haben",
+    "d": "Keine Prototypizität aufweisen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Respektvolle Behandlung in Gruppen fördert Kooperation, weil sie:",
+    "a": "Die soziale Identifikation stärkt",
+    "b": "Individuelle Leistungen belohnt",
+    "c": "Wettbewerb erhöht",
+    "d": "Autoritäten schwächt",
+    "richtig": "a"
+  },
+  {
+    "frage": "Bei disjunkten Aufgaben hängt die Gruppenleistung ab vom:",
+    "a": "Schwächsten Mitglied",
+    "b": "Durchschnitt aller Mitglieder",
+    "c": "Leistungsstärksten Mitglied",
+    "d": "Zufallsprinzip",
+    "richtig": "c"
+  },
+  {
+    "frage": "‘Soziales Faulenzen’ tritt auf, wenn:",
+    "a": "Individuelle Beiträge nicht identifizierbar sind",
+    "b": "Klare Rollenverteilung existiert",
+    "c": "Gruppen klein sind",
+    "d": "Aufgaben einfach sind",
+    "richtig": "a"
+  },
+  {
+    "frage": "Diversität in Gruppen verbessert die Leistung besonders bei:",
+    "a": "Additiven Aufgaben",
+    "b": "Disjunkten Aufgaben",
+    "c": "Konjunkten Aufgaben",
+    "d": "Diskretionären Aufgaben",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das 'Group-Engagement-Modell' (Tyler) betont die Bedeutung von:",
+    "a": "Starker Führung",
+    "b": "Prozeduraler Gerechtigkeit und Respekt",
+    "c": "Wirtschaftlichen Anreizen",
+    "d": "Autoritären Strukturen",
+    "richtig": "b"
+  },
+  {
+    "frage": "In sozialen Dilemmata kooperieren 'prosozial Orientierte' häufiger als 'wettbewerbsorientierte', weil sie:",
+    "a": "Eigennutz maximieren wollen",
+    "b": "Gemeinsamen Gewinn maximieren wollen",
+    "c": "Andere dominieren wollen",
+    "d": "Risiko vermeiden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der Tit-for-Tat-Ansatz in Gefangenendilemmata funktioniert, weil er:",
+    "a": "Immer kooperiert",
+    "b": "Reziprozitätsnorm nutzt und 'verzeiht'",
+    "c": "Nie kooperiert",
+    "d": "Zufällig entscheidet",
+    "richtig": "b"
+  },
+  {
+    "frage": "Michel Foucault analysierte soziale Kontrolle als:",
+    "a": "Mittel zur Aufrechterhaltung von Machtstrukturen",
+    "b": "Wirtschaftliches Instrument",
+    "c": "Biologischen Mechanismus",
+    "d": "Individuelles Wahlrecht",
+    "richtig": "a"
+  },
+  {
+    "frage": "In Milgrams Experiment sank der Gehorsam auf 0 %, wenn:",
+    "a": "Zwei Versuchsleiter widersprüchliche Anweisungen gaben",
+    "b": "Das Opfer sichtbar war",
+    "c": "Die Teilnehmer bezahlt wurden",
+    "d": "Die Schocks schmerzhaft waren",
+    "richtig": "a"
+  },
+  {
+    "frage": "Pluralistische Ignoranz beschreibt:",
+    "a": "Öffentliche Konformität trotz privater Ablehnung",
+    "b": "Privaten Einfluss ohne öffentliche Wirkung",
+    "c": "Absolute Übereinstimmung in Gruppen",
+    "d": "Wissen über Gruppenprozesse",
+    "richtig": "a"
+  },
+  {
+    "frage": "'Soziale Variation' nach Hagan bezieht sich auf Devianz mit:",
+    "a": "Hoher Schwere und niedrigem Konsens",
+    "b": "Niedriger Schwere und niedrigem Konsens (z.B. Piercings)",
+    "c": "Illegalem Charakter",
+    "d": "Starker Sanktionierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Informelle Sanktionen erfolgen durch:",
+    "a": "Gerichtliche Urteile",
+    "b": "Verbale/nonverbale Kommunikation (z. B. Blicke)",
+    "c": "Freiheitsentzug",
+    "d": "Therapeutische Maßnahmen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das 'Categorization-Elaboration Model' (van Knippenberg) erklärt positive Diversitätseffekte durch:",
+    "a": "Stereotypisierung",
+    "b": "Vertiefte Informationsverarbeitung",
+    "c": "Reduzierte Kommunikation",
+    "d": "Homogenität",
+    "richtig": "b"
+  },
+  {
+    "frage": "'Soziale Kompensation' bedeutet, dass:",
+    "a": "Leistungsstarke Mitglieder Schwächere ausgleichen",
+    "b": "Alle Mitglieder weniger leisten",
+    "c": "Trittbrettfahren gefördert wird",
+    "d": "Konflikte ignoriert werden",
+    "richtig": "a"
+  },
+  {
+    "frage": "Nach der Metaanalyse von Karau & Williams sinkt Trittbrettfahren, wenn Gruppenmitglieder:",
+    "a": "Keine persönliche Beziehung haben",
+    "b": "Starke positive Beziehungen haben",
+    "c": "Anonym sind",
+    "d": "Unterschiedliche Ziele verfolgen",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Prozedurale Fairness\" in Gruppenkommunikation bedeutet:",
+    "a": "Respektvoller Umgangston",
+    "b": "Möglichkeit, den eigenen Standpunkt zu äußern",
+    "c": "Schnelle Informationsweitergabe",
+    "d": "Belohnung für Konformität",
+    "richtig": "b"
+  },
+  {
+    "frage": "William Sumners Definition von Devianz betont:",
+    "a": "Genetische Ursachen",
+    "b": "Verstoß gegen kontextuelle/kulturelle Normen",
+    "c": "Wirtschaftliche Faktoren",
+    "d": "Individuelle Freiheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Gay Travel Index-Karte zeigt, dass LGBTQ+-Sicherheit korreliert mit:",
+    "a": "Autoritären Regimen",
+    "b": "Demokratischen Staaten",
+    "c": "Religiösem Fundamentalismus",
+    "d": "Wirtschaftlicher Armut",
+    "richtig": "b"
+  },
+  {
+    "frage": "Beim \"Trotteleffekt\" reduzieren Mitglieder ihr Engagement, um:",
+    "a": "Nicht ausgenutzt zu wirken",
+    "b": "Die Gruppe zu stärken",
+    "c": "Belohnt zu werden",
+    "d": "Konflikte zu vermeiden",
+    "richtig": "a"
+  },
+  {
+    "frage": "\"Schlichtende soziale Kontrolle\" zielt auf:",
+    "a": "Bestrafung",
+    "b": "Interessenausgleich zwischen Individuum und Kollektiv",
+    "c": "Therapie",
+    "d": "Isolation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach Moscovicis Konversionstheorie führt Minoritätseinfluss zu:",
+    "a": "Compliance",
+    "b": "Privater Akzeptanz (Konversion)",
+    "c": "Öffentlicher Ablehnung",
+    "d": "Autoritären Reaktionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Ressourcendilemma:",
+    "a": "Steuern alle in einen gemeinsamen Pool",
+    "b": "Wird eine Ressource übernutzt, wenn jeder Eigennutz maximiert",
+    "c": "Kooperation ist unkritisch",
+    "d": "Trittbrettfahren ist unmöglich",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Sozialer Wettbewerb\" als Motivationsgewinn entsteht, wenn:",
+    "a": "Individuelle Leistungen vergleichbar sind",
+    "b": "Anonymität herrscht",
+    "c": "Aufgaben komplex sind",
+    "d": "Keine Führung existiert",
+    "richtig": "a"
+  },
+  {
+    "frage": "Hautkrankheiten lösen oft Stigmatisierung aus, weil sie evolutionär als Signal für:",
+    "a": "Schlechte Austauschpartner/Krankheitsrisiko",
+    "b": "Hohe Intelligenz",
+    "c": "Soziale Dominanz",
+    "d": "Kreativität",
+    "richtig": "a"
+  },
+  {
+    "frage": "Das \"KSA-3\" (Kurzskala Autoritarismus) misst:",
+    "a": "Empathie",
+    "b": "Autoritäre Aggression, Unterwürfigkeit, Konventionalismus",
+    "c": "Soziale Dominanz",
+    "d": "Kognitive Fähigkeiten",
+    "richtig": "b"
+  },
+  {
+    "frage": "In Brainstorming-Gruppen entstehen \"Produktionsblockierungen\", weil:",
+    "a": "Mitglieder gleichzeitig sprechen können",
+    "b": "Mitglieder warten müssen, bis andere fertig sind",
+    "c": "Keine Struktur existiert",
+    "d": "Aufgaben zu einfach sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Rechtsgerichteter Autoritarismus\" wird laut Duckitt ausgelöst durch:",
+    "a": "Wettbewerb und Statuskonflikte",
+    "b": "Bedrohung und Unsicherheit",
+    "c": "Wirtschaftliches Wachstum",
+    "d": "Geringe Gewissenhaftigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die historische Pathologisierung der \"hysterischen Persönlichkeitsstörung\" kritisierte:",
+    "a": "Biologische Ursachen",
+    "b": "Pathologisierung rollennonkonformen Verhaltens von Frauen",
+    "c": "Vernachlässigung genetischer Faktoren",
+    "d": "Zu geringe Diagnosehäufigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Kommunikation in sozialen Dilemmata fördert Kooperation, weil sie:",
+    "a": "Anonymität sichert",
+    "b": "Kooperative Normen etabliert",
+    "c": "Wettbewerb verstärkt",
+    "d": "Individuelle Ziele betont",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Soziale Hemmung\" tritt auf bei:",
+    "a": "Einfachen Aufgaben",
+    "b": "Komplexen/unvertrauten Aufgaben",
+    "c": "Hoher Gruppenkohäsion",
+    "d": "Geringer Gruppengröße",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Metaanalyse von Bond & Titus (1983) zeigte, dass soziale Erleichterung/Hemmung:",
+    "a": "Starke Effekte hat",
+    "b": "Geringe Effekte hat (besonders negativ bei komplexen Aufgaben)",
+    "c": "Nur bei Männern auftritt",
+    "d": "Kulturunabhängig ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im \"transaktiven Gedächtnis\" ist entscheidend, dass Mitglieder wissen:",
+    "a": "Wer welche Expertise hat",
+    "b": "Wie man konkurriert",
+    "c": "Die genauen Gruppenregeln",
+    "d": "Die persönlichen Hintergründe aller",
+    "richtig": "a"
+  },
+  {
+    "frage": "\"Altruistische soziale Wertorientierung\" bedeutet:",
+    "a": "Maximierung des eigenen Gewinns",
+    "b": "Maximierung des Gewinns anderer",
+    "c": "Maximierung der Differenz zu anderen",
+    "d": "Minimierung von Konflikten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das \"Group-Engagement-Modell\" sagt vorher, dass faire Behandlung durch Autoritäten:",
+    "a": "Soziale Identifikation schwächt",
+    "b": "Soziale Identifikation stärkt und Konformität fördert",
+    "c": "Rebellion auslöst",
+    "d": "Wirtschaftlichen Erfolg mindert",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Pluralistische Ignoranz\" liegt vor, wenn:",
+    "a": "Alle Gruppenmitglieder privat anders denken als öffentlich gezeigt",
+    "b": "Ein klarer Gruppenkonsens besteht",
+    "c": "Autoritäten infrage gestellt werden",
+    "d": "Minoritäten dominant sind",
+    "richtig": "a"
+  },
+  {
+    "frage": "Beim \"Knowledge Hoarding\" (Ray et al.) halten Personen Wissen zurück, wenn:",
+    "a": "Soziale Vergleiche selbstwertbedrohlich sind",
+    "b": "Gruppenziele gefördert werden",
+    "c": "Transaktives Gedächtnis etabliert ist",
+    "d": "Keine Expertise vorhanden ist",
+    "richtig": "a"
+  },
+  {
+    "frage": "\"Gruppensynchronisation\" zielt primär auf:",
+    "a": "Reduktion von Koordinationsverlusten",
+    "b": "Erhöhung der Gruppengröße",
+    "c": "Stärkung autoritärer Führung",
+    "d": "Förderung von Trittbrettfahren",
+    "richtig": "a"
+  },
+  {
+    "frage": "Im Group-Engagement-Modell fördert prozedurale Gerechtigkeit Kooperation durch:",
+    "a": "Stärkung von Stolz und Respektwahrnehmung",
+    "b": "Monetäre Anreize",
+    "c": "Bestrafung abweichender Meinungen",
+    "d": "Reduktion der Gruppenidentifikation",
+    "richtig": "a"
+  },
+  {
+    "frage": "Die \"Tit-for-Tat\"-Strategie im Gefangenendilemma ist erfolgreich, weil sie:",
+    "a": "Immer kooperiert",
+    "b": "Reziprozität nutzt und nach Defektion wieder kooperiert",
+    "c": "Nie vergibt",
+    "d": "Zufällige Entscheidungen trifft",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Soziale Erleichterung\" (Zajonc) wird am stärksten durch erklärt:",
+    "a": "Bewertungsangst",
+    "b": "Biologische Aktivierung",
+    "c": "Kognitive Dissonanz",
+    "d": "Normative Konformität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Ressourcendilemma führt Übernutzung typischerweise zu:",
+    "a": "Gleichmäßiger Ressourcenverteilung",
+    "b": "Ressourcenkollaps (\"Tragik der Allmende\")",
+    "c": "Automatischer Regeneration",
+    "d": "Höherer Gruppenkohäsion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Behringer et al. zeigten: Wissensaustausch in digitalen Medien steigt besonders bei:",
+    "a": "Hoher Identifikation mit der Organisation",
+    "b": "Anonymer Teilnahme",
+    "c": "Wettbewerbsorientierung",
+    "d": "Geringer Tool-Nützlichkeit",
+    "richtig": "a"
+  },
+  {
+    "frage": "Die \"Kronzeugenregel\" im Gefangenendilemma begünstigt:",
+    "a": "Kooperation beider Parteien",
+    "b": "Einseitige Defektion des Geständigen",
+    "c": "Höchststrafen für beide",
+    "d": "Gleichzeitiges Schweigen",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Diffusion der Verantwortung\" in großen Gruppen erklärt:",
+    "a": "Steigende Kooperationsbereitschaft",
+    "b": "Sinkende individuelle Beiträge",
+    "c": "Höhere Identifizierbarkeit",
+    "d": "Stärkere Führungsakzeptanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im N-Parteien-Gefangenendilemma (Kino-Feuer) ist die optimale Strategie:",
+    "a": "Panisches Rennen zum Ausgang",
+    "b": "Geduldiges Nacheinandergehen",
+    "c": "Warten auf Anweisungen",
+    "d": "Ausnutzen anderer",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Pro-norm Devianz\" (Abrams et al.) beschreibt:",
+    "a": "Verstärkte Befolgung von Gruppennormen (z. B. Fanatismus)",
+    "b": "Revolutionäre Positionen",
+    "c": "Verdeckte Regelverstöße",
+    "d": "Autoritätskritik",
+    "richtig": "a"
+  },
+  {
+    "frage": "Milgrams Variation mit zwei widersprüchlichen Versuchsleitern demonstrierte:",
+    "a": "Bedeutung von informationalem Einfluss",
+    "b": "Unwirksamkeit von Autoritäten",
+    "c": "Stärkere Gehorsamsbereitschaft",
+    "d": "Rolle von Empathie",
+    "richtig": "a"
+  },
+  {
+    "frage": "Das \"Categorization-Elaboration Model\" argumentiert, Diversität fördert Innovation nur wenn:",
+    "a": "Soziodemografische Merkmale dominieren",
+    "b": "Stereotype aktiviert werden",
+    "c": "Motivation und kognitive Kapazität vorhanden sind",
+    "d": "Homogenität erhalten bleibt",
+    "richtig": "c"
+  },
+  {
+    "frage": "\"Private Akzeptanz\" nach Sherif zeigt sich durch:",
+    "a": "Öffentliche Konformität unter Druck",
+    "b": "Dauerhafte Übernahme der Gruppennorm",
+    "c": "Verweigerung von Anpassung",
+    "d": "Strategische Täuschung",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
