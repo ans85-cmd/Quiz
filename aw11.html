@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Welche Norm beschreibt Fairness als Aufteilung proportional zum geleisteten Beitrag?",
+    "a": "Gleichheitsprinzip",
+    "b": "Equity-Prinzip",
+    "c": "Bedürftigkeitsprinzip",
+    "d": "Solidaritätsprinzip",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie nennt man den Befund, dass selbst unvorteilhafte Entscheidungen akzeptiert werden, wenn das Verfahren als fair erlebt wird?",
+    "a": "Loss-Aversion-Effekt",
+    "b": "Fair-Process-Effect",
+    "c": "Framing-Effekt",
+    "d": "Status-quo-Bias",
+    "richtig": "b"
+  },
+  {
+    "frage": "Prozess- vs. Entscheidungskontrolle unterscheiden Thibaut & Walker unter dem Sammelbegriff …",
+    "a": "formale Verfahrensaspekte",
+    "b": "Kontrollebenen",
+    "c": "Verfahrensbasis",
+    "d": "Mitsprachegrade",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche der folgenden Leventhal-Kriterien bezieht sich auf die Möglichkeit, Fehler anzufechten?",
+    "a": "Konsistenz",
+    "b": "Korrigierbarkeit",
+    "c": "Unvoreingenommenheit",
+    "d": "Repräsentativität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Verfahren, in dem die Autorität respektlos mit Beteiligten spricht, verletzt primär …",
+    "a": "Neutralität",
+    "b": "Prozesskontrolle",
+    "c": "Respektkomponente der Interaktionsgerechtigkeit",
+    "d": "Konsistenz",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Barriere beschreibt die systematische Abwertung von Vorschlägen der Gegenseite aus Misstrauen?",
+    "a": "Nullsummenannahme",
+    "b": "Reaktive Abwertung",
+    "c": "Ankereffekt",
+    "d": "Sunk-Cost-Fallacy",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Verhandlungsgegenstand, bei dem jeder Gewinn der einen Partei gleich hohe Kosten für die andere bedeutet, heißt …",
+    "a": "additiv",
+    "b": "distributiv",
+    "c": "integrativ",
+    "d": "expansiv",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was gehört NICHT zu Leventhals formalen Kriterien?",
+    "a": "Zuverlässigkeit",
+    "b": "Ethische Grundsätze",
+    "c": "Bedürftigkeit",
+    "d": "Unvoreingenommenheit",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wenn Parteien unterschiedliche, aber nicht antagonistische Interessen haben, spricht man von … Verhandlungspotential.",
+    "a": "distributivem",
+    "b": "negativem",
+    "c": "integrativem",
+    "d": "neutralem",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage zu Ankereffekten ist korrekt?",
+    "a": "Nur Laien sind davon betroffen.",
+    "b": "Frühe Forderungen verengen oft unnötig den Spielraum.",
+    "c": "Sie treten nur bei Preisverhandlungen auf.",
+    "d": "Ankereffekte machen spätere Angebote attraktiver.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Orange-Beispiel illustriert die Aufteilung von Schale und Fruchtfleisch …",
+    "a": "Kompromisslösung",
+    "b": "distributive Tausch-Logik",
+    "c": "integrative Lösung",
+    "d": "Nullsummenannahme",
+    "richtig": "c"
+  },
+  {
+    "frage": "Lind & Tyler bezeichnen den Einfluss von fairen Verfahren auf Akzeptanz unvorteilhafter Ergebnisse als …",
+    "a": "Trust-Effect",
+    "b": "Procedural-Shield",
+    "c": "Fair-Process-Effect",
+    "d": "Equity-Buffer",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage stimmt laut Forschung zu Geschlecht und Verhandlung?",
+    "a": "Männer erzielen immer bessere Ergebnisse.",
+    "b": "Erfahrung reduziert beobachtete Geschlechtsunterschiede.",
+    "c": "Frauen verhandeln besser für sich selbst als für andere.",
+    "d": "Kontext spielt keine Rolle.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Interpersonale Gerechtigkeit wird im Text synonym verwendet mit …",
+    "a": "Ergebnisgerechtigkeit",
+    "b": "Interaktionsgerechtigkeit",
+    "c": "Distributive Fairness",
+    "d": "Kontrollgerechtigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Option ist KEIN Bestandteil der drei interaktionalen Hauptaspekte nach Tyler & Lind?",
+    "a": "Neutralität",
+    "b": "Vertrauenswürdigkeit",
+    "c": "Transparenz",
+    "d": "Respektvolle Behandlung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Ein faires Verfahren benötigt gemäß Leventhal unter anderem „Ausgewogenheit“. Gemeint ist …",
+    "a": "strikte Ergebnisgleichheit",
+    "b": "angemessene Berücksichtigung aller Interessen",
+    "c": "Entscheidungsbeschleunigung",
+    "d": "transparente Sanktionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der Begriff „fair process effect“ betont den Vorrang von … gegenüber Ergebnisgerechtigkeit.",
+    "a": "Verfahrensgerechtigkeit",
+    "b": "Verteilungsgerechtigkeit",
+    "c": "Leistungsanreizen",
+    "d": "Bedürftigkeit",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Kontrolle ist laut Thibaut & Walker entscheidend für Gerechtigkeitsempfinden?",
+    "a": "Entscheidungskontrolle",
+    "b": "Prozesskontrolle (voice)",
+    "c": "Endergebnis-Kontrolle",
+    "d": "Sanktionenkontrolle",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wenn eine Partei die Verteilung als nach „falschem“ Prinzip bewertet, handelt es sich um …",
+    "a": "Verfahrensungerechtigkeit",
+    "b": "subjektive Verteilungsungerechtigkeit",
+    "c": "soziale Desidentifikation",
+    "d": "reaktive Abwertung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Verhandlungen mit verbundenen Gegenständen erfordern …",
+    "a": "Einigung über alle Punkte",
+    "b": "sequentielle Streitbeilegung",
+    "c": "immer externe Mediatoren",
+    "d": "getrennte Schlichtung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche formale Bedingung nach Leventhal adressiert Parteilichkeit der Entscheider?",
+    "a": "Konsistenz",
+    "b": "Unvoreingenommenheit",
+    "c": "Repräsentativität",
+    "d": "Genauigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Verfahrensgerechtigkeit stärkt laut Tyler & Blader vor allem …",
+    "a": "materielle Gewinne",
+    "b": "Rechtstreue und Identifikation mit dem Staat",
+    "c": "individuelle Autonomie",
+    "d": "Autoritätsverdrossenheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Mangel an Vertrauen führt zur Tendenz, Zugeständnisse als versteckte Fallen zu sehen. Das nennt man …",
+    "a": "rational choice",
+    "b": "reaktive Abwertung",
+    "c": "risk shift",
+    "d": "decision inertia",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielt „Kohärenz des Verfahrens“? Sie beschreibt …",
+    "a": "gleiche Durchführung unabhängig von Zeit, Ort, Personen",
+    "b": "ständige Anpassung an Parteiwünsche",
+    "c": "maximale Ergebnisgleichheit",
+    "d": "Pflicht zur öffentlichen Begründung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Die soziale Konsequenz wahrgenommener Verfahrensungerechtigkeit ist häufig …",
+    "a": "höhere Kooperationsbereitschaft",
+    "b": "Stärkung der Identifikation",
+    "c": "Misstrauen gegenüber Institutionen",
+    "d": "sinkende Sensibilität für Diskriminierung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Integrative Lösungen entstehen, wenn Parteien …",
+    "a": "dieselben Interessen haben",
+    "b": "unterschiedliche, kombinierbare Interessen haben",
+    "c": "strikt gegensätzliche Ziele haben",
+    "d": "nur um Geld streiten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Dimension gehört zu den formalen, nicht zu den interaktionalen Aspekten?",
+    "a": "Neutralität der Autorität",
+    "b": "Prozesskontrolle",
+    "c": "Konsistenz des Verfahrens",
+    "d": "Respektvolle Behandlung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Eine Partei, die weniger erhält als subjektiv zusteht, versucht typischerweise …",
+    "a": "Ergebnis zu ändern",
+    "b": "Verhandlung abzubrechen",
+    "c": "Mediator zu wechseln",
+    "d": "Anker hochzusetzen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Der Verhandlungsspielraum ist definiert als …",
+    "a": "Mindestpreis plus Maximalpreis",
+    "b": "Menge aller Ergebnisse innerhalb aller Parteien-Limits",
+    "c": "Median der Angebote",
+    "d": "Unterschied zwischen ersten beiden Angebote",
+    "richtig": "b"
+  },
+  {
+    "frage": "„Mitsprache vorhanden, Einfluss aber gering“ – laut Forschung wird das Verfahren trotzdem oft als fair erlebt. Grund:",
+    "a": "Illusion der Kontrolle",
+    "b": "Prozesskontrolle genügt",
+    "c": "Ergebniszentrierung",
+    "d": "Korrigierbarkeit fehlt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt die „Nullsummenannahme“?",
+    "a": "Ressourcen sind unendlich teilbar",
+    "b": "Jeder Gewinn der einen ist Verlust der anderen",
+    "c": "Interessen sind komplementär",
+    "d": "Einigung ist immer möglich",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wenn Verhandler erste Forderung sehr hoch ansetzen, riskieren sie gemäß Forschung …",
+    "a": "Vertrauensaufbau",
+    "b": "frühen Spielraumverlust durch Anker",
+    "c": "Fair-Process-Effect",
+    "d": "prozedurale Neutralität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Leventhal betont „ethische Grundsätze“ als Kriterium. Das bedeutet insbesondere …",
+    "a": "immer religiöse Werte",
+    "b": "Einhaltung moralischer Prinzipien im Verfahren",
+    "c": "Ergebnisgerechtigkeit",
+    "d": "Gerechtigkeit nach Bedürftigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Verfahrenskriterien können trotz gesetzlicher Regeln verletzt wirken wegen …",
+    "a": "Interpretationsspielräumen",
+    "b": "fehlender Sanktionen",
+    "c": "Unbekannter Gesetze",
+    "d": "Ankereffekten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Eine integrative Lösung ist wahrscheinlicher, wenn …",
+    "a": "nur ein Gegenstand verhandelt wird",
+    "b": "mehrere Gegenstände mit unverbundenen Interessen vorliegen",
+    "c": "Distributive Struktur dominiert",
+    "d": "Limits sehr eng sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "Führung ist laut Brodbeck et al. ein Prozess, durch den Mitglieder …",
+    "a": "überwacht werden",
+    "b": "zu individuellen Zielen geführt werden",
+    "c": "motiviert & befähigt werden, Gruppenziele zu erreichen",
+    "d": "Sozialisation erfahren",
+    "richtig": "c"
+  },
+  {
+    "frage": "Cartwright & Zander unterscheiden zwei Hauptfunktionen von Führung: Lokomotion und …",
+    "a": "Kontrolle",
+    "b": "Kohäsion",
+    "c": "Sanktionierung",
+    "d": "Inspiration",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Machtgrundlage nach French & Raven beruht auf Bestrafung?",
+    "a": "Expertenmacht",
+    "b": "Legitimitätsmacht",
+    "c": "Bestrafungsmacht",
+    "d": "Identifikationsmacht",
+    "richtig": "c"
+  },
+  {
+    "frage": "Der „great-man“-Ansatz nimmt primär an, dass Führung …",
+    "a": "erlernbar ist",
+    "b": "situationsabhängig ist",
+    "c": "angeborenen Eigenschaften entspringt",
+    "d": "durch Austausch entsteht",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Persönlichkeitsdimension korreliert moderat positiv mit Führungserfolg (Judge et al., 2002)?",
+    "a": "Neurotizismus (hoch)",
+    "b": "Extraversion",
+    "c": "Verträglichkeit",
+    "d": "Introversion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Experiment von Lippitt & White bewirkte der Laissez-faire-Stil …",
+    "a": "höchste Leistung",
+    "b": "geringste Zufriedenheit und Leistung",
+    "c": "höchste Zufriedenheit",
+    "d": "stabile Qualität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Situationsorientierte Ansätze betonen, dass erfolgreiche Führung …",
+    "a": "fast jeder sein kann, wenn die Umstände passen",
+    "b": "vom Charisma abhängt",
+    "c": "stets transformationale Züge hat",
+    "d": "mit Machtmonopol korreliert",
+    "richtig": "a"
+  },
+  {
+    "frage": "Fiedlers Kontingenzansatz kombiniert Führungsstil mit …",
+    "a": "Ressourcenlage",
+    "b": "Situationsgüte (Aufgabe, Beziehung, Macht)",
+    "c": "Geschlecht",
+    "d": "Emotionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Beziehungsorientierte Führung gilt nach Fiedler als besonders effektiv bei …",
+    "a": "extrem günstigen Situationen",
+    "b": "extrem ungünstigen Situationen",
+    "c": "mittelgünstigen Situationen",
+    "d": "sanktionierender Macht",
+    "richtig": "c"
+  },
+  {
+    "frage": "Implizite Führungstheorien (Lord & Maher) verorten Schemata v.a. bei …",
+    "a": "Führungsperson selbst",
+    "b": "Geführten",
+    "c": "externen Beobachtern",
+    "d": "Personalabteilung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach Rollen-Kongruenz-Theorie werden weibliche Führungskräfte häufig …",
+    "a": "positiver bewertet bei maskulinen Aufgaben",
+    "b": "unterbewertet trotz identischer Leistung",
+    "c": "bevorzugt gewählt",
+    "d": "gar nicht beurteilt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Transaktionale Führung basiert primär auf …",
+    "a": "Austausch von Ressourcen",
+    "b": "Vorbildcharisma",
+    "c": "Identifikation",
+    "d": "Metakontrast‐Prinzip",
+    "richtig": "a"
+  },
+  {
+    "frage": "Eine Kernkomponente transformationaler Führung ist …",
+    "a": "Bestrafung",
+    "b": "Individualisierte Mitarbeiterorientierung",
+    "c": "Gleichheitsprinzip",
+    "d": "Prozesskontrolle",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche FOUR-I Komponente zielt auf kreative Problemlösungen?",
+    "a": "Idealisierender Einfluss",
+    "b": "Inspirierende Motivation",
+    "c": "Intellektuelle Stimulierung",
+    "d": "Individualisierte Orientierung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Laut Lowe et al. (1996) hängt Überlegenheit von transaktionaler oder transformationaler Führung stark von … ab.",
+    "a": "Alter der Geführten",
+    "b": "Kontext (politisch, militärisch, Arbeit)",
+    "c": "IQ der Führenden",
+    "d": "Gruppengröße",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der soziale Identitätsansatz betont die Bedeutung von … für Führungsakzeptanz.",
+    "a": "relativer Prototypikalität",
+    "b": "Expertenmacht",
+    "c": "Belohnungssystemen",
+    "d": "Machtmonopol",
+    "richtig": "a"
+  },
+  {
+    "frage": "Nach Hogg werden prototypische Mitglieder eher gemocht, was ihren Einfluss erhöht. Dieser Mechanismus heißt …",
+    "a": "dispositionale Attribution",
+    "b": "soziale Attraktion",
+    "c": "foot-in-the-door",
+    "d": "Gruppenkohäsion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Korrespondenzverzerrung trägt dazu bei, dass …",
+    "a": "Situationsfaktoren überbetont werden",
+    "b": "Verhalten prototypischer Führender auf Persönlichkeit zurückgeführt wird",
+    "c": "Prototypikalität ignoriert wird",
+    "d": "Austauschbeziehungen dominieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Schema illustriert den Einfluss von Vergleichsrahmen auf Prototypikalität?",
+    "a": "Metakontrast-Prinzip",
+    "b": "Equity-Prinzip",
+    "c": "Social Exchange",
+    "d": "Decoy-Effekt",
+    "richtig": "a"
+  },
+  {
+    "frage": "Transformationale Führung zielt stärker als transaktionale auf …",
+    "a": "stabile Kosten-Nutzen-Bilanz",
+    "b": "emotionale Identifikation und Wertewandel",
+    "c": "kurzfristige Belohnungen",
+    "d": "formale Machtausübung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Machtgrundlage passt am besten zu transformationaler Führung?",
+    "a": "Bestrafungsmacht",
+    "b": "Identifikationsmacht",
+    "c": "Expertenmacht",
+    "d": "Legitimitätsmacht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Führungsstile werden im Verhaltensgitter von Blake & Mouton als … verstanden.",
+    "a": "situativ fluid",
+    "b": "stabile Verhaltensmuster",
+    "c": "rein dispositionell",
+    "d": "irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Situationsorientierte Ansätze haben in der modernen Forschung …",
+    "a": "größten Einfluss",
+    "b": "kaum Gewicht wegen Einseitigkeit",
+    "c": "Transformation abgelöst",
+    "d": "die Rollen-Kongruenz-Theorie widerlegt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nach French & Raven beschreibt „legitimierte Macht“ …",
+    "a": "Zwangsandrohung",
+    "b": "Fachwissen",
+    "c": "Akzeptierte Positionsautorität",
+    "d": "persönliche Vorbildfunktion",
+    "richtig": "c"
+  },
+  {
+    "frage": "Transaktionale Führung wird in Arbeitsteams häufiger beobachtet, weil …",
+    "a": "keine Ressourcen vorhanden sind",
+    "b": "emotionale Bindung dominiert",
+    "c": "Belohnungs-Ressourcen einfach verfügbar sind",
+    "d": "politische Ziele fehlen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wer betont, dass nicht Eigenschaften, sondern Passung zu Führungsschemata über Effektivität entscheidet?",
+    "a": "Fiedler",
+    "b": "Lord & Maher",
+    "c": "Bass",
+    "d": "Cartwright",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der klassischen Taxonomie fügte Cartwright die „ökologische Macht“ hinzu, die …",
+    "a": "durch Umweltgestaltung Verhalten lenkt",
+    "b": "auf Sanktionen basiert",
+    "c": "rein symbolisch ist",
+    "d": "keine Rolle mehr spielt",
+    "richtig": "a"
+  },
+  {
+    "frage": "Der demokratische Stil zeigte im Feldexperiment …",
+    "a": "höchste Leistung, niedrigste Zufriedenheit",
+    "b": "mittlere Leistung, höchste Zufriedenheit",
+    "c": "niedrigste Leistung",
+    "d": "keine Effekte",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Komponente transformationaler Führung umfasst ethisches Vorbildhandeln?",
+    "a": "Idealisierender Einfluss",
+    "b": "Intellektuelle Stimulierung",
+    "c": "Inspirierende Motivation",
+    "d": "Laissez-faire",
+    "richtig": "a"
+  },
+  {
+    "frage": "Der soziale Identitätsansatz erklärt Führungserfolg vor allem als …",
+    "a": "reine Trait-Frage",
+    "b": "Austauschrelation",
+    "c": "Interaktion von Prototypikalität und Intergruppenkontext",
+    "d": "Folge charismatischer Rhetorik",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was unterscheidet nach Tyler & Blader die Wirkung von Verfahrensgerechtigkeit im Kontext niedriger vs. hoher Ergebnisgerechtigkeit?",
+    "a": "Bei niedriger Ergebnisgerechtigkeit ist die Wirkung besonders stark.",
+    "b": "Bei hoher Ergebnisgerechtigkeit wird Verfahrensgerechtigkeit irrelevant.",
+    "c": "Verfahrensgerechtigkeit wirkt nur, wenn auch Ergebnisgerechtigkeit gegeben ist.",
+    "d": "Beides wirkt unabhängig voneinander.",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was unterscheidet distributive von prozeduraler Gerechtigkeit in Bezug auf die zeitliche Stabilität der Wahrnehmung?",
+    "a": "Distributive Gerechtigkeit hat längerfristigen Einfluss.",
+    "b": "Prozedurale Gerechtigkeit beeinflusst primär kurzfristige Reaktionen.",
+    "c": "Prozedurale Gerechtigkeit beeinflusst langfristiger Vertrauen & Systemakzeptanz.",
+    "d": "Es gibt keinen Unterschied in der Wirkung.",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was beschreibt das sogenannte „Schalen-und-Fruchtfleisch“-Beispiel im Detail?",
+    "a": "Einen distributiven Kompromiss mit Fairnessgewinn",
+    "b": "Eine ineffiziente 50:50-Aufteilung",
+    "c": "Eine integrative Lösung durch Identifikation latenter Interessen",
+    "d": "Einen Mediationsfehler",
+    "richtig": "c"
+  },
+  {
+    "frage": "Warum kann die Nullsummenannahme integrative Lösungen verhindern?",
+    "a": "Weil sie Parteien davon abhält, Optionen zu tauschen",
+    "b": "Weil sie gemeinsame Gewinne negiert und den Fokus auf relative Vorteile lenkt",
+    "c": "Weil sie distributive Logik betont",
+    "d": "Alle drei",
+    "richtig": "d"
+  },
+  {
+    "frage": "Welche Leventhal-Kriterien stehen besonders im Konflikt, wenn unter Zeitdruck entschieden werden muss?",
+    "a": "Genauigkeit vs. Korrigierbarkeit",
+    "b": "Konsistenz vs. Ethische Prinzipien",
+    "c": "Repräsentativität vs. Ausgewogenheit",
+    "d": "Konsistenz vs. Korrigierbarkeit",
+    "richtig": "d"
+  },
+  {
+    "frage": "In welchem Punkt unterscheiden sich French & Ravens Expertenmacht und Referenzmacht am deutlichsten?",
+    "a": "Nur Expertenmacht basiert auf wahrgenommenem Wissen.",
+    "b": "Referenzmacht entsteht durch soziale Attraktivität und Identifikation.",
+    "c": "Expertenmacht ist formal legitimiert.",
+    "d": "Referenzmacht kann sanktionieren.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie reagieren Personen laut Studien typischerweise auf Verfahren, die formal korrekt, aber interaktional respektlos sind?",
+    "a": "Keine Reaktion – formal ist entscheidend",
+    "b": "Wahrnehmung unfairer Behandlung trotz korrektem Ablauf",
+    "c": "Höhere Akzeptanz als bei interaktional fairem, aber formalen Fehlern",
+    "d": "Völlige Verweigerung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut LMX-Theorie (Leader-Member Exchange) entscheidend für Führungserfolg?",
+    "a": "Formale Machtausübung",
+    "b": "Individuelle Austauschqualität zwischen Führungskraft und Geführtem",
+    "c": "Transformationale Prinzipien",
+    "d": "Expertenmacht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist die Führung durch prototypische Gruppenmitglieder besonders stabil laut sozialem Identitätsansatz?",
+    "a": "Weil sie stärker mit Sanktionen arbeiten können",
+    "b": "Weil sie geringere Macht brauchen",
+    "c": "Weil sie weniger angezweifelt werden – ihre Normverkörperung wird kaum hinterfragt",
+    "d": "Weil sie am meisten belohnen können",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was besagt das Metakontrastprinzip in der Führungstheorie?",
+    "a": "Wahrgenommene Prototypikalität steigt, wenn Unterschiede zu Fremdgruppen größer als zu Eigengruppen sind",
+    "b": "Je höher die Macht, desto stärker der Einfluss",
+    "c": "Kontraste zwischen Führungsstilen bestimmen Leistung",
+    "d": "Vergleichsverzerrungen werden durch Sanktionen aufgehoben",
+    "richtig": "a"
+  },
+  {
+    "frage": "Herr Moser ist Abteilungsleiter. Er verteilt Bonuszahlungen nach objektiv gleichen Kriterien, ohne Rücksprache mit seinem Team. Obwohl das Ergebnis als gerecht gilt, fühlen sich viele Mitarbeitende unfair behandelt. Welche Form von Gerechtigkeit wurde hier vermutlich verletzt?",
+    "a": "Distributive Gerechtigkeit",
+    "b": "Prozedurale Gerechtigkeit",
+    "c": "Interaktionale Gerechtigkeit",
+    "d": "Bedürfnisgerechtigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "In einer Tarifverhandlung setzen beide Seiten anfangs unrealistisch hohe Forderungen. Im Laufe der Gespräche lehnt die Gewerkschaft ein gut gemeintes Angebot der Gegenseite ab – obwohl es ihren Interessen entspricht. Sie vermutet eine „Falle“. Welches psychologische Phänomen liegt hier vermutlich vor?",
+    "a": "Ankereffekt",
+    "b": "Reaktive Abwertung",
+    "c": "Nullsummenannahme",
+    "d": "Sunk-Cost-Fallacy",
+    "richtig": "b"
+  },
+  {
+    "frage": "Frau Berger ist Gruppenleiterin in einer sozialen Einrichtung. Sie wird von ihrem Team akzeptiert, weil sie als fürsorglich, gemeinschaftsorientiert und uneigennützig gilt. In Konflikten orientiert sie sich stets am Wohl der Gruppe – nicht an Regeln von oben. Welches Führungskonzept passt am besten zu dieser Beschreibung?",
+    "a": "Transaktionale Führung",
+    "b": "Sozialer Identitätsansatz – Prototypikalität",
+    "c": "Laissez-faire-Stil",
+    "d": "Great-Man-Theorie",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Projektleiter bezieht sein Team frühzeitig in alle Planungsprozesse ein, berücksichtigt Rückmeldungen aktiv und kommuniziert transparent über Entscheidungswege. Das Team bewertet selbst unvorteilhafte Entscheidungen positiv. Welcher Effekt beschreibt diese Akzeptanz?",
+    "a": "Equity-Effekt",
+    "b": "Interaktionsgerechtigkeit",
+    "c": "Fair-Process-Effect",
+    "d": "Rollen-Kongruenz-Effekt",
+    "richtig": "c"
+  },
+  {
+    "frage": "In einem Unternehmen werden zwei Führungskräfte verglichen: Herr K. arbeitet autoritär, trifft Entscheidungen allein und kontrolliert die Umsetzung streng. Frau H. fördert individuelle Talente, ermutigt zu innovativen Lösungen und zeigt starke persönliche Überzeugungskraft. Welche Aussage trifft am besten zu?",
+    "a": "Herr K. steht für transformationale Führung, Frau H. für transaktionale.",
+    "b": "Herr K. zeigt demokratischen Stil, Frau H. Laissez-faire.",
+    "c": "Herr K. zeigt transaktionale, Frau H. transformationale Führung.",
+    "d": "Beide zeigen transformationale Führung.",
+    "richtig": "c"
+  }
+    ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
