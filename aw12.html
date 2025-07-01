@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was beschreibt das \"Akzentuierungsprinzip\" nach Tajfel?",
+    "a": "Unterschätzung von Unterschieden innerhalb von Kategorien",
+    "b": "Überschätzung von Unterschieden zwischen Kategorien",
+    "c": "Gleichmäßige Wahrnehmung aller Reize",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein \"legitimierender Mythos\" dient primär dazu:",
+    "a": "Soziale Mobilität zu fördern",
+    "b": "Statusunterschiede zwischen Gruppen zu rechtfertigen",
+    "c": "Individuelle Leistung zu belohnen",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion erfüllt \"soziale Kreativität\" in der Theorie der sozialen Identität?",
+    "a": "Physische Grenzen zwischen Gruppen zu schaffen",
+    "b": "Vergleichsdimensionen zu verändern, um positive Distinktheit herzustellen",
+    "c": "Direkten Wettbewerb mit der Fremdgruppe zu suchen",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das \"Stereotype-Content-Model\" unterscheidet Stereotype basierend auf:",
+    "a": "Intelligenz und Attraktivität",
+    "b": "Wärme und Kompetenz",
+    "c": "Alter und Geschlecht",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein \"paternalistisches Stereotyp\" liegt vor, wenn eine Gruppe als:",
+    "a": "Warm, aber inkompetent wahrgenommen wird",
+    "b": "Kalt, aber kompetent",
+    "c": "Wettbewerbsorientiert und dominant",
+    "d": "",
+    "richtig": "a"
+  },
+  {
+    "frage": "Automatische Stereotypaktivierung nach Devine (1989):",
+    "a": "Ist immer bewusst kontrollierbar",
+    "b": "Erfolgt unbewusst bei Vorliegen eines Auslösereizes",
+    "c": "Betrifft nur explizite Vorurteile",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die \"Kernel of Truth\"-Hypothese wird durch welche Evidenz widerlegt?",
+    "a": "Berufswahlunterschiede in Industrieländern",
+    "b": "fMRI-Studien zeigen keine signifikanten Hirnunterschiede",
+    "c": "Testosteron korreliert mit Aggression",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Hyde (2014) sind Geschlechterunterschiede in den meisten psychologischen Domänen:",
+    "a": "Groß (d > 0.80)",
+    "b": "Klein oder trivial (d ≤ 0.20)",
+    "c": "Ausschließlich biologisch bedingt",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie haben sich Geschlechterstereotype laut Eagly et al. (2020) verändert?",
+    "a": "Agency-Zuschreibungen an Männer nahmen ab",
+    "b": "Communion-Zuschreibungen an Frauen nahmen zu",
+    "c": "Kompetenz wird Männern stärker zugeschrieben",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein \"Stigma\" im Sinne Goffmans (1963):",
+    "a": "Bezieht sich nur auf sichtbare körperliche Merkmale",
+    "b": "Diskreditiert Personen und entzieht ihnen gesellschaftliche Gleichberechtigung",
+    "c": "Ist immer medizinisch begründet",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Subtiler Vorurteilsausdruck zeigt sich z.B. in:",
+    "a": "Direkter körperlicher Gewalt",
+    "b": "Selektiver Verteidigung von Redefreiheit für Hasskommentare",
+    "c": "Offener Kritik an Diskriminierung",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das \"Ablehnungs-Identifikationsmodell\" zeigt:",
+    "a": "Diskriminierung reduziert immer den Selbstwert",
+    "b": "Starke Gruppenidentifikation puffert negative Effekte von Diskriminierung",
+    "c": "Soziale Mobilität ist die einzige Bewältigungsstrategie",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Negative Interdependenz\" nach Sherif (1961) führt zu Konflikten, weil:",
+    "a": "Gruppen um knappe Ressourcen konkurrieren",
+    "b": "Kulturelle Unterschiede unüberwindbar sind",
+    "c": "Autoritäre Persönlichkeiten dominieren",
+    "d": "",
+    "richtig": "a"
+  },
+  {
+    "frage": "\"Fraternale relative Deprivation\" bezeichnet:",
+    "a": "Individuelle Benachteiligung",
+    "b": "Wahrgenommene Benachteiligung der Eigengruppe im Vergleich zu einer Fremdgruppe",
+    "c": "Ökonomische Ungleichheit innerhalb einer Gruppe",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Sozialer Wettbewerb wird gewählt, wenn:",
+    "a": "Gruppengrenzen durchlässig sind",
+    "b": "Statusunterschiede als illegitim und veränderbar wahrgenommen werden",
+    "c": "Individuelle Mobilität möglich ist",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im \"Who-said-what?\"-Paradigma zeigen Verwechslungen innerhalb von Kategorien:",
+    "a": "Assimilation (Homogenitätswahrnehmung)",
+    "b": "Kontrastierung",
+    "c": "Individuierungsprozesse",
+    "d": "",
+    "richtig": "a"
+  },
+  {
+    "frage": "Die Kontrolle von Vorurteilen erfordert laut Devine (1989):",
+    "a": "Ausschließlich kognitive Ressourcen",
+    "b": "Motivation UND kognitive Ressourcen",
+    "c": "Explizite Instruktionen",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Stereotype Threat\" beeinträchtigt Leistung, weil:",
+    "a": "Biologische Unterschiede aktiviert werden",
+    "b": "Bedrohungsgefühle binden kognitive Ressourcen",
+    "c": "Diskriminierung direkt wirkt",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Ebola-Beispiel legitimierten Medienberichte:",
+    "a": "Medizinische Aufklärung",
+    "b": "Restriktive Einwanderungspolitik durch kulturalisierende Darstellungen",
+    "c": "Internationale Hilfsprogramme",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Polizisten im Schießparadigma zeigten:",
+    "a": "Stärkere rassistische Bias als Laien",
+    "b": "Kontrollierten Verhaltensreaktionen trotz impliziter Stereotype",
+    "c": "Ignorierten die Hautfarbe der Zielpersonen",
+    "d": "",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist das Ziel der Kontakthypothese (Allport, 1954)?",
+    "a": "Reduktion von Intragruppenkonflikten",
+    "b": "Reduktion von Vorurteilen durch Intergruppen-Kontakt unter optimalen Bedingungen",
+    "c": "Stärkung nationaler Identität",
+    "d": "Förderung von Leistungswettbewerb",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedingung gehört **nicht** zu Allports optimalen Bedingungen für erfolgreichen Kontakt?",
+    "a": "Gegenseitige Abhängigkeit",
+    "b": "Gleicher Status",
+    "c": "Wettbewerb zwischen Gruppen",
+    "d": "Gemeinsame Ziele",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was beschreibt 'Extended Contact'?",
+    "a": "Individueller Kontakt über virtuelle Medien",
+    "b": "Wahrnehmung, dass Mitglieder der Eigengruppe positive Kontakte mit Fremdgruppenmitgliedern haben",
+    "c": "Kontakt über gemeinsame Projekte im Arbeitsumfeld",
+    "d": "Intensiver Austausch über kulturelle Normen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum kann erzwungener Kontakt negative Effekte haben?",
+    "a": "Weil er stereotype Strukturen stabilisiert",
+    "b": "Weil keine Motivation zur Kooperation besteht",
+    "c": "Weil Menschen generell kontaktavers sind",
+    "d": "Weil der Kontakt zu oberflächlich ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der Meta-Analyse von Pettigrew & Tropp (2006)?",
+    "a": "Kontakt verstärkt Vorurteile bei hoher Bedrohung",
+    "b": "Intergruppenkontakt reduziert Vorurteile in einer Vielzahl von Kontexten",
+    "c": "Kontakt wirkt nur bei gleichzeitiger Erhöhung der wirtschaftlichen Ressourcen",
+    "d": "Kontakteffekte sind nur kurzzeitig",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter 'Dekategorisierung' im Rahmen von Kontakttheorien?",
+    "a": "Abschwächung der eigenen Gruppenidentität",
+    "b": "Individuelle Wahrnehmung des Interaktionspartners statt Kategorisierung",
+    "c": "Wechsel von Fremdgruppen- zu Eigengruppenzugehörigkeit",
+    "d": "Auflösung aller sozialen Kategorien",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was meint 'Rekategorisierung'?",
+    "a": "Betonung gemeinsamer übergeordneter Gruppenidentität",
+    "b": "Verstärkung von Eigengruppenbias",
+    "c": "Reduktion von Kontaktfrequenz",
+    "d": "Verstärkte Kategorisierung nach Leistungsfähigkeit",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was ist ein 'Dual Identity'-Ansatz?",
+    "a": "Gleichzeitige Wahrnehmung der ursprünglichen Gruppenidentitäten und einer übergeordneten gemeinsamen Identität",
+    "b": "Wechsel zwischen ethnischer und nationaler Identität",
+    "c": "Identifikation mit zwei Nationen",
+    "d": "Gleichzeitiger Kontakt mit zwei Mitgliedern einer Fremdgruppe",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Rolle spielt Perspektivübernahme bei der Vorurteilsreduktion?",
+    "a": "Hat keinen nachgewiesenen Effekt",
+    "b": "Erhöht Empathie und reduziert negative Einstellungen",
+    "c": "Führt zu Selbstabwertung",
+    "d": "Verstärkt soziale Distinktheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine potenzielle Nebenwirkung des Common Ingroup Identity Models?",
+    "a": "Verringerung von Intergruppenbias",
+    "b": "Erhöhung von Subgruppenhass",
+    "c": "Vernachlässigung spezifischer Diskriminierungserfahrungen",
+    "d": "Stärkung individueller Mobilität",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist 'symbolischer Rassismus'?",
+    "a": "Offener Hass gegen andere Ethnien",
+    "b": "Verdeckte Vorurteile, die sich in moralischen oder politischen Argumenten zeigen",
+    "c": "Rassismus gegen Symbole wie Flaggen",
+    "d": "Verbal geäußerter Extremismus",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter 'benevolenter Sexismus'?",
+    "a": "Ablehnung von Frauenrechten",
+    "b": "Positiv klingende, aber paternalistische Einstellungen gegenüber Frauen",
+    "c": "Aggressive sexuelle Belästigung",
+    "d": "Forderung nach Gleichstellung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die Forschung zu Stereotypen im Bewerbungsverfahren?",
+    "a": "Stereotype haben keinen Einfluss",
+    "b": "Fremdgruppenmitglieder müssen oft mehr Kompetenz nachweisen",
+    "c": "Gleichberechtigte Chancen für alle Bewerbenden",
+    "d": "Frauen werden immer bevorzugt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist das Ziel von Diversity Trainings?",
+    "a": "Beseitigung aller Vorurteile durch Training",
+    "b": "Steigerung von Sensibilität und inklusivem Verhalten in Organisationen",
+    "c": "Ersetzen aller Führungskräfte durch diverse Gruppen",
+    "d": "Eliminierung individueller Differenzen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was meint 'aversiver Rassismus'?",
+    "a": "Rassismus, der auf kultureller Überlegenheit basiert",
+    "b": "Rassismus, der sich nur in nonverbalem Verhalten zeigt",
+    "c": "Unbewusste negative Einstellungen trotz expliziter Gleichheitsüberzeugung",
+    "d": "Aggressiver Rassismus in sozialen Medien",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein zentrales Ziel von Empowerment-Strategien?",
+    "a": "Anpassung an die Mehrheit",
+    "b": "Stärkung der Selbstwirksamkeit marginalisierter Gruppen",
+    "c": "Vermeidung interkulturellen Kontakts",
+    "d": "Übernahme traditioneller Rollenbilder",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was besagt das Prinzip der 'Minimalgruppen' nach Tajfel?",
+    "a": "Menschen bevorzugen Gruppen mit gleichen Werten",
+    "b": "Schon minimale Gruppenzugehörigkeit reicht aus, um Eigengruppenfavorisierung zu zeigen",
+    "c": "Kulturelle Unterschiede sind notwendig für Vorurteile",
+    "d": "Gruppenidentität entsteht erst durch Interaktion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Methode dient zur Messung impliziter Einstellungen?",
+    "a": "Likert-Skala",
+    "b": "Interviews",
+    "c": "Impliziter Assoziationstest (IAT)",
+    "d": "Beobachtung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist eine wichtige Voraussetzung für die Wirksamkeit von Kontakterfahrungen?",
+    "a": "Hoher sozioökonomischer Status",
+    "b": "Gleichwertigkeit und Freiwilligkeit",
+    "c": "Fremdenfeindliche Grundhaltung",
+    "d": "Abgrenzung zur Fremdgruppe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie gehört zur Vorurteilsreduktion?",
+    "a": "Gruppenseparierung",
+    "b": "Verdrängung negativer Informationen",
+    "c": "Empathieinduktion und Perspektivübernahme",
+    "d": "Kategorisierung nach äußeren Merkmalen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was versteht man unter 'Subtypen' in der Stereotypforschung?",
+    "a": "Neue Gruppenidentitäten, die alte ersetzen",
+    "b": "Unterkategorien, die es ermöglichen, stereotype Inkonsistenzen zu erklären, ohne das Gesamtschema zu ändern",
+    "c": "Individuen ohne Gruppenidentität",
+    "d": "Soziale Rollen, die stereotype Inhalte aktiv verstärken",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Nachteil von Subtypisierung?",
+    "a": "Führt zu vollständiger Vorurteilsreduktion",
+    "b": "Verhindert die Aufrechterhaltung von Vorurteilen",
+    "c": "Erlaubt es, stereotype Überzeugungen trotz widersprechender Evidenz beizubehalten",
+    "d": "Führt zu extremer Ablehnung der Fremdgruppe",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein 'token' in der Organisationspsychologie?",
+    "a": "Jemand mit hoher Autorität",
+    "b": "Eine Person, die eine Minderheit in einem bestimmten Kontext repräsentiert",
+    "c": "Ein Mitarbeiter mit besonders hohem Status",
+    "d": "Ein Mitglied einer homogenen Gruppe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'Stereotype Threat'?",
+    "a": "Angst, ein Stereotyp über die eigene Gruppe zu bestätigen, was die Leistung beeinträchtigen kann",
+    "b": "Furcht vor Gruppen mit negativen Stereotypen",
+    "c": "Wunsch, sich stereotypkonform zu verhalten",
+    "d": "Angst vor sozialer Ablehnung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie kann Stereotype Threat reduziert werden?",
+    "a": "Durch Betonung negativer Konsequenzen",
+    "b": "Durch priming gruppenspezifischer Unterschiede",
+    "c": "Durch Betonung individueller Fähigkeiten und Selbstaffirmation",
+    "d": "Durch starke Leistungsanforderungen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was versteht man unter 'Selbstkategorisierungstheorie'?",
+    "a": "Individuen wählen Gruppen aus, die sie persönlich bereichern",
+    "b": "Soziale Identität wird aktiviert durch Kontext und Vergleich mit anderen Gruppen",
+    "c": "Menschen vermeiden soziale Kategorien zur Wahrung der Individualität",
+    "d": "Kategorisierung erfolgt nur bei direkten Konflikten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was besagt das Modell des realistischen Gruppenkonflikts?",
+    "a": "Konflikte entstehen durch ideologische Unterschiede",
+    "b": "Intergruppenkonflikte entstehen durch Wettbewerb um knappe Ressourcen",
+    "c": "Gruppen streben Harmonie an",
+    "d": "Vorurteile entstehen ausschließlich durch Medien",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte das Robbers-Cave-Experiment (Sherif)?",
+    "a": "Kontakt reduziert automatisch Vorurteile",
+    "b": "Kinder streben unabhängig von Gruppenzugehörigkeit Kooperation an",
+    "c": "Gruppenkonflikte entstehen durch Wettbewerb, lassen sich aber durch übergeordnete Ziele abbauen",
+    "d": "Kinder bilden keine stabilen Gruppen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was bedeutet 'ingroup favoritism'?",
+    "a": "Neutralität gegenüber allen Gruppen",
+    "b": "Positive Bewertung der Eigengruppe gegenüber Fremdgruppen",
+    "c": "Gleichbehandlung aller Personen",
+    "d": "Überbetonung der Fremdgruppe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'outgroup homogeneity effect'?",
+    "a": "Mitglieder der Fremdgruppe werden als sehr unterschiedlich wahrgenommen",
+    "b": "Eigengruppenmitglieder erscheinen homogener",
+    "c": "Fremdgruppenmitglieder werden als ähnlicher untereinander wahrgenommen als Eigengruppenmitglieder",
+    "d": "Menschen streben nach Vielfalt in Fremdgruppen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was bedeutet 'Moral Credentialing'?",
+    "a": "Moralisches Verhalten wird durch Autoritäten festgelegt",
+    "b": "Vorherige moralische Handlungen führen zu größerer Toleranz gegenüber eigenen unethischen Handlungen",
+    "c": "Menschen suchen moralische Gruppen",
+    "d": "Menschen verurteilen unethisches Verhalten strenger, wenn sie sich selbst als moralisch sehen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was besagt die 'Just-World-Hypothese'?",
+    "a": "Menschen glauben, dass gute Dinge zufällig passieren",
+    "b": "Ungerechtigkeit ist ein normaler Teil der Welt",
+    "c": "Menschen glauben, dass jeder bekommt, was er verdient",
+    "d": "Die Welt ist von Natur aus unfair",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was kann ein Nachteil der Just-World-Hypothese sein?",
+    "a": "Führt zu vermehrtem Engagement",
+    "b": "Begünstigt Victim-Blaming",
+    "c": "Erhöht Empathie für benachteiligte Gruppen",
+    "d": "Reduziert stereotype Wahrnehmung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist 'Ambivalenter Sexismus'?",
+    "a": "Wechsel zwischen Geschlechterrollen",
+    "b": "Gleichzeitige Existenz von wohlwollendem und feindseligem Sexismus",
+    "c": "Gleichbehandlung in ungleichen Kontexten",
+    "d": "Sexismus in ambivalenten Beziehungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Nachteil wohlwollenden Sexismus?",
+    "a": "Führt zu Aggression",
+    "b": "Ermutigt Gleichstellung",
+    "c": "Verfestigt traditionelle Geschlechterrollen auf subtile Weise",
+    "d": "Wird leicht erkannt und abgelehnt",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wie wirkt sich chronische Stigmatisierung auf die psychische Gesundheit aus?",
+    "a": "Führt meist zu größerem Selbstvertrauen",
+    "b": "Hat keinen nachgewiesenen Einfluss",
+    "c": "Kann chronischen Stress und niedriges Selbstwertgefühl verursachen",
+    "d": "Stimuliert Kreativität",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist das Ziel inklusiver Sprache?",
+    "a": "Vereinfachung der Kommunikation",
+    "b": "Erhalt traditioneller Normen",
+    "c": "Vermeidung von Diskriminierung durch Sprache",
+    "d": "Förderung humorvoller Ausdrucksweisen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Wirkung kann der Einsatz inklusiver Sprache haben?",
+    "a": "Reduziert Wahrnehmung von Diskriminierung und erhöht Zugehörigkeitsgefühl",
+    "b": "Erhöht Vorurteile",
+    "c": "Verringert Sprachverständnis",
+    "d": "Hat keinen Einfluss auf Gruppenprozesse",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was versteht man unter Mikroaggressionen?",
+    "a": "Offene Gewaltakte gegen Minderheiten",
+    "b": "Unbewusste, subtile Beleidigungen oder Abwertungen gegenüber marginalisierten Gruppen",
+    "c": "Öffentlich sichtbare Diskriminierung",
+    "d": "Strategien zur Selbstverteidigung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kann eine Herausforderung bei der Thematisierung von Mikroaggressionen sein?",
+    "a": "Fehlende wissenschaftliche Forschung",
+    "b": "Überreaktion der Betroffenen",
+    "c": "Sie sind oft schwer zu identifizieren und wirken kumulativ belastend",
+    "d": "Mikroaggressionen existieren nur online",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was versteht man unter 'tokenism' im sozialen Kontext?",
+    "a": "Echte Gleichstellung von Minderheiten",
+    "b": "Symbolische Inklusion von Mitgliedern einer Minderheit ohne echte Gleichstellung",
+    "c": "Belohnung für Gruppenarbeit",
+    "d": "Finanzielle Entschädigung für Diskriminierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine mögliche Folge von tokenism?",
+    "a": "Erhöhte Repräsentation und Gleichbehandlung",
+    "b": "Verstärkung von Stereotypen und Isolation",
+    "c": "Vollständige Integration",
+    "d": "Neutralität gegenüber Minderheiten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Hauptziel von Diversity-Trainings?",
+    "a": "Homogenität fördern",
+    "b": "Leistungskontrolle verbessern",
+    "c": "Bewusstsein für Vorurteile schaffen und Inklusion fördern",
+    "d": "Produktivität kurzfristig steigern",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein häufiger Kritikpunkt an Diversity-Trainings?",
+    "a": "Zu hoher Praxisbezug",
+    "b": "Verstärken Vorurteile systematisch",
+    "c": "Fehlende Nachhaltigkeit und Wirksamkeit bei schlechter Umsetzung",
+    "d": "Sie erhöhen systematische Diskriminierung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'Kontakthypothese'?",
+    "a": "Kontakt zwischen Gruppen führt immer zu mehr Konflikt",
+    "b": "Positiver Kontakt zwischen Gruppen kann Vorurteile reduzieren, wenn bestimmte Bedingungen erfüllt sind",
+    "c": "Kontakt verstärkt Gruppenzugehörigkeit",
+    "d": "Interaktion ist irrelevant für Vorurteile",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedingungen fördern laut Kontakthypothese den Abbau von Vorurteilen?",
+    "a": "Ungleichheit, Wettbewerb, Fremdbestimmung",
+    "b": "Gleichberechtigung, Kooperation, gemeinsame Ziele, institutionelle Unterstützung",
+    "c": "Homogenität der Gruppen",
+    "d": "Kurzer, sporadischer Kontakt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist 'extended contact'?",
+    "a": "Langer physischer Kontakt zwischen Gruppen",
+    "b": "Wissen, dass ein Mitglied der Eigengruppe positive Beziehungen zu einem Mitglied der Fremdgruppe hat",
+    "c": "Medialer Kontakt über soziale Netzwerke",
+    "d": "Indirekte Konfrontation mit Stereotypen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist 'imagined contact'?",
+    "a": "Kognitive Vorstellung einer positiven Interaktion mit einem Fremdgruppenmitglied",
+    "b": "Kontakt im virtuellen Raum",
+    "c": "Fiktionale Darstellung von Gruppeninteraktionen",
+    "d": "Konfliktvorstellungen im Gruppenkontext",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie wirkt sich imagined contact tendenziell auf Einstellungen aus?",
+    "a": "Keine messbare Wirkung",
+    "b": "Kann kurzfristig Angst erhöhen",
+    "c": "Kann positive Einstellungen gegenüber Fremdgruppen fördern",
+    "d": "Führt zu Vermeidung von Fremdkontakt",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'soziale Identität'?",
+    "a": "Persönlichkeit eines Individuums",
+    "b": "Individuelle Wertvorstellungen",
+    "c": "Teil des Selbstkonzepts, der sich aus der Mitgliedschaft in sozialen Gruppen ableitet",
+    "d": "Berufliche Rollenidentität",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was bedeutet 'soziale Mobilität' im Kontext der sozialen Identität?",
+    "a": "Bewegung zwischen Städten",
+    "b": "Bemühung, die eigene Gruppenzugehörigkeit zu wechseln, um den sozialen Status zu verbessern",
+    "c": "Anpassung an Gruppennormen",
+    "d": "Wechsel der politischen Einstellung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bedeutet 'soziale Kreativität' nach der sozialen Identitätstheorie?",
+    "a": "Gründung neuer Gruppen",
+    "b": "Reinterpretation negativer Gruppenmerkmale, um positives Selbstwertgefühl zu bewahren",
+    "c": "Vermeidung von Gruppenvergleichen",
+    "d": "Kreative Ausdrucksformen innerhalb der Gruppe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist das Ziel von Re-Kategorisierung in der Vorurteilsforschung?",
+    "a": "Trennung von Gruppen",
+    "b": "Vermeidung jeglicher Gruppenzugehörigkeit",
+    "c": "Schaffung einer übergeordneten Identität zur Reduktion von Intergruppenkonflikten",
+    "d": "Verfestigung bestehender Identitäten",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was versteht man unter 'Dual Identity'?",
+    "a": "Gleichzeitige Zugehörigkeit zu zwei sozialen Klassen",
+    "b": "Bewusstsein über eigene Vorurteile",
+    "c": "Gleichzeitige Betonung der Eigengruppen- und übergeordneten Identität",
+    "d": "Identifikation mit widersprüchlichen Normen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein Vorteil von Dual Identity gegenüber vollständiger Re-Kategorisierung?",
+    "a": "Fördert stärker die Aufgabe eigener Gruppenzugehörigkeit",
+    "b": "Erhält Gruppenidentitäten und fördert trotzdem positive Intergruppeneinstellungen",
+    "c": "Verstärkt Vorurteile",
+    "d": "Verhindert interkulturelle Kommunikation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist der 'Contact Anxiety'?",
+    "a": "Furcht, mit fremden Gruppen in Kontakt zu treten",
+    "b": "Angst vor Gruppenzugehörigkeit",
+    "c": "Stress durch eigene Gruppe",
+    "d": "Panikstörung im Gruppenkontext",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie kann Kontaktangst reduziert werden?",
+    "a": "Vermeidung aller Kontakte",
+    "b": "Förderung positiver Erwartungen und sichere Rahmenbedingungen",
+    "c": "Verstärkung negativer Gruppenerfahrungen",
+    "d": "Sanktionierung von Kontaktvermeidung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist 'intersektionale Diskriminierung'?",
+    "a": "Diskriminierung aufgrund eines einzigen Merkmals",
+    "b": "Bevorzugung mehrerer Gruppen gleichzeitig",
+    "c": "Diskriminierung aufgrund sich überschneidender sozialer Merkmale wie Geschlecht und Ethnie",
+    "d": "Positive Diskriminierung von Minderheiten",
+    "richtig": "c"
+  },
+  {
+    "frage": "Warum ist Intersektionalität wichtig für die Vorurteilsforschung?",
+    "a": "Vereinfacht Datenerhebung",
+    "b": "Zeigt, dass Diskriminierungserfahrungen komplexer sind als eindimensionale Analysen",
+    "c": "Ersetzt die Stereotypenforschung",
+    "d": "Reduziert Vielfalt in der Analyse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt 'colorblind ideology'?",
+    "a": "Betonung von Gruppenunterschieden",
+    "b": "Ignorieren von Hautfarbe und ethnischer Zugehörigkeit, um Gleichheit zu betonen",
+    "c": "Vermeidung visueller Wahrnehmung",
+    "d": "Verstärkung von Diskriminierung durch Sichtbarmachung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein Hauptkritikpunkt an der 'colorblind ideology'?",
+    "a": "Sie fördert kulturelle Vielfalt",
+    "b": "Sie kann bestehende Ungleichheiten ignorieren und aufrechterhalten",
+    "c": "Sie erhöht den Kontakt zwischen Gruppen",
+    "d": "Sie basiert auf biologischer Forschung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bedeutet 'kulturelle Anpassung' (acculturation)?",
+    "a": "Bewusste Ablehnung anderer Kulturen",
+    "b": "Der Prozess, in dem Individuen Elemente einer anderen Kultur übernehmen, oft beim Kontakt mit einer Mehrheitsgesellschaft",
+    "c": "Vollständige Assimilation ohne eigene Kultur",
+    "d": "Trennung von kulturellen Gruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Form der Akkulturation gilt oft als am günstigsten für psychisches Wohlbefinden?",
+    "a": "Assimilation",
+    "b": "Marginalisierung",
+    "c": "Integration (Beibehaltung eigener Kultur + Kontakt zur Mehrheitskultur)",
+    "d": "Separation",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist das Ziel von inklusiven Schulprogrammen zur Vorurteilsreduktion?",
+    "a": "Homogenität der Schüler fördern",
+    "b": "Kinder voneinander trennen",
+    "c": "Empathie, Perspektivübernahme und positives Gruppenverhalten fördern",
+    "d": "Kulturelle Eigenheiten ignorieren",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wie kann Perspektivübernahme Vorurteile reduzieren?",
+    "a": "Sie verstärkt die Wahrnehmung von Unterschieden",
+    "b": "Sie hilft, Emotionen und Sichtweisen anderer Gruppen besser zu verstehen",
+    "c": "Sie verhindert Gruppenidentität",
+    "d": "Sie ersetzt faktisches Wissen",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
