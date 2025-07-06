@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was beschreibt 'interpersonelle Stereotype' in dieser Studie?",
+    "a": "Vorurteile gegenüber sozialen Gruppen",
+    "b": "Verzerrungen in Persönlichkeitseindrücken aufgrund wahrgenommener Gruppenzugehörigkeit",
+    "c": "Kulturell geteilte Überzeugungen über Status",
+    "d": "Explizite Diskriminierung in Institutionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Modell postuliert ambivalente Stereotype (z.B. 'reich = kompetent/kalt')?",
+    "a": "Soziales Dominanzmodell",
+    "b": "Stereotype Content Model (SCM)",
+    "c": "Interpersonelles Stereotypenmodell (ISM)",
+    "d": "Big-Five-Modell",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum sind Laborexperimente zur SES-Wahrnehmung laut Studie limitiert?",
+    "a": "Fehlende statistische Power",
+    "b": "Verwendung extremer SES-Gruppen und künstlicher Stimuli",
+    "c": "Zu heterogene Stichproben",
+    "d": "Fokus auf Langzeitinteraktionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion haben Stereotype laut funktionalistischem Ansatz?",
+    "a": "Reduktion kognitiver Dissonanz",
+    "b": "Schnelle soziale Evaluation von Gruppenmitgliedern",
+    "c": "Förderung sozialer Mobilität",
+    "d": "Verbesserung der Selbstwahrnehmung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Design nutzte die Studie für soziale Interaktionen?",
+    "a": "Einzelinterviews",
+    "b": "Online-Round-Robin (dyadische Videokonferenzen)",
+    "c": "Feldbeobachtungen in öffentlichen Räumen",
+    "d": "Schriftliche Vignettenstudien",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wozu diente das 'Social Relations Model' (SRM)?",
+    "a": "Messung impliziter Vorurteile",
+    "b": "Varianzzerlegung von Eindrücken in Perceiver-, Target- und Beziehungseffekte",
+    "c": "Erfassung von Big-Five-Persönlichkeitsdimensionen",
+    "d": "Berechnung von Gruppenhomogenität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Thema diskutierten Teilnehmer in den Dyaden?",
+    "a": "Politische Einstellungen",
+    "b": "Negative Konsumerfahrungen",
+    "c": "Bildungsbiografien",
+    "d": "Gesundheitsverhalten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum wurde Prolific als Rekrutierungsplattform gewählt?",
+    "a": "Fokus auf Studierende",
+    "b": "Nationale Diversität der Stichprobe",
+    "c": "Niedrige Kosten",
+    "d": "Erfassung physiologischer Daten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie genau war die Fremdeinschätzung von SES in Interaktionen?",
+    "a": "Nicht über Zufallsniveau",
+    "b": "Moderat (signifikante Selbst-Fremd-Übereinstimmung)",
+    "c": "Höher als bei Persönlichkeitseindrücken",
+    "d": "Unabhängig von sichtbaren Hinweisreizen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor begünstigte SES-Wahrnehmungsgenauigkeit?",
+    "a": "Verfügbarkeit multipler Hinweisreize (Umgebung, Sprache, etc.)",
+    "b": "Explizite Angabe des Einkommens",
+    "c": "Lange Interaktionsdauer (>10 Min.)",
+    "d": "Geschlecht der Interaktionspartner",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welches Muster zeigte sich bei interpersonellen SES-Stereotypen?",
+    "a": "Ambivalenz (Hoher SES: kompetent/kalt)",
+    "b": "Global positive Zuschreibung bei hohem SES",
+    "c": "Keine systematische Verzerrung",
+    "d": "Negative Zuschreibung bei mittlerem SES",
+    "richtig": "b"
+  },
+  {
+    "frage": "Hoher SES wurde mit welchem Persönlichkeitsmerkmal assoziiert?",
+    "a": "Geringere Neurotizismus-Wahrnehmung",
+    "b": "Höhere Impulsivität",
+    "c": "Geringere Gewissenhaftigkeit",
+    "d": "Höhere Ängstlichkeit",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wie unterschieden sich Gruppen- vs. Individualstereotype?",
+    "a": "Sie waren identisch",
+    "b": "Individualstereotype zeigten keine Ambivalenz",
+    "c": "Gruppenstereotype waren positiver",
+    "d": "Nur Gruppenstereotype beeinflussten soziale Entscheidungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welchen Effekt hatte hoher SES auf Affiliation Interest?",
+    "a": "Höheres Interesse an sozialer Bindung",
+    "b": "Geringeres Vertrauen",
+    "c": "Keinen signifikanten Einfluss",
+    "d": "Höhere Konfliktbereitschaft",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum wurden Personen mit niedrigem SES in Konsumkontexten als weniger glaubwürdig eingeschätzt?",
+    "a": "Mediation durch Kompetenzstereotype",
+    "b": "Explizite Vorurteile der Perceiver",
+    "c": "Sprachliche Defizite",
+    "d": "Fehlende empirische Evidenz",
+    "richtig": "a"
+  },
+  {
+    "frage": "Beeinflusste SES die Bewertung von Unternehmen nach Beschwerden?",
+    "a": "Ja, stark negativ",
+    "b": "Nein, kein signifikanter Effekt",
+    "c": "Nur bei hohem SES der Konsumenten",
+    "d": "Ausschließlich bei mündlichen Beschwerden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Theorie erklärt positive Stereotype bei hohem SES durch Systemrechtfertigung?",
+    "a": "Kontakthypothese",
+    "b": "Just-World-Theorie",
+    "c": "Sozialer Vergleichstheorie",
+    "d": "Kognitive Dissonanztheorie",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie trägt SES-Sichtbarkeit zur Ungleichheitsverfestigung bei?",
+    "a": "Sie ermöglicht stereotypebasierte Diskriminierung",
+    "b": "Sie reduziert interpersonelles Vertrauen",
+    "c": "Sie fördert homogene Netzwerke",
+    "d": "Sie verhindert Statusmobilität",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welcher Faktor limitiert die ökologische Validität?",
+    "a": "Künstlicher Interaktionskontext (vorbereitete Konsumgeschichten)",
+    "b": "Zu große Stichprobe",
+    "c": "Fehlende Manipulation der IV",
+    "d": "Ausschließlich weibliche Teilnehmer",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum konnten Rasse-SES-Interaktionen nicht analysiert werden?",
+    "a": "Theoretische Irrelevanz",
+    "b": "Zu geringe Fallzahlen pro Subgruppe",
+    "c": "Fehlende Messinstrumente",
+    "d": "Ethische Bedenken",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Mechanismus erklärt primär den Effekt von SES auf Affiliation Interest?",
+    "a": "Direkte soziale Diskriminierung",
+    "b": "Indirekte Mediation durch Persönlichkeitsstereotype",
+    "c": "Kognitive Dissonanz bei Statusunterschieden",
+    "d": "Explizite Präferenz für Ressourcen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Konsens in der SES-Wahrnehmung zeigt sich methodisch durch...",
+    "a": "Hohe Selbst-Fremd-Korrelation",
+    "b": "Signifikante Target-Varianz im SRM",
+    "c": "Geringe Perceiver-Effekte",
+    "d": "Übereinstimmung mit demografischen Daten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum wird SES als 'sichtbare' Identität mit Extraversion verglichen?",
+    "a": "Beide sind kulturell spezifisch",
+    "b": "Beide zeigen hohe Fremdurteilsgenauigkeit",
+    "c": "Beide korrelieren mit Neurotizismus",
+    "d": "Beide sind in Online-Interaktionen irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine Hauptkritik an früheren Stereotype-Content-Studien zu SES?",
+    "a": "Vernachlässigung von Warmth-Dimensionen",
+    "b": "Verwendung extrem dichotomer SES-Gruppen",
+    "c": "Fokus auf Langzeitinteraktionen",
+    "d": "Zu kleine Laborgruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie könnten Schuluniformen laut Studie soziale Ungleichheit reduzieren?",
+    "a": "Durch Förderung von Konformität",
+    "b": "Durch Verringerung sichtbarer SES-Hinweisreize",
+    "c": "Durch Erhöhung der akademischen Leistung",
+    "d": "Durch Stärkung des Gruppenzusammenhalts",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die zentrale kausale Kette im Interpersonellen Stereotypenmodell (ISM) ist:",
+    "a": "Stereotype → SES-Wahrnehmung → Soziale Entscheidungen",
+    "b": "Tatsächlicher SES → Wahrgenommener SES → Stereotype → Soziale Entscheidungen",
+    "c": "Soziale Entscheidungen → Stereotype → SES-Attribution",
+    "d": "Persönlichkeit → SES-Inferenz → Affiliation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist der Konsumkontext besonders relevant für SES-Forschung?",
+    "a": "Unternehmen nutzen bewusst Klassenstereotype",
+    "b": "Niedriger SES ist vulnerabler bei negativen Erfahrungen",
+    "c": "Beschwerden offenbaren implizite Vorurteile",
+    "d": "Luxusgüter definieren Status eindeutig",
+    "richtig": "b"
+  },
+  {
+    "frage": "Explorative Analysen zeigten keine systematischen Unterschiede in Stereotypen nach...",
+    "a": "Alter",
+    "b": "Bildung",
+    "c": "Geschlecht",
+    "d": "Ethnizität",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche praktische Implikation ergibt sich aus den Glaubwürdigkeitsbefunden für Unternehmen?",
+    "a": "Preisanpassungen für niedrige SES-Gruppen",
+    "b": "Sensibilisierungstraining gegen SES-bias bei Beschwerden",
+    "c": "Segmentierung nach sozioökonomischen Gruppen",
+    "d": "Priorisierung von High-SES-Kunden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Beispiel für 'behavioral residue' zur SES-Erkennung in der Studie war...",
+    "a": "Verwendung von Fachsprache",
+    "b": "Hintergrundobjekte in Videokonferenzen",
+    "c": "Dialekt",
+    "d": "Kleidungsmarken",
+    "richtig": "b"
+  },
+  {
+    "frage": "Laut Sozialer Dominanztheorie stabilisiert sich Status durch...",
+    "a": "Institutionelle Diskriminierung",
+    "b": "'Legitimierende Mythen' über Gruppen",
+    "c": "Wirtschaftliche Umverteilung",
+    "d": "Intergenerationelle Mobilität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie limitierte das Online-Format die ökologische Validität?",
+    "a": "Reduzierte natürliche Rapportbildung durch fehlende Präsenz",
+    "b": "Technische Probleme verzerrten Interaktionen",
+    "c": "Teilnehmer logen über ihre Identität",
+    "d": "Keine Aufzeichnung der Gespräche",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum testeten die Autoren quadratische Effekte für SES-Stereotype?",
+    "a": "Zur Bestätigung linearer Modelle",
+    "b": "Prüfung curvilinearer Vorhersagen (z.B. mittlerer SES positiver)",
+    "c": "Wechselwirkungen mit Geschlecht",
+    "d": "Komplexere SRM-Berechnungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was kritisieren die Autoren an der Messung von Intelligenzstereotypen?",
+    "a": "Fehlende Fremdeinschätzung",
+    "b": "Selbstauskunft als unzuverlässiges Validitätskriterium",
+    "c": "Zu globale Einzelitems",
+    "d": "Kulturelle Verzerrung der Skala",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das Schlüsselergebnis zur Glaubwürdigkeit von Konsumenten war:",
+    "a": "Hoher SES erhielt mehr Entschädigungen",
+    "b": "Niedriger SES wurde als weniger glaubwürdig eingestuft",
+    "c": "Unternehmen ignorierten Low-SES-Beschwerden",
+    "d": "Geschlecht moderierte den Effekt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie trägt die Studie zur Theorie von Kraus et al. (2017) bei?",
+    "a": "Widerlegung von Statuskonflikten",
+    "b": "Empirische Bestätigung von Stereotypen als Ungleichheitsmechanismus",
+    "c": "Fokus auf intragruppale Homophilie",
+    "d": "Neue Definition von 'sozialem Kapital'",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist SES-Wahrnehmung funktional für soziale Beziehungen?",
+    "a": "Sie beschleunigt Konfliktlösungen",
+    "b": "Sie signalisiert Ressourcenzugang für Allianzen",
+    "c": "Sie reduziert kognitive Dissonanz",
+    "d": "Sie fördert empathische Reaktionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielten Forschungsassistenten in den Interaktionen?",
+    "a": "Aktive Gesprächssteuerung",
+    "b": "Stille Überwachung ohne Intervention",
+    "c": "Gezielte Provokation von Konflikten",
+    "d": "Datenerhebung via Chat",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Ergebnis widerspricht direkt dem Stereotype Content Model?",
+    "a": "Niedriger SES wurde als warm wahrgenommen",
+    "b": "Hoher SES wurde als warm UND kompetent stereotypisiert",
+    "c": "Mittlerer SES zeigte höchste Kompetenz",
+    "d": "Keine Stereotype bei Offenheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist die Kernaussage zur Reduktion sozialer Ungleichheit?",
+    "a": "Politische Maßnahmen sind wirkungslos",
+    "b": "Stereotype können durch individuierende Information abgeschwächt werden",
+    "c": "Homogene Netzwerke verstärken Bias",
+    "d": "Online-Interaktionen eliminieren Vorurteile",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein Validitätsproblem der 'consumer credibility'-Skala war...",
+    "a": "Soziale Erwünschtheit",
+    "b": "Niedrige interne Konsistenz (α = .66)",
+    "c": "Kulturelle Voreingenommenheit",
+    "d": "Fehlende Faktorvalidität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum setzten die Autoren das Signifikanzniveau auf α = .005 herab?",
+    "a": "Aufgrund kleiner Effektstärken",
+    "b": "Zur Kontrolle von falsch-positiven Resultaten bei multiplen Tests",
+    "c": "Wegen heterogener Stichprobe",
+    "d": "Auf Anraten der Ethikkommission",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Theorie erklärt Affiliation zu höherem SES als Ressourcenstrategie?",
+    "a": "Systemjustierungstheorie",
+    "b": "Theorie sozialen Kapitals",
+    "c": "Kontakthypothese",
+    "d": "Selbstkategorisierungstheorie",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der Hauptvorteil des Round-Robin-Designs war...",
+    "a": "Zeitersparnis",
+    "b": "Trennung von Perceiver- und Target-Effekten",
+    "c": "Eliminierung von Gruppendynamiken",
+    "d": "Höhere externe Validität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Variable wurde NICHT als SES-Indikator verwendet?",
+    "a": "Haushaltseinkommen",
+    "b": "Berufsprestige",
+    "c": "Politische Einstellung",
+    "d": "Subjektive SES-Einschätzung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Signifikanter Mediator zwischen SES und Sympathie war...",
+    "a": "Impulsivität",
+    "b": "Wahrgenommene Gewissenhaftigkeit",
+    "c": "Soziale Offenheit",
+    "d": "Intelligenzstereotype",
+    "richtig": "b"
+  },
+  {
+    "frage": "Forschungsfrage 2 (R2) untersuchte primär...",
+    "a": "Genauigkeit der SES-Wahrnehmung",
+    "b": "Verzerrung von Persönlichkeitseindrücken durch SES",
+    "c": "Auswirkungen auf Konsumentscheidungen",
+    "d": "Demografische Moderatoreffekte",
+    "richtig": "b"
+  },
+  {
+    "frage": "Extrapersonale Hinweisreize in der Studie umfassten...",
+    "a": "Mimik und Gestik",
+    "b": "Wohnumgebung im Video-Hintergrund",
+    "c": "Sprachliche Komplexität",
+    "d": "Akzentstärke",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die Hauptlimitation für kausale Interpretationen ist...",
+    "a": "Fehlende Randomisierung",
+    "b": "Ungeklärte Richtung der Mediation (SES ↔ Persönlichkeit)",
+    "c": "Soziale Erwünschtheit",
+    "d": "Kleine Effektstärken",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist 'ecological validity' in dieser Studie zentral?",
+    "a": "Wegen Verwendung von Selbstberichten",
+    "b": "Übertragbarkeit von Laboreffekten auf reale Interaktionen",
+    "c": "Generalisierbarkeit auf nicht-US-Populationen",
+    "d": "Vergleichbarkeit mit Vignettenstudien",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

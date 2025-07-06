@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was kennzeichnet eine soziale Bewegung laut Tajfel (1981b)?",
+    "a": "Individuen, die unabhängig voneinander handeln",
+    "b": "Eine formelle Organisation mit hierarchischer Struktur",
+    "c": "Eine große Gruppe, die sich kollektiv als Einheit definiert, um ein gemeinsames Problem zu lösen",
+    "d": "Staatlich finanzierte Initiativen zur Lösung sozialer Missstände",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aktivität zählt zu den nach außen gerichteten Strategien sozialer Bewegungen?",
+    "a": "Aufbau interner Netzwerke",
+    "b": "Kollektive Protestaktionen",
+    "c": "Mitgliederwerbung",
+    "d": "Organisationsentwicklung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Form der Beteiligung ist durch hohen Aufwand und lange Dauer charakterisiert?",
+    "a": "Unterschriftenaktion",
+    "b": "Einmalige Demonstration",
+    "c": "Dauerhafte ehrenamtliche Mitarbeit",
+    "d": "Zahlung eines Jahresbeitrags",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Emotion entsteht durch fraternale relative Deprivation?",
+    "a": "Selbstzweifel",
+    "b": "Gruppenbasierter Ärger",
+    "c": "Individuelle Resignation",
+    "d": "Schuldgefühle",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wodurch wird soziale Identität politisiert?",
+    "a": "Durch individuelle Erfolgserlebnisse",
+    "b": "Durch Triangulation gesellschaftlicher Konflikte",
+    "c": "Durch ökonomische Privilegien",
+    "d": "Durch religiöse Rituale",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt Empowerment im Kontext kollektiven Handelns?",
+    "a": "Finanzielle Förderung durch den Staat",
+    "b": "Entwicklung kollektiver Wirksamkeitserwartungen",
+    "c": "Aufbau hierarchischer Strukturen",
+    "d": "Individuelle Karrierechancen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wer gehört zum Mobilisierungspotential laut Klandermans?",
+    "a": "Nur aktive Mitglieder",
+    "b": "Personen, die einen Collective Action Frame teilen",
+    "c": "Ausschließlich Führungspersonen",
+    "d": "Opponenten der Bewegung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist der effektivste Weg zur Mobilisierung?",
+    "a": "Massenmedienkampagnen",
+    "b": "Persönliche Netzwerke und Organisationen",
+    "c": "Anonyme Online-Petitionen",
+    "d": "Staatliche Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Motiv bezieht sich auf kollektive Ziele?",
+    "a": "Normatives Motiv",
+    "b": "Belohnungsmotiv",
+    "c": "Kollektives Motiv",
+    "d": "Soziales Motiv",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was verhindert trotz Motivation die Teilnahme?",
+    "a": "Fehlende Verhaltenskontrolle (z.B. Transportmöglichkeit)",
+    "b": "Geringe Identifikation mit der Bewegung",
+    "c": "Fehlende kollektive Wirksamkeit",
+    "d": "Niedrige emotionale Beteiligung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Wann wird soziale Identität handlungsrelevant?",
+    "a": "Wenn sie gegenüber personaler Identität dominiert",
+    "b": "Bei hohem individuellem Nutzen",
+    "c": "In autoritären Systemen",
+    "d": "Bei finanziellen Anreizen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welcher Prozess führt zur Internalisierung von Gruppenzielen?",
+    "a": "Kosten-Nutzen-Kalkulation",
+    "b": "Starke Identifikation mit der Bewegung",
+    "c": "Externe Belohnungen",
+    "d": "Niedrige Partizipationsbarrieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Emotion fördert Protestbereitschaft jenseits normativer Standards?",
+    "a": "Schuld",
+    "b": "Angst",
+    "c": "Moralische Empörung",
+    "d": "Resignation",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist das zentrale individuelle Motiv für Radikalisierung?",
+    "a": "Materieller Gewinn",
+    "b": "Streben nach Bedeutung",
+    "c": "Soziale Anerkennung",
+    "d": "Politische Macht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Element legitimiert Gewalt in radikalen Narrativen?",
+    "a": "Betonung von Dialogbereitschaft",
+    "b": "Verweis auf Selbstverteidigung als Kriegshandlung",
+    "c": "Fokus auf rechtliche Mittel",
+    "d": "Anerkennung staatlicher Autoritäten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum senkt Dehumanisierung die Hemmschwelle für Gewalt?",
+    "a": "Sie suspendiert moralische Prinzipien gegenüber der Fremdgruppe",
+    "b": "Sie erhöht die Empathie",
+    "c": "Sie fördert interkulturellen Dialog",
+    "d": "Sie reduziert Gruppenkohäsion",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was widerlegte die 'Wutbürger'-These von Kurbjuweit bei den Stuttgart-21-Protesten?",
+    "a": "Überwiegend ältere Teilnehmer",
+    "b": "Heterogene Altersstruktur und politische Mitte-Orientierung",
+    "c": "Dominanz konservativ-radikaler Positionen",
+    "d": "Geringe Bildungsbeteiligung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Faktor verstärkte radikale Einstellungen laut Kölner Silvesternacht-Studie?",
+    "a": "Realistische Bedrohung (Kriminalitätsangst)",
+    "b": "Mediale Fokussierung auf 'kulturelle Erklärungen'",
+    "c": "Sozioökonomischer Status",
+    "d": "Politische Selbstwirksamkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist der kollektive Nutzen allein unzureichend für Motivation (Trittbrettfahrerproblem)?",
+    "a": "Ausschluss von Trittbrettfahrern ist unmöglich",
+    "b": "Kollektive Güter sind irrelevant",
+    "c": "Individuelle Kosten überwiegen immer",
+    "d": "Soziale Bewegungen lehnen kollektive Güter ab",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was löst häufig den Ausstieg aus radikalen Gruppen aus?",
+    "a": "Erhöhte finanzielle Anreize",
+    "b": "Kritische Lebensereignisse (z.B. Familiengründung)",
+    "c": "Staatliche Repression",
+    "d": "Öffentliche Anerkennung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielen 'Collective Action Frames' bei der Mobilisierung?",
+    "a": "Sie definieren individuelle Karriereziele",
+    "b": "Sie helfen, Probleme zu interpretieren und Handlungsoptionen zu legitimeren",
+    "c": "Sie schaffen staatliche Kontrollmechanismen",
+    "d": "Sie verhindern die soziale Identifikation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter 'fraternaler relativer Deprivation'?",
+    "a": "Das Gefühl, als Individuum benachteiligt zu sein",
+    "b": "Das Gefühl, die eigene Gruppe sei gegenüber anderen benachteiligt",
+    "c": "Der Wunsch nach materiellem Besitz",
+    "d": "Die Identifikation mit einer höheren sozialen Klasse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat die moralische Empörung in sozialen Bewegungen?",
+    "a": "Sie hemmt kollektives Handeln",
+    "b": "Sie mobilisiert und legitimiert Protest",
+    "c": "Sie reduziert Gruppenkohäsion",
+    "d": "Sie fördert individuelle Resignation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was sind kollektive Güter im Kontext sozialer Bewegungen?",
+    "a": "Materielle Belohnungen für Mitglieder",
+    "b": "Nicht ausschließbare Vorteile, die allen zugutekommen",
+    "c": "Private Leistungen einzelner Mitglieder",
+    "d": "Güter, die nur für Führungspersonen bestimmt sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Strategie hilft gegen das Trittbrettfahrerproblem?",
+    "a": "Verzicht auf jegliche Belohnungen",
+    "b": "Ausschluss von Nicht-Mitgliedern vom Nutzen kollektiver Güter",
+    "c": "Ignorieren der Problematik",
+    "d": "Erhöhung der individuellen Kosten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist persönliche Ansprache bei der Mobilisierung wirksam?",
+    "a": "Sie erreicht nur wenige Individuen",
+    "b": "Sie stärkt soziale Bindungen und Vertrauen",
+    "c": "Sie ersetzt formelle Organisationsstrukturen",
+    "d": "Sie fördert anonyme Beteiligung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt die 'soziale Identitätstheorie' von Tajfel und Turner?",
+    "a": "Individuen handeln ausschließlich egoistisch",
+    "b": "Menschen definieren sich durch Gruppenmitgliedschaften",
+    "c": "Soziale Gruppen sind irrelevant für Selbstkonzept",
+    "d": "Konflikte entstehen nur durch individuelle Unterschiede",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedingung erhöht die Wahrscheinlichkeit kollektiven Handelns?",
+    "a": "Geringe Identifikation mit der Gruppe",
+    "b": "Hohe Erwartungen an kollektive Wirksamkeit",
+    "c": "Fehlende emotionale Beteiligung",
+    "d": "Individuelle Kosten überwiegen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'Empowerment'?",
+    "a": "Entmündigung durch staatliche Stellen",
+    "b": "Stärkung der Selbstwirksamkeit und Handlungsmöglichkeiten",
+    "c": "Finanzielle Belohnungen",
+    "d": "Abhängigkeit von Führungspersonen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Emotion wird mit der Politischen Psychologie als Motor von Protesten hervorgehoben?",
+    "a": "Angst",
+    "b": "Moralische Empörung",
+    "c": "Freude",
+    "d": "Traurigkeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wirkt sich Dehumanisierung auf intergruppale Konflikte aus?",
+    "a": "Sie fördert Empathie gegenüber Fremdgruppen",
+    "b": "Sie senkt Hemmschwellen für Gewalt gegen Fremdgruppen",
+    "c": "Sie vermindert Vorurteile",
+    "d": "Sie erhöht Dialogbereitschaft",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Motiv steht bei der Radikalisierung im Vordergrund?",
+    "a": "Suche nach sozialer Anerkennung",
+    "b": "Streben nach Bedeutung und Sinn",
+    "c": "Materieller Gewinn",
+    "d": "Politische Macht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was sind mögliche Auslöser für den Ausstieg aus radikalen Gruppen?",
+    "a": "Konflikte mit Behörden",
+    "b": "Kritische Lebensereignisse wie Familiengründung",
+    "c": "Finanzielle Schwierigkeiten",
+    "d": "Mediale Negativberichte",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielen Emotionen bei der Entstehung sozialer Bewegungen?",
+    "a": "Sie verhindern kollektives Handeln",
+    "b": "Sie fördern Motivation und Engagement",
+    "c": "Sie sind irrelevant",
+    "d": "Sie führen zu Resignation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wird das Mobilisierungspotential einer Bewegung definiert?",
+    "a": "Alle Menschen in einer Gesellschaft",
+    "b": "Personen, die sich mit den Zielen identifizieren und aktiv werden könnten",
+    "c": "Nur die Führungspersonen",
+    "d": "Externe Unterstützer",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter 'kollektiver Wirksamkeitserwartung'?",
+    "a": "Erwartung, dass das eigene Handeln allein zählt",
+    "b": "Glaube, dass gemeinsames Handeln Veränderungen bewirken kann",
+    "c": "Zweifel an der Sinnhaftigkeit von Protesten",
+    "d": "Abhängigkeit von staatlicher Unterstützung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Emotion ist typisch für 'fraternale relative Deprivation'?",
+    "a": "Scham",
+    "b": "Gruppenbezogener Ärger",
+    "c": "Einsamkeit",
+    "d": "Freude",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie trägt soziale Identität zur politischen Mobilisierung bei?",
+    "a": "Durch individuelle Ziele",
+    "b": "Indem sie kollektives Handeln legitimiert",
+    "c": "Durch wirtschaftliche Anreize",
+    "d": "Durch Hierarchieabbau",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Konsequenz hat die Legitimation von Gewalt in radikalen Narrativen?",
+    "a": "Ablehnung jeglichen Dialogs",
+    "b": "Rechtfertigung von Gewalt als Selbstverteidigung",
+    "c": "Stärkung staatlicher Autoritäten",
+    "d": "Verzicht auf politische Ziele",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielt die Medienberichterstattung bei der Radikalisierung?",
+    "a": "Sie verhindert radikale Einstellungen",
+    "b": "Sie kann radikale Einstellungen verstärken durch kulturelle Deutungen",
+    "c": "Sie hat keinen Einfluss",
+    "d": "Sie fördert nur moderate Positionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Faktoren fördern die Identifikation mit einer radikalen Gruppe?",
+    "a": "Isolation und Gruppenzwang",
+    "b": "Gemeinsame Werte und geteilte Erfahrungen",
+    "c": "Materielle Anreize",
+    "d": "Individuelle Karriereziele",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter 'kognitive Öffnung' im Radikalisierungsprozess?",
+    "a": "Verschlossenheit gegenüber neuen Ideen",
+    "b": "Bereitschaft, neue politische Ideen aufzunehmen",
+    "c": "Ablehnung aller politischen Ideen",
+    "d": "Unabhängigkeit von Gruppenzwängen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielen soziale Netzwerke bei der Radikalisierung?",
+    "a": "Sie isolieren Individuen vom Einfluss anderer",
+    "b": "Sie fördern den Austausch und Verstärkung radikaler Ideen",
+    "c": "Sie verhindern den Zugang zu radikalen Gruppen",
+    "d": "Sie haben keinen Einfluss",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie kann eine Gesellschaft Radikalisierung vorbeugen?",
+    "a": "Durch soziale Integration und Dialogförderung",
+    "b": "Durch totale Überwachung aller Bürger",
+    "c": "Durch Ausgrenzung radikaler Gruppen",
+    "d": "Durch Ignorieren des Problems",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Bedeutung hat die 'soziale Unterstützung' im Ausstiegsprozess?",
+    "a": "Sie erschwert den Ausstieg",
+    "b": "Sie erleichtert die Abkehr von radikalen Gruppen",
+    "c": "Sie ist irrelevant",
+    "d": "Sie stärkt die Radikalisierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein 'Radikalisierungsnetzwerk'?",
+    "a": "Eine staatliche Behörde zur Prävention",
+    "b": "Ein Netzwerk von Individuen, die radikale Ideen verbreiten",
+    "c": "Ein Programm zur Reintegration",
+    "d": "Ein legales politisches Bündnis",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie beeinflusst die Wahrnehmung von Ungerechtigkeit die Radikalisierung?",
+    "a": "Sie wirkt neutral",
+    "b": "Sie kann Motivation für radikale Aktionen sein",
+    "c": "Sie führt immer zu friedlichem Protest",
+    "d": "Sie verhindert soziale Bewegungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'Deindividuation'?",
+    "a": "Verlust des individuellen Selbstbewusstseins in Gruppen",
+    "b": "Stärkung der individuellen Identität",
+    "c": "Abgrenzung von der Gruppe",
+    "d": "Bewusstes Individualverhalten",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Konsequenz kann 'Dehumanisierung' haben?",
+    "a": "Förderung von Toleranz",
+    "b": "Erhöhung der Gewaltbereitschaft gegen Fremdgruppen",
+    "c": "Verbesserung der interkulturellen Kommunikation",
+    "d": "Reduzierung von Konflikten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedeutung hat das Gefühl der Ohnmacht bei Radikalisierung?",
+    "a": "Es fördert Resignation",
+    "b": "Es kann zu Suche nach Bedeutung in radikalen Gruppen führen",
+    "c": "Es verhindert politischen Aktivismus",
+    "d": "Es ist irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie kann 'Empowerment' Radikalisierung entgegenwirken?",
+    "a": "Durch Stärkung der Selbstwirksamkeit und Teilhabe",
+    "b": "Durch Kontrolle und Überwachung",
+    "c": "Durch Isolation",
+    "d": "Durch Sanktionen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was versteht man unter 'kultureller Deutung' im Radikalisierungsprozess?",
+    "a": "Oberflächliche Wahrnehmung von Kultur",
+    "b": "Interpretation von Ereignissen im Sinne der eigenen kulturellen Identität",
+    "c": "Ablehnung jeglicher Kultur",
+    "d": "Kulturelle Ignoranz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielt das Internet bei der Radikalisierung?",
+    "a": "Es hat keinen Einfluss",
+    "b": "Es ermöglicht schnellen Austausch und Vernetzung",
+    "c": "Es verhindert Radikalisierung",
+    "d": "Es fördert nur moderate Positionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Wirkung hat politische Marginalisierung auf Radikalisierung?",
+    "a": "Sie verhindert Protest",
+    "b": "Sie kann Radikalisierung begünstigen",
+    "c": "Sie ist irrelevant",
+    "d": "Sie fördert Integration",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt der Begriff 'Selbstwirksamkeit'?",
+    "a": "Überzeugung, keine Wirkung zu haben",
+    "b": "Glaube an die eigene Fähigkeit, Ziele zu erreichen",
+    "c": "Abhängigkeit von anderen",
+    "d": "Resignation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wirkt sich 'soziale Exklusion' auf Jugendliche aus?",
+    "a": "Sie fördert soziale Integration",
+    "b": "Sie kann zu Radikalisierung führen",
+    "c": "Sie hat keinen Einfluss",
+    "d": "Sie stärkt die Familie",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Merkmal radikaler Narrative?",
+    "a": "Friedlicher Dialog",
+    "b": "Schwarz-Weiß-Denken und Feindbilder",
+    "c": "Toleranz gegenüber Andersdenkenden",
+    "d": "Offenheit für Kompromisse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat die Gruppenkohäsion in radikalen Gruppen?",
+    "a": "Sie schwächt die Gruppe",
+    "b": "Sie stärkt Bindungen und Loyalität",
+    "c": "Sie verhindert Handlungsfähigkeit",
+    "d": "Sie reduziert den Gruppenzusammenhalt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedeutung hat 'Frustration' für soziale Bewegungen?",
+    "a": "Sie wirkt lähmend",
+    "b": "Sie kann Protestbereitschaft erhöhen",
+    "c": "Sie führt zu Passivität",
+    "d": "Sie ist irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie beeinflusst die Wahrnehmung von politischer Wirksamkeit das Engagement?",
+    "a": "Sie fördert aktives Handeln",
+    "b": "Sie hemmt Beteiligung",
+    "c": "Sie ist unwichtig",
+    "d": "Sie führt zu Resignation",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was versteht man unter 'soziale Identität'?",
+    "a": "Persönliche Eigenschaften ohne Bezug zur Gruppe",
+    "b": "Teil der Selbstwahrnehmung basierend auf Gruppenmitgliedschaft",
+    "c": "Individuelle Karriereziele",
+    "d": "Isolierte Persönlichkeitsmerkmale",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielt 'Gruppenzwang' bei Radikalisierung?",
+    "a": "Er verhindert radikale Einstellungen",
+    "b": "Er kann den Druck zur Anpassung erhöhen",
+    "c": "Er ist unwichtig",
+    "d": "Er fördert Individualität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Funktion hat das Gefühl der 'Ungerechtigkeit' in Protestbewegungen?",
+    "a": "Es hemmt Engagement",
+    "b": "Es motiviert zu kollektivem Handeln",
+    "c": "Es verhindert soziale Mobilisierung",
+    "d": "Es ist irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter 'kollektiver Handlung'?",
+    "a": "Individuelle Aktivitäten ohne Gruppenbezug",
+    "b": "Gemeinsames Handeln einer Gruppe zur Erreichung eines Ziels",
+    "c": "Zufällige Begegnungen",
+    "d": "Passives Verhalten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Bedeutung hat das Konzept der 'moralischen Empörung'?",
+    "a": "Es fördert Resignation",
+    "b": "Es mobilisiert zu Protesten gegen wahrgenommene Ungerechtigkeiten",
+    "c": "Es verhindert Konflikte",
+    "d": "Es führt zu Gleichgültigkeit",
+    "richtig": "b"
+  },
+  {
+  "frage": "Was ist laut dem Studienbrief notwendig, damit kollektive Identifikation zur Protestteilnahme führt?",
+  "a": "Eine zusätzliche materielle Belohnung",
+  "b": "Ein explizites politisches Mandat",
+  "c": "Ein starkes Belohnungsmotiv",
+  "d": "Keine zusätzlichen Motive – kollektive Identifikation reicht",
+  "richtig": "d"
+  },
+  {
+  "frage": "Was kann laut Empowerment-Theorie die Handlungskomponente des Collective Action Frame stärken?",
+  "a": "Negative Medienberichterstattung",
+  "b": "Hohe individuelle Selbstwirksamkeit",
+  "c": "Sichtbare Erfolge früherer Proteste",
+  "d": "Starke Unterscheidung zwischen 'wir' und 'die'",
+  "richtig": "c"
+  },
+  {
+  "frage": "Was trifft laut Studienbrief auf Menschen zu, die sich nicht über Gruppenzugehörigkeit definieren?",
+  "a": "Sie engagieren sich besonders häufig in Bewegungen.",
+  "b": "Sie sind Hauptakteure in der Bewegungspolitik.",
+  "c": "Sie zeigen eher spontane Protestteilnahme.",
+  "d": "Sie sind seltener bereit zu kollektiver Beteiligung.",
+  "richtig": "d"
+  },
+  {
+  "frage": "Wann kann laut Studienbrief eine Person auch ohne eigene Betroffenheit aktiv werden?",
+  "a": "Wenn sie direkte finanzielle Vorteile erwartet",
+  "b": "Wenn sie hohe persönliche Kosten vermeiden will",
+  "c": "Wenn sie mit der Bewegung politisch stark identifiziert ist",
+  "d": "Nur wenn sie Teil der diskriminierten Gruppe ist",
+  "richtig": "c"
+  },
+  {
+  "frage": "Wann ist laut Studienbrief die Teilnahmewahrscheinlichkeit an Protestaktionen am höchsten?",
+  "a": "Wenn das kollektive Motiv stark ist",
+  "b": "Wenn Empörung über die Regierung besteht",
+  "c": "Wenn alle vier Stufen nach Klandermans überwunden und starke Emotionen vorhanden sind",
+  "d": "Wenn soziale Identität fehlt, aber persönliche Vorteile groß sind",
+  "richtig": "c"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

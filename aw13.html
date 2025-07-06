@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was beschreibt das Phänomen der 'stereotypischen Akzentuierung'?",
+    "a": "Übertreibung von Ähnlichkeiten innerhalb der Eigengruppe",
+    "b": "Überbetonung von Unterschieden zwischen Gruppen und Unterschätzung innerhalber Gruppenunterschiede",
+    "c": "Gleichmäßige Wahrnehmung aller Gruppenmitglieder",
+    "d": "Ignoranz gegenüber kulturellen Unterschieden",
+    "richtig": "b"
+  },
+  {
+    "frage": "Henri Tajfels Experimente zur sozialen Identität zeigen, dass:",
+    "a": "Individuen immer faire Entscheidungen treffen",
+    "b": "Allein die Kategorisierung in Gruppen ausreicht, um Diskriminierung auszulösen",
+    "c": "Kooperation zwischen Gruppen automatisch Vorurteile reduziert",
+    "d": "Statusunterschiede zwischen Gruppen irrelevant sind",
+    "richtig": "b"
+  },
+  {
+    "frage": "Die 'Kernel of Truth'-Hypothese zu Geschlechterstereotypen besagt:",
+    "a": "Stereotype sind ausschließlich soziale Konstrukte ohne empirische Basis",
+    "b": "Biologische Unterschiede erklären alle Geschlechterunterschiede",
+    "c": "Stereotype können auf tatsächlichen, aber übertriebenen Unterschieden basieren",
+    "d": "Kultur spielt keine Rolle bei der Entstehung von Stereotypen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welcher Faktor trägt *nicht* zur Aufrechterhaltung von Geschlechterstereotypen bei?",
+    "a": "Selektive Informationssuche nach stereotypkonformen Informationen",
+    "b": "Stärkere Belohnung geschlechtsrollenkonformen Verhaltens",
+    "c": "Gleichverteilung von Care-Arbeit zwischen Männern und Frauen",
+    "d": "Darstellung in Medien gemäß traditioneller Rollenbilder",
+    "richtig": "c"
+  },
+  {
+    "frage": "Laut Allports Kontakthypothese (1954) reduziert Kontakt Vorurteile am effektivsten unter:",
+    "a": "Wettbewerbsbedingungen",
+    "b": "Ungleichem Status der Gruppen",
+    "c": "Fehlender institutioneller Unterstützung",
+    "d": "Gemeinsamen übergeordneten Zielen und Kooperation",
+    "richtig": "d"
+  },
+  {
+    "frage": "Der 'erweiterte Kontakteffekt' nach Wright et al. (1997) bezieht sich auf:",
+    "a": "Direkte Face-to-Face-Interaktion",
+    "b": "Verbesserte Einstellungen durch Wissen um Freundschaften zwischen Eigengruppenmitgliedern und Fremdgruppe",
+    "c": "Virtuelle Kontakte in sozialen Medien",
+    "d": "Kontakt unter Konkurrenzbedingungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Problem behindert die Generalisierung positiver Kontakterfahrungen auf die gesamte Fremdgruppe?",
+    "a": "Substereotypisierung",
+    "b": "Gemeinsame übergeordnete Ziele",
+    "c": "Dekategorisierung",
+    "d": "Emotionale Bindungen",
+    "richtig": "a"
+  },
+  {
+    "frage": "In welcher Kontaktphase nach Pettigrew (1998) steht die Dekategorisierung im Vordergrund?",
+    "a": "Etablierter Kontakt",
+    "b": "Gemeinsame Gruppe",
+    "c": "Initialer Kontakt",
+    "d": "Nachkonfliktphase",
+    "richtig": "c"
+  },
+  {
+    "frage": "'Politisierte kollektive Identität' nach Simon & Klandermans (2001) beinhaltet:",
+    "a": "Individualistische Kosten-Nutzen-Kalküle",
+    "b": "Triangulation (Einbeziehung Dritter wie Öffentlichkeit) zur Lösung von Gruppenkonflikten",
+    "c": "Ablehnung aller Gruppenidentitäten",
+    "d": "Fokus auf rein emotionale Prozesse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das 'Dual-Pathway-Modell' kollektiven Handelns (Stürmer & Simon) kombiniert:",
+    "a": "Soziale Identität und rationales Kalkül",
+    "b": "Biologische und evolutionäre Ansätze",
+    "c": "Autoritäre Führung und Gruppendenken",
+    "d": "Individuelle Deprivation und Aggression",
+    "richtig": "a"
+  },
+  {
+    "frage": "Kollektive Wirksamkeitserwartung bezieht sich auf:",
+    "a": "Die Überzeugung, dass Einzelne allein gesellschaftliche Probleme lösen können",
+    "b": "Die geteilte Überzeugung, dass die Gruppe durch gemeinsame Anstrengungen Missstände beheben kann",
+    "c": "Staatliche Autorität als alleinigen Veränderungsmotor",
+    "d": "Resignation angesichts struktureller Benachteiligung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Bei undurchlässigen Gruppengrenzen und negativer sozialer Identität wählt die Gruppe laut Tajfel & Turner (1986):",
+    "a": "Sozialen Wettbewerb",
+    "b": "Individuelle Mobilität",
+    "c": "Aufgabe der Gruppenidentität",
+    "d": "Soziale Kreativität",
+    "richtig": "d"
+  },
+  {
+    "frage": "Soziale Kreativität umfasst *nicht*:",
+    "a": "Vergleich mit niedrigerstatus Gruppen",
+    "b": "Neudefinition von Vergleichsdimensionen",
+    "c": "Änderung der Bewertungsdimensionen (z.B. 'Schwul' als positiv)",
+    "d": "Gewaltsame Konfrontation",
+    "richtig": "d"
+  },
+  {
+    "frage": "Im Experiment von Tajfel & Wilkes (1960er) führte Kategorisierung von Linien in Gruppe A/B zu:",
+    "a": "Geringerer Schätzgenauigkeit der Längen",
+    "b": "Überschätzung der Unterschiede *zwischen* den Kategorien",
+    "c": "Gleichmäßiger Wahrnehmung aller Linien",
+    "d": "Vernachlässigung der Kategorie-Labels",
+    "richtig": "b"
+  },
+  {
+    "frage": "Metaanalyse von Pettigrew & Tropp (2006) zur Kontakthypothese zeigt:",
+    "a": "Kontakt reduziert Vorurteile nur unter Allports Optimalbedingungen",
+    "b": "Kontakt wirkt auch ohne strikte Einhaltung aller Optimalbedingungen",
+    "c": "Ethnische Gruppen profitieren weniger als andere Gruppen",
+    "d": "Direkter Kontakt ist unwirksam",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im 'apology-forgiveness cycle' (Nadler & Shnabel) hat die Tätergruppe ein primäres Bedürfnis nach:",
+    "a": "Machterhalt",
+    "b": "Moralischer Rehabilitation",
+    "c": "Finanzieller Entschädigung",
+    "d": "Vermeidung von Verantwortung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Instrumentelle Versöhnung bezieht sich auf:",
+    "a": "Vertrauensaufbau durch Kooperation für gemeinsame Ziele",
+    "b": "Einseitige Schuldanerkennung",
+    "c": "Emotionale Katharsis ohne Handlung",
+    "d": "Externe Sanktionen",
+    "richtig": "a"
+  },
+  {
+    "frage": "'Deprovincialisierung' nach Pettigrew (1998) beschreibt:",
+    "a": "Verstärkte Abgrenzung von der Eigengruppe",
+    "b": "Neubewertung der Eigengruppen-Normen als eine unter vielen Möglichkeiten",
+    "c": "Aufgabe kultureller Identität",
+    "d": "Politische Zentralisierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Kreuzkategorisierung reduziert Vorurteile, weil sie:",
+    "a": "Alle Gruppenunterschiede eliminiert",
+    "b": "Mehrdimensionalität sozialer Identitäten betont",
+    "c": "Eine hierarchische Kategorisierung erzwingt",
+    "d": "Emotionale Prozesse unterdrückt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Linguistic Intergroup Bias beschreibt, dass:",
+    "a": "Positive Eigenhandlungen abstrakt ('Sie ist hilfsbereit'), negative konkret formuliert werden ('Sie schubste ihn')",
+    "b": "Fremdgruppen neutral beschrieben werden",
+    "c": "Sprache keine Rolle für Stereotype spielt",
+    "d": "Konkrete Sprache immer fair ist",
+    "richtig": "a"
+  },
+  {
+    "frage": "Die Jigsaw-Methode (Aronson) reduziert Vorurteile durch:",
+    "a": "Wettbewerb zwischen ethnischen Gruppen",
+    "b": "Gegenseitige Abhängigkeit in kooperativen Lerngruppen",
+    "c": "Autoritätsgestützte Zuweisung von Rollen",
+    "d": "Isolierte Einzelarbeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Kreuzkategorisierung\" wirkt vorurteilsreduzierend, weil sie:",
+    "a": "Eine einzige dominante Kategorie erzwingt",
+    "b": "Mehrfachzugehörigkeiten betont (z.B. \"weiblicher Ingenieur\")",
+    "c": "Gruppenunterschiede polarisiert",
+    "d": "Individuelle Identitäten auslöscht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die Metaanalyse von Pettigrew & Tropp (2006) zur Kontakthypothese?",
+    "a": "Kontakt wirkt nur bei strikter Einhaltung aller Optimalbedingungen",
+    "b": "Kontakt reduziert Vorurteile signifikant, auch ohne vollständige Optimalbedingungen",
+    "c": "Effekte sind ausschließlich auf Laborstudien beschränkt",
+    "d": "Ethnische Gruppen profitieren weniger als andere Gruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Deprovincialisierung\" nach Pettigrew (1998) bedeutet:",
+    "a": "Verstärkte Abgrenzung von der Eigengruppe",
+    "b": "Neubewertung eigener Normen als eine Möglichkeit unter vielen",
+    "c": "Aufgabe kultureller Traditionen",
+    "d": "Politische Radikalisierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Common-Ingroup-Identity-Modell (Gaertner & Dovidio) werden Deutsche und Polen rekategorisiert als:",
+    "a": "Konkurrenten",
+    "b": "Europäer",
+    "c": "Wirtschaftspartner",
+    "d": "Historische Gegner",
+    "richtig": "b"
+  },
+  {
+    "frage": "Substereotypisierung dient der Aufrechterhaltung von Stereotypen durch:",
+    "a": "Integration abweichender Mitglieder in Hauptkategorien",
+    "b": "Bildung von Unterkategorien für \"Ausnahmen\" (z.B. \"Karrierefrau\")",
+    "c": "Vollständige Dekategorisierung",
+    "d": "Betonung individueller Ähnlichkeiten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Der \"erweiterte Kontakteffekt\" (Wright et al.) ist wirksam, weil er:",
+    "a": "Direkte Face-to-Face-Interaktion erzwingt",
+    "b": "Eigengruppennormen über die Fremdgruppe verändert",
+    "c": "Statusunterschiede zementiert",
+    "d": "Emotionale Prozesse unterdrückt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Problem tritt bei der Generalisierung von Kontakterfahrungen auf?",
+    "a": "\"Wegerklären\" abweichenden Verhaltens durch Sonderumstände",
+    "b": "Beschleunigte Identifikation mit der Fremdgruppe",
+    "c": "Überschätzung empirischer Unterschiede",
+    "d": "Reduktion von Kreuzkategorisierungen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Instrumentelle Versöhnung nach Nadler basiert primär auf:",
+    "a": "Einseitigen Schuldeingeständnissen",
+    "b": "Kooperation für gemeinsame Ziele",
+    "c": "Finanziellen Reparationen",
+    "d": "Symbolischen Gesten ohne Handlung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im \"apology-forgiveness cycle\" (Nadler & Shnabel) benötigt die Opfergruppe primär:",
+    "a": "Moralische Rehabilitation",
+    "b": "Wiedererlangung von Kontrolle",
+    "c": "Ökonomische Entschädigung",
+    "d": "Öffentliche Demütigung der Täter",
+    "richtig": "b"
+  },
+  {
+    "frage": "Politische Kritik an der Kontakthypothese (Dixon et al.) betont:",
+    "a": "Vernachlässigung struktureller Ungleichheiten",
+    "b": "Überschätzung individueller Vorurteile als Konfliktursache",
+    "c": "Beide Aussagen sind zutreffend",
+    "d": "Keine der Aussagen",
+    "richtig": "c"
+  },
+  {
+    "frage": "\"Vorgestellter Kontakt\" (Crisp & Turner) bezieht sich auf:",
+    "a": "Verpflichtende reale Interaktionen",
+    "b": "Mentale Simulation positiver Begegnungen",
+    "c": "Beobachtung von Konflikten",
+    "d": "Historische Analysen von Gruppenbeziehungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Strukturelle Benachteiligung\" (van Zomeren) ist charakterisiert durch:",
+    "a": "Situative, vorübergehende Nachteile",
+    "b": "Historisch verankerte Diskriminierung (z.B. ethnische Minderheiten)",
+    "c": "Individuell verschuldete Probleme",
+    "d": "Exklusiv ökonomische Ungleichheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Kollektive vs. individuelle relative Deprivation unterscheiden sich durch:",
+    "a": "Bezug auf Intergruppen- vs. interpersonale Vergleiche",
+    "b": "Stärke der emotionalen Komponente",
+    "c": "Ausmaß der Rationalität",
+    "d": "Politische Manipulierbarkeit",
+    "richtig": "a"
+  },
+  {
+    "frage": "Die vier Stufen zu kollektivem Protest nach Klandermans beginnen mit:",
+    "a": "Entwicklung von Teilnahmemotivation",
+    "b": "Sympathie für die Bewegung",
+    "c": "Überwindung von Teilnahmebarrieren",
+    "d": "Ziel von Mobilisierungsversuchen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Ein \"Collective Action Frame\" (Gamson) muss enthalten:",
+    "a": "Finanzierungsplan und Logistik",
+    "b": "Ungerechtigkeitswahrnehmung, Identität und Handlungsoption",
+    "c": "Internationale Solidaritätsbekundungen",
+    "d": "Biografien der Anführer",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Frame Resonance\" (Benford & Snow) erhöht sich durch:",
+    "a": "Maximale Abstraktion von empirischen Bezügen",
+    "b": "Konsistenz, empirische Prüfbarkeit und Glaubwürdigkeit",
+    "c": "Isolierung von Gegenargumenten",
+    "d": "Finanzielle Anreize",
+    "richtig": "b"
+  },
+  {
+    "frage": "Mobilisierungsnetzwerke wie die Black Church in der US-Bürgerrechtsbewegung nutzen:",
+    "a": "Neue, kampagnenspezifische Strukturen",
+    "b": "Bestehende soziale Infrastrukturen",
+    "c": "Exklusiv digitale Plattformen",
+    "d": "Staatliche Institutionen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Motivationsmodell (Klandermans) ist das \"kollektive Motiv\" definiert als:",
+    "a": "Persönliche Kosten-Nutzen-Kalkulation",
+    "b": "Erwartete soziale Sanktionen",
+    "c": "Wert des kollektiven Nutzens × Erfolgserwartung",
+    "d": "Emotionale Katharsis",
+    "richtig": "c"
+  },
+  {
+    "frage": "Die \"politisierte kollektive Identität\" (Simon & Klandermans) beinhaltet zentral:",
+    "a": "Privatisierung von Beschwerden",
+    "b": "Triangulation (Einbeziehung der Gesellschaft)",
+    "c": "Ablehnung institutioneller Wege",
+    "d": "Fokus auf individuelle Mobilität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Das \"Dual-Pathway-Modell\" kollektiven Handelns (Stürmer & Simon) kombiniert:",
+    "a": "Rationale Kalkulation und soziale Identität",
+    "b": "Biologische Dispositionen und kulturelle Faktoren",
+    "c": "Autoritäre Führung und Gruppendruck",
+    "d": "Ökonomische und politische Theorie",
+    "richtig": "a"
+  },
+  {
+    "frage": "\"Kollektive Wirksamkeitserwartung\" (Bandura) bezieht sich auf:",
+    "a": "Individuelle Selbstwirksamkeit",
+    "b": "Geteilte Überzeugung der Gruppenhandlungsfähigkeit",
+    "c": "Staatliches Eingreifen als Lösung",
+    "d": "Externe Legitimation durch Autoritäten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im SIMCA-Modell (van Zomeren et al.) wirkt Identität besonders stark bei:",
+    "a": "Situativen Benachteiligungen",
+    "b": "Struktureller Benachteiligung",
+    "c": "Beiden gleichermaßen",
+    "d": "Ausschließlich individuellen Problemen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Im Experiment zu Ärger und Protest (Stürmer & Simon, 2009):",
+    "a": "Katharsis reduziert instrumentellen Protest",
+    "b": "Ärger fördert feindseligen Protest ohne Katharsis-Alternative",
+    "c": "Emotionen haben keinen Einfluss auf Protestformen",
+    "d": "Identifikation neutralisiert Ärger komplett",
+    "richtig": "b"
+  },
+  {
+    "frage": "Nicht-normativer Protest (Klandermans) umfasst:",
+    "a": "Petitionen und legale Demonstrationen",
+    "b": "Gewaltsame Aktionen/Sachbeschädigung",
+    "c": "Boykottaufrufe in Sozialen Medien",
+    "d": "Parteipolitische Arbeit",
+    "richtig": "b"
+  },
+  {
+    "frage": "In der DDR-Protestbewegung 1989 war entscheidend:",
+    "a": "Externe Finanzierung",
+    "b": "Kirchliche Räume als Mobilisierungsorte",
+    "c": "Unterstützung durch staatliche Medien",
+    "d": "Internationale Militärhilfe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Bei negativer sozialer Identität und undurchlässigen Grenzen wählt die Gruppe (Tajfel & Turner):",
+    "a": "Individuelle Mobilität",
+    "b": "Sozialen Wettbewerb oder soziale Kreativität",
+    "c": "Aufgabe der Gruppenidentität",
+    "d": "Externalisierung der Schuld",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf die Metaanalyse von Lemmer & Wagner (2015) zu?",
+    "a": "Kontaktinterventionen wirken nur für Mehrheitsgruppen",
+    "b": "Effekte sind auch in Hochkonfliktregionen (z.B. Nahost) nachweisbar",
+    "c": "Indirekter Kontakt ist wirkungslos",
+    "d": "Langzeiteffekte sind nicht untersucht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Kritik an der \"Kernel of Truth\"-Hypothese beinhaltet:",
+    "a": "Ignoranz gegenüber biologischen Unterschieden",
+    "b": "Schwache hormonelle Zusammenhänge (z.B. Testosteron-Aggression)",
+    "c": "Überschätzung kultureller Einflüsse",
+    "d": "Pauschalablehnung evolutionärer Erklärungen",
+    "richtig": "b"
+  },
+  {
+    "frage": "\"Soziale Kreativität\" als Identitätsmanagement umfasst NICHT:",
+    "a": "Vergleich mit niedrigerstatus Gruppen",
+    "b": "Neudefinition von Vergleichsdimensionen",
+    "c": "Gewaltsame Statusumkehr",
+    "d": "Bewertungsänderung negativer Merkmale",
+    "richtig": "c"
+  },
+  {
+    "frage": "Das \"bedürfnisbasierte Versöhnungsmodell\" (Nadler) betont für Tätergruppen:",
+    "a": "Wiederherstellung von Kontrolle",
+    "b": "Moralische Rehabilitation",
+    "c": "Finanzielle Entschädigung",
+    "d": "Öffentliche Demütigung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Zentrale Limitation von \"vorgestelltem Kontakt\" ist:",
+    "a": "Fehlende empirische Belege für Langzeiteffekte",
+    "b": "Zu hohe Implementierungskosten",
+    "c": "Exklusiver Fokus auf emotionale Prozesse",
+    "d": "Verstärkung von Stereotypen",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was beschreibt der \"Linguistic Intergroup Bias\"?",
+    "a": "Neutrale Sprachverwendung bei Gruppenbeschreibungen",
+    "b": "Abstrakte Formulierung negativer Fremdgruppenhandlungen (\"Die sind aggressiv\")",
+    "c": "Konkrete Beschreibung positiver Eigengruppenhandlungen (\"Sie half ihm\")",
+    "d": "Gleichmäßige Abstraktionsebene für alle Gruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage beschreibt am besten Substereotypisierung?",
+    "a": "Integration abweichender Mitglieder in die Hauptkategorie",
+    "b": "Erstellung von Sonderkategorien wie \"Karrierefrau\"",
+    "c": "Zerschlagung aller Gruppenkategorien",
+    "d": "Verallgemeinerung auf die gesamte Fremdgruppe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine zentrale Annahme der Kontakthypothese nach Allport?",
+    "a": "Kontakt ist nur in Konfliktsituationen effektiv",
+    "b": "Kontakt reduziert Vorurteile bei Gleichheit, Kooperation und institutioneller Unterstützung",
+    "c": "Kontakt verstärkt ethnische Unterschiede",
+    "d": "Kontakt ist nur wirksam unter Zwang",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt soziale Kreativität?",
+    "a": "Aggressive Umwertung von Statushierarchien",
+    "b": "Strategischer Vergleich mit Gruppen auf anderen Dimensionen",
+    "c": "Rückzug aus der Eigengruppe",
+    "d": "Passiver Widerstand gegen Autorität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt die \"Frame Resonance\" nach Benford & Snow?",
+    "a": "Emotionale Distanz zu politischen Zielen",
+    "b": "Widerstand gegen Mobilisierungsversuche",
+    "c": "Passung und Glaubwürdigkeit kollektiver Deutungsmuster",
+    "d": "Rekrutierung über staatliche Medien",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was fördert nach Stürmer & Simon die Beteiligung an kollektiven Protesten?",
+    "a": "Emotionale Gleichgültigkeit",
+    "b": "Relative individuelle Deprivation",
+    "c": "Geteilte soziale Identität und kollektive Wirksamkeitserwartung",
+    "d": "Mangel an Alternativen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist laut Tajfel & Turner eine Reaktion auf stabile negative soziale Identität?",
+    "a": "Individuelle Mobilität",
+    "b": "Auflösung der Gruppe",
+    "c": "Soziale Kreativität oder sozialer Wettbewerb",
+    "d": "Staatliche Repression",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Funktion erfüllt das Bedürfnis nach moralischer Rehabilitation?",
+    "a": "Wiederherstellung eines positiven Selbstbilds der Tätergruppe",
+    "b": "Bestrafung der Opfer",
+    "c": "Legitimation weiterer Gewalt",
+    "d": "Unterdrückung von Schuldgefühlen",
+    "richtig": "a"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>

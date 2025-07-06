@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Was ist die Hauptfrage der Studie?",
+    "a": "Ob Online-Kontakt persönlichen Kontakt vollständig ersetzen kann",
+    "b": "Ob persönlicher Kontakt weiterhin zentral für die Verbesserung von Gruppenbeziehungen ist",
+    "c": "Ob negative Kontakterfahrungen wirksamer sind als positive",
+    "d": "Ob stellvertretender Kontakt die effizienteste Kontaktform ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Kontaktformen werden in der Studie verglichen?",
+    "a": "Direkter vs. indirekter Kontakt",
+    "b": "Positiver vs. negativer Kontakt",
+    "c": "Persönlicher vs. Online-Kontakt",
+    "d": "Alle genannten",
+    "richtig": "d"
+  },
+  {
+    "frage": "In welchen Kontexten wurden die Studien durchgeführt?",
+    "a": "Studie 1: Nordirland (religiös); Studie 2: UK (ethnisch)",
+    "b": "Studie 1: UK (ethnisch); Studie 2: Nordirland (religiös)",
+    "c": "Beide Studien in den USA",
+    "d": "Studie 1: Online; Studie 2: persönlich",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Design verwendete Studie 2?",
+    "a": "Querschnitt",
+    "b": "Experimentell",
+    "c": "Longitudinal",
+    "d": "Metaanalyse",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wie groß war die Stichprobe in Studie 1?",
+    "a": "529 Weiße und 501 Schwarze",
+    "b": "447 Katholiken und 567 Protestanten",
+    "c": "1030 Teilnehmer insgesamt",
+    "d": "a und c",
+    "richtig": "d"
+  },
+  {
+    "frage": "Welche Kontaktform berichteten beide Gruppen am häufigsten?",
+    "a": "Negativer Online-Kontakt",
+    "b": "Positiver persönlicher Direktkontakt",
+    "c": "Stellvertretender negativer Kontakt",
+    "d": "Positiver Online-Kontakt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die ANOVA in Studie 1 bzgl. Kontakthäufigkeit?",
+    "a": "Mehr negativer als positiver Kontakt",
+    "b": "Mehr Online- als persönlicher Kontakt",
+    "c": "Signifikant mehr positiver als negativer Kontakt",
+    "d": "Keine Unterschiede zwischen Gruppen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wie korrelierte positiver persönlicher Kontakt mit Vorurteilen?",
+    "a": "Stärkste negative Korrelation",
+    "b": "Schwächste Korrelation",
+    "c": "Kein signifikanter Zusammenhang",
+    "d": "Positive Korrelation",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was war das unerwartete Ergebnis für weiße Teilnehmer bei negativem stellvertretendem Online-Kontakt?",
+    "a": "Stärkere Vorurteile",
+    "b": "Kein Effekt",
+    "c": "Reduzierte Vorurteile",
+    "d": "Höhere Angst",
+    "richtig": "c"
+  },
+  {
+    "frage": "Warum könnte negativer Online-Kontakt bei schwarzen Teilnehmern schädlicher sein?",
+    "a": "Weil sie seltener Online-Kontakt haben",
+    "b": "Wegen häufigerer rassistischer Online-Mikroaggressionen",
+    "c": "Weil Online-Kontakt generell positiv ist",
+    "d": "Wegen höherer Anonymität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie veränderte sich die Stichprobe in Studie 2 durch COVID-19?",
+    "a": "Keine Teilnehmer verloren",
+    "b": "Reduktion von 1014 auf 249 Teilnehmer",
+    "c": "Zunahme der Teilnehmerzahl",
+    "d": "Nur persönlicher Kontakt wurde gemessen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Mediatoren wurden in Studie 2 untersucht?",
+    "a": "Kognitive Dissonanz und Empathie",
+    "b": "Symbolische Bedrohung, realistische Bedrohung, Angst",
+    "c": "Soziale Identität und Selbstwertgefühl",
+    "d": "Politische Einstellungen und Religiosität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wirkte sich negativer Online-Kontakt auf Vorurteile aus?",
+    "a": "Direkt, ohne Mediatoren",
+    "b": "Nur über Angst und Bedrohungswahrnehmungen",
+    "c": "Gar nicht",
+    "d": "Stärker als positiver Kontakt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte sich zur Häufigkeit von stellvertretendem negativem Kontakt?",
+    "a": "Seltener als direkter Kontakt",
+    "b": "Häufiger als direkter negativer Kontakt",
+    "c": "Nur bei Katholiken verbreitet",
+    "d": "Nicht gemessen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage trifft auf beide Gruppen in Studie 2 zu?",
+    "a": "Persönlicher Kontakt war unwirksam",
+    "b": "Online-Kontakt erklärte zusätzliche Varianz in Vorurteilen",
+    "c": "Stellvertretender Kontakt dominierte",
+    "d": "Negative Kontakte waren selten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wurde Kontakt gemessen?",
+    "a": "Komplexe Skalen mit 20 Items",
+    "b": "Einfache Einzelitems auf einer 7-Punkte-Likert-Skala",
+    "c": "Nur qualitative Interviews",
+    "d": "Experimentelle Manipulation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie wurde Vorurteil operationalisiert?",
+    "a": "Nur Gefühlsthermometer",
+    "b": "Sechs semantische Differenzialskalen und Gefühlsthermometer",
+    "c": "Offene Fragen",
+    "d": "Implizite Assoziationstests",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche statistische Methode prüfte den Beitrag von Online-Kontakt?",
+    "a": "T-Tests",
+    "b": "Hierarchische Regression",
+    "c": "Faktoranalyse",
+    "d": "Korrelationsanalyse",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die hierarchische Regression in beiden Studien?",
+    "a": "Online-Kontakt war unnötig in Modellen",
+    "b": "Online-Kontakt trug signifikant zusätzliche Varianz bei",
+    "c": "Nur direkter Kontakt war relevant",
+    "d": "Keine signifikanten Effekte",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Softwaretool wurde für Mediationsanalysen genutzt?",
+    "a": "SPSS",
+    "b": "MPlus",
+    "c": "R",
+    "d": "Excel",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist die Kernaussage zu positivem persönlichem Kontakt?",
+    "a": "Er ist irrelevant in digitalen Zeiten",
+    "b": "Er ist häufiger und vorurteilsreduzierender als andere Formen",
+    "c": "Nur in Laborexperimenten wirksam",
+    "d": "Wirkt nur bei Mehrheitsgruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist negativer Online-Kontakt potenziell schädlicher?",
+    "a": "Wegen geringerer Anonymität",
+    "b": "Wegen Disinhibition durch Anonymität",
+    "c": "Weil er seltener vorkommt",
+    "d": "Weil er nicht generalisiert",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Gruppe erlebte mehr negativen Kontakt?",
+    "a": "Weiße in Studie 1",
+    "b": "Schwarze in Studie 1",
+    "c": "Protestanten in Studie 2",
+    "d": "Katholiken in Studie 2",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte sich zur Wirkung von stellvertretendem Kontakt?",
+    "a": "Immer vorurteilssteigernd",
+    "b": "Kann Vorurteile reduzieren (z. B. bei Sympathie)",
+    "c": "Nur in persönlichem Kontext relevant",
+    "d": "Unerforscht",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Limitation hat die Studie?",
+    "a": "Keine Validierung der Skalen",
+    "b": "Vereinfachte Messung (Einzelitems)",
+    "c": "Zu große Stichproben",
+    "d": "Keine statistischen Tests",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie argumentieren Hasler & Amichai-Hamburger (2013) zu Online-Kontakt?",
+    "a": "Er ist immer schädlich",
+    "b": "Er kann unter optimalen Bedingungen positiv wirken",
+    "c": "Nur synchroner Kontakt ist nützlich",
+    "d": "Er ersetzt persönlichen Kontakt vollständig",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was besagt die \"Kontakt-Valenz-Asymmetrie\"?",
+    "a": "Positiver Kontakt ist seltener, aber wirksamer",
+    "b": "Negativer Kontakt ist seltener, aber einflussreicher",
+    "c": "Keine Unterschiede in der Wirkung",
+    "d": "Nur bei Mehrheitsgruppen relevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Mediatoren waren für negativen Online-Kontakt signifikant?",
+    "a": "Nur symbolische Bedrohung",
+    "b": "Angst, realistische und symbolische Bedrohung",
+    "c": "Empathie",
+    "d": "Keine Mediation",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was war ein COVID-19-bedingter Einfluss?",
+    "a": "Keine Daten zum Online-Kontakt",
+    "b": "Stichprobenverlust in Studie 2",
+    "c": "Verstärkter persönlicher Kontakt",
+    "d": "Höhere Vorurteile",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Zukunftsfrage leitet sich aus der Studie ab?",
+    "a": "Abschaffung persönlichen Kontakts",
+    "b": "Unterschiede zwischen synchronem/asynchronem Online-Kontakt",
+    "c": "Fokus auf politische Interventionen",
+    "d": "Vernachlässigung von Mediatoren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wer formulierte die ursprüngliche Kontakthypothese?",
+    "a": "Pettigrew & Tropp",
+    "b": "Allport (1954)",
+    "c": "Hasler & Amichai-Hamburger",
+    "d": "Paolini et al.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was sind \"optimale Bedingungen\" nach Allport?",
+    "a": "Anonymität",
+    "b": "Gleichberechtigter Status, gemeinsame Ziele",
+    "c": "Kurze Dauer",
+    "d": "Wettbewerb",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigte die Metaanalyse von Pettigrew & Tropp (2006)?",
+    "a": "Kontakt reduziert nie Vorurteile",
+    "b": "94% der Studien zeigen Vorurteilsreduktion",
+    "c": "Nur Online-Kontakt ist wirksam",
+    "d": "Negative Kontakte dominieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist \"stellvertretender Kontakt\"?",
+    "a": "Eigene Interaktion",
+    "b": "Beobachtete Interaktion anderer",
+    "c": "Imagination von Kontakt",
+    "d": "Schriftlicher Austausch",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Form indirekten Kontakts untersuchten Wright et al. (1997)?",
+    "a": "Online-Chats",
+    "b": "Erweiterter Kontakt (Freundschaften im Netzwerk)",
+    "c": "Virtuelle Realität",
+    "d": "Telefonate",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was misst die Effektgröße ηp²?",
+    "a": "Reliabilität",
+    "b": "Varianzaufklärung durch einen Effekt",
+    "c": "Signifikanzniveau",
+    "d": "Korrelationsstärke",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was prüfte die hierarchische Regression?",
+    "a": "Unterschiede zwischen Gruppen",
+    "b": "Zusätzliche Varianzaufklärung durch Online-Kontakt",
+    "c": "Mediationseffekte",
+    "d": "Faktorenstruktur",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt ein signifikanter β-Wert in der Regression?",
+    "a": "Kein Zusammenhang",
+    "b": "Einfluss des Prädiktors bei Kontrolle anderer Variablen",
+    "c": "Reliabilität des Maßes",
+    "d": "Kausale Wirkung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wann liegt ein \"kleiner Effekt\" nach Cohen (1992) vor?",
+    "a": "ηp² > 0.5",
+    "b": "d ≈ 0.2 oder R² ≈ 0.01",
+    "c": "p < 0.001",
+    "d": "r > 0.7",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bewertet der RMSEA-Wert?",
+    "a": "Reliabilität",
+    "b": "Modellpassung in SEM",
+    "c": "Signifikanz",
+    "d": "Effektstärke",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Limitation betrifft die Kontaktmessung?",
+    "a": "Zu viele Items",
+    "b": "Vereinfachung durch Einzelitems",
+    "c": "Ausschließlich experimentell",
+    "d": "Fehlende Validierung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was wurde nicht zwischen Online-Formen differenziert?",
+    "a": "Positive/negative Valenz",
+    "b": "Synchroner/asynchroner Kontakt",
+    "c": "Direkt/stellvertretend",
+    "d": "Persönlich/virtuell",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Gruppe könnte unterrepräsentiert sein?",
+    "a": "Junge Menschen",
+    "b": "Ältere ohne Internetzugang",
+    "c": "Nur Minderheiten",
+    "d": "Keine Gruppen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Praxisimplikation leitet sich ab?",
+    "a": "Online-Kontakt ignorieren",
+    "b": "Online-Räume moderieren, um negative Kontakte zu reduzieren",
+    "c": "Nur persönliche Interventionen",
+    "d": "Vorurteile akzeptieren",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was fordern die Autoren für zukünftige Forschung?",
+    "a": "Ausschließlich Laborexperimente",
+    "b": "Differenzierung von Online-Kontaktformen",
+    "c": "Ende der Kontaktforschung",
+    "d": "Fokus auf politische Systeme",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wie bewerten die Autoren die Rolle von persönlichem Kontakt?",
+    "a": "Überflüssig",
+    "b": "Weiterhin zentral, aber nicht exklusiv",
+    "c": "Nur historisch relevant",
+    "d": "Schädlich",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Aussage fasst Studie 2 zusammen?",
+    "a": "Keine Mediatoren gefunden",
+    "b": "Online-Kontakt wirkt über Bedrohung/Ängste",
+    "c": "COVID-19 verzerrte alle Ergebnisse",
+    "d": "Nur Katholiken zeigten Effekte",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welches Ergebnis widersprach früheren Studien?",
+    "a": "Positiver Kontakt reduziert Vorurteile",
+    "b": "Negativer stellvertretender Online-Kontakt reduziert Vorurteile (bei Weißen)",
+    "c": "Persönlicher Kontakt ist häufig",
+    "d": "Negativer Kontakt ist selten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine Stärke der Studie?",
+    "a": "Kleine Stichproben",
+    "b": "Vergleich mehrerer Kontaktformen in realen Kontexten",
+    "c": "Ausschließlich Querschnittsdesign",
+    "d": "Fehlende statistische Kontrollen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Kernbotschaft betonen die Autoren?",
+    "a": "Online-Kontakt ersetzt persönlichen Kontakt",
+    "b": "Persönlicher Kontakt bleibt zentral, aber Online-Formen sind eigenständig relevant",
+    "c": "Negative Kontakte sind harmlos",
+    "d": "Nur experimentelle Kontakte wirken",
+    "richtig": "b"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
