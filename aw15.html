@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenny´s Sozialpsychologie Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .quiz-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background-color: #c8e6c9;
+    }
+
+    .answers button.wrong {
+      background-color: #ffcdd2;
+    }
+
+    .next-btn {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      background-color: #aaa;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="quiz">
+    <!-- Inhalte werden via JS eingefügt -->
+  </div>
+  <button id="next-btn" class="next-btn" disabled>Weiter</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+  {
+    "frage": "Welche Persönlichkeitsmerkmale fördern laut HEXACO-Modell xenophiles Verhalten?",
+    "a": "Verträglichkeit, Emotionalität, Ehrlichkeit",
+    "b": "Offenheit, Extraversion, Gewissenhaftigkeit",
+    "c": "Neurotizismus, Verträglichkeit, Offenheit",
+    "d": "Offenheit, Bescheidenheit, Loyalität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bezeichnet der Begriff Xenophilie?",
+    "a": "Die Angst vor fremden Kulturen",
+    "b": "Die Abwesenheit von Fremdenfeindlichkeit",
+    "c": "Die aktive Suche nach positivem Kontakt mit Fremdgruppen",
+    "d": "Den Wunsch nach kultureller Abschottung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was sind laut Stürmer & Benbow (2017) zentrale Motive für interkulturellen Kontakt?",
+    "a": "Angstvermeidung und soziale Normen",
+    "b": "Wissenserwerb, Werteausdruck, berufliche Interessen",
+    "c": "Empathie, Vertrauen, Intelligenz",
+    "d": "Sicherheit, Kontrolle, Status",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Eigenschaft ist KEIN altruism/cooperation-related trait im HEXACO-Modell?",
+    "a": "Verträglichkeit",
+    "b": "Ehrlichkeit-Bescheidenheit",
+    "c": "Extraversion",
+    "d": "Emotionalität",
+    "richtig": "c"
+  },
+  {
+    "frage": "Warum wird Fremdgruppenmitgliedern teilweise mehr geholfen als Eigengruppenmitgliedern?",
+    "a": "Weil Empathie stärker wirkt",
+    "b": "Wegen „umgekehrter Diskriminierung“",
+    "c": "Weil sie attraktiver erscheinen",
+    "d": "Wegen automatischer prosozialer Tendenzen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Prozess ist laut Stürmer & Snyder (2010) beim Eigengruppenhelfen dominant?",
+    "a": "Kalkulation von Kosten-Nutzen",
+    "b": "Soziale Erwünschtheit",
+    "c": "Empathiebasierter Altruismus",
+    "d": "Normativer Druck",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wann ist Hilfeverhalten gegenüber Fremdgruppen am ehesten wahrscheinlich?",
+    "a": "Wenn hohe Empathie vorliegt",
+    "b": "Wenn Hilfe sozial belohnt wird",
+    "c": "Wenn Gruppenzugehörigkeit egal ist",
+    "d": "Wenn Kosten-Nutzen positiv ausfallen",
+    "richtig": "d"
+  },
+  {
+    "frage": "Welche Aussage trifft auf den Empathic Concern Index zu?",
+    "a": "Misst objektiv beobachtbares Helfen",
+    "b": "Misst dispositionelle Empathiefähigkeit",
+    "c": "Misst Hilfsbereitschaft bei Eigengruppen",
+    "d": "Misst kognitive Perspektivenübernahme",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der Meta-Analyse von Saucier et al. (2005)?",
+    "a": "Weiße helfen Schwarzen signifikant weniger",
+    "b": "Es gibt keine systematische Diskriminierung beim Helfen",
+    "c": "Empathie ist bei Fremdgruppen irrelevant",
+    "d": "Umgekehrte Diskriminierung ist nicht belegbar",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was reduziert laut Theorie die Wahrscheinlichkeit von empathischem Helfen gegenüber Fremdgruppen?",
+    "a": "Soziale Erwünschtheit",
+    "b": "Perspektivenübernahme",
+    "c": "Wahrgenommene Unähnlichkeit",
+    "d": "Hohe Kosten",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Strategie kann Empathie gegenüber Fremdgruppen erhöhen?",
+    "a": "Ressourcenentzug",
+    "b": "Betonung von kulturellen Unterschieden",
+    "c": "Kategorisierung auf hoher Abstraktionsebene (z.B. Menschsein)",
+    "d": "Hinweis auf Eigengruppe",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was bezeichnet „reciprocal altruism“ im evolutionären Sinn?",
+    "a": "Hilfeverhalten gegenüber Verwandten",
+    "b": "Hilfeverhalten ohne Gegenerwartung",
+    "c": "Hilfe mit der Erwartung zukünftiger Gegenhilfe",
+    "d": "Hilfeverhalten zur Stärkung des Selbstwerts",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welches Motiv ist KEIN identifiziertes Motiv für interkulturellen Kontakt?",
+    "a": "Kollektives Selbstbild",
+    "b": "Neugiervermeidung",
+    "c": "Soziale Entwicklung",
+    "d": "Berufliche Interessen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Emotion gilt als Basis echter altruistischer Hilfe?",
+    "a": "Ärger",
+    "b": "Empathie",
+    "c": "Schuld",
+    "d": "Stolz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was verstärkt laut Forschung die Wirkung von Empathie auf Hilfeverhalten?",
+    "a": "Gleichheit der Gruppenzugehörigkeit",
+    "b": "Attraktivität der Zielperson",
+    "c": "Persönliche Relevanz",
+    "d": "Öffentliche Beobachtung",
+    "richtig": "a"
+  },
+  {
+    "frage": "Warum ist empathiebasiertes Helfen bei Fremdgruppen seltener?",
+    "a": "Weil es egoistisch motiviert ist",
+    "b": "Weil Ähnlichkeitswahrnehmung fehlt",
+    "c": "Weil Fremde immer Hilfe ablehnen",
+    "d": "Weil es gesetzlich verboten ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was versteht man unter “Bedürfnisorientierung” im Hilfeverhalten?",
+    "a": "Die Anpassung der Hilfe an eigene Ziele",
+    "b": "Das Helfen, wenn andere es verlangen",
+    "c": "Die Orientierung am tatsächlichen Bedarf der Zielperson",
+    "d": "Die Unterstützung finanzieller Bedürftigkeit",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wann ist Diskriminierung im Hilfeverhalten am wahrscheinlichsten?",
+    "a": "Wenn Hilfe leicht ist",
+    "b": "Wenn Hilfe nicht beobachtet wird",
+    "c": "Wenn hohe Kosten anfallen",
+    "d": "Wenn Empathie hoch ist",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was sagt die Selbstkategorisierungstheorie zum Thema Ähnlichkeit?",
+    "a": "Ähnlichkeiten sind sozial konstruiert und irrelevant",
+    "b": "Eigengruppenmitglieder erscheinen ähnlicher",
+    "c": "Unterschiede innerhalb der Eigengruppe werden betont",
+    "d": "Gruppenkategorien reduzieren empathisches Verhalten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Stürmer & Snyder (2010) typisch für Helfen innerhalb der Eigengruppe?",
+    "a": "Strategische Vorteilsoptimierung",
+    "b": "Bedürfnisorientierung",
+    "c": "Hilfe nur bei Beobachtung",
+    "d": "Abhängigkeit von Status der Zielperson",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Eigenschaft gehört laut HEXACO nicht zu den “endeavor-related traits”?",
+    "a": "Offenheit",
+    "b": "Extraversion",
+    "c": "Gewissenhaftigkeit",
+    "d": "Verträglichkeit",
+    "richtig": "d"
+  },
+  {
+    "frage": "Was sind laut Studien zentrale Funktionen von interkulturellem Kontaktmotiv „Werteausdruck“?",
+    "a": "Kontakte knüpfen",
+    "b": "Gegen Diskriminierung Stellung beziehen",
+    "c": "Sprachkompetenz verbessern",
+    "d": "Berufschancen erhöhen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was trifft auf “altruism/cooperation-related traits” zu?",
+    "a": "Sie begünstigen spontan interkulturellen Kontakt",
+    "b": "Sie fördern Empathie gegenüber Fremdgruppen",
+    "c": "Sie begünstigen Helfen in sicheren, vertrauten Beziehungen",
+    "d": "Sie korrelieren negativ mit Hilfeverhalten",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche empirische Methode wurde in den Studien von Stürmer et al. (2006) verwendet?",
+    "a": "Tagebuchmethode",
+    "b": "Online-Panelanalyse",
+    "c": "Laborbasiertes Chat-Experiment mit manipulierten Gruppenzugehörigkeiten",
+    "d": "Interviewmethode",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was zeigt das Experiment mit „Markus“ und „Mohammed“ (Stürmer et al., 2006)?",
+    "a": "Empathie wirkt bei Fremdgruppen stärker",
+    "b": "Gruppenzugehörigkeit beeinflusst Hilfsbereitschaft",
+    "c": "Persönliche Betroffenheit ist unwichtig",
+    "d": "Diskriminierung ist immer bewusst gesteuert",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bezeichnet der Begriff „umgekehrte Diskriminierung“?",
+    "a": "Hilfe wird verweigert, um Gleichheit zu wahren",
+    "b": "Fremdgruppen werden absichtlich bevorzugt",
+    "c": "Eigengruppenmitglieder helfen sich nicht",
+    "d": "Reine Altruismusverweigerung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine plausible Erklärung für uneinheitliche Ergebnisse in Studien zum Hilfeverhalten?",
+    "a": "Hilfeverhalten ist komplett zufällig",
+    "b": "Soziale Normen verhindern klare Muster",
+    "c": "Unterschiedliche situative und motivationale Kontexte",
+    "d": "Hilfe wird durch Autoritätspersonen ausgelöst",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Rolle spielt Ähnlichkeitswahrnehmung in intergruppalem Helfen?",
+    "a": "Sie aktiviert empathische Prozesse bei Fremdgruppen",
+    "b": "Sie hemmt Empathie bei Eigengruppen",
+    "c": "Sie erleichtert empathiebasiertes Helfen bei wahrgenommener Nähe",
+    "d": "Sie hat keinen Effekt",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist typisch für helfen im Sinne von „reciprocal altruism“?",
+    "a": "Kosten werden nicht beachtet",
+    "b": "Helfen erfolgt reflexartig",
+    "c": "Hilfe basiert auf erwarteter Gegenseitigkeit",
+    "d": "Hilfe ist auf genetische Verwandtschaft beschränkt",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welcher Effekt tritt häufig bei hohem Aufwand im Fremdgruppen-Helfen auf?",
+    "a": "Hilfe wird wahrscheinlicher",
+    "b": "Empathie steigt",
+    "c": "Hilfe wird weniger wahrscheinlich",
+    "d": "Hilfe erfolgt automatisch",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welcher empirische Befund spricht gegen die Annahme systematischer Diskriminierung im Helfen?",
+    "a": "Saucier et al.: keine klare Tendenz bei rassifizierter Hilfeleistung",
+    "b": "Cialdini et al.: Negative-State-Relief-Modell",
+    "c": "Tajfel: minimal group paradigm",
+    "d": "Davis: Perspektivenübernahme funktioniert nicht",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welche Strategie wird in Interventionsansätzen zur Förderung von Fremdgruppen-Hilfe empfohlen?",
+    "a": "Salienz kultureller Unterschiede",
+    "b": "Betonung von Gruppenhomogenität",
+    "c": "Förderung übergeordneter Identitäten (z. B. „Mensch“)",
+    "d": "Abschottung fremder Gruppen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist laut Stürmer & Siem (2017) Voraussetzung für reflexives Helfen?",
+    "a": "Wahrgenommene Kosten",
+    "b": "Selbstgefährdung",
+    "c": "Selbst-Andere-Ähnlichkeit",
+    "d": "Anonymität",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Motivation steht typischerweise hinter Eigengruppenhelfen?",
+    "a": "Reziprozität",
+    "b": "Empathische Sorge",
+    "c": "Machtgewinn",
+    "d": "Statuserhalt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt das „Minimalgruppen-Experiment“ von Tajfel?",
+    "a": "Fremdgruppen werden fairer beurteilt",
+    "b": "Kategorisierung genügt, um Eigengruppenbevorzugung zu erzeugen",
+    "c": "Hilfeverhalten basiert immer auf persönlichen Beziehungen",
+    "d": "Gruppenzugehörigkeit ist irrelevant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist eine typische Formulierung aus dem Empathic Concern Index?",
+    "a": "Ich mag es, wenn ich hilflosen Menschen helfen kann.",
+    "b": "Ich fühle mich oft bewegt, wenn andere leiden.",
+    "c": "Ich helfe nur, wenn ich beobachtet werde.",
+    "d": "Ich helfe, wenn ich etwas zurückbekomme.",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Theorie bei hoher Gruppensalienz und Fremdgruppenstatus wahrscheinlich?",
+    "a": "Automatische Hilfe",
+    "b": "Kosten-Nutzen-Kalkulationen",
+    "c": "Bedürfnisorientierte Hilfe",
+    "d": "Spontane Solidarität",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was bezeichnet der Begriff „Selbstrelevanz“ im Zusammenhang mit Helfen?",
+    "a": "Das Maß, in dem Helfen den eigenen Status stärkt",
+    "b": "Der Bezug der Situation zum eigenen Selbstbild",
+    "c": "Die Wichtigkeit der Gruppe",
+    "d": "Die Übereinstimmung mit Normen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was fördert Perspektivenübernahme?",
+    "a": "Wahrgenommene Differenz",
+    "b": "Aktivierung von Empathie",
+    "c": "Reziprozitätsvermeidung",
+    "d": "Erhöhung von Hilfskosten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wann ist Hilfe gegenüber Fremdgruppen qualitativ schlechter?",
+    "a": "Wenn Empathie sehr hoch ist",
+    "b": "Wenn keine Kategorisierung vorliegt",
+    "c": "Wenn nur aus Eigennutz geholfen wird",
+    "d": "Wenn Eigengruppennormen es verlangen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der Studien zu interkulturellen Dyaden im „Study-Buddy“-Programm?",
+    "a": "Interkulturelle Unähnlichkeit steigert Motivation",
+    "b": "Kulturelle Ähnlichkeit verstärkt empathiebasiertes Helfen",
+    "c": "Fremdheit führt zu mehr Spenden",
+    "d": "Unähnlichkeit ist irrelevant für Hilfeverhalten",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Prozess steht hinter der Entscheidung, Fremdgruppenmitgliedern zu helfen, wenn ein Nutzen erwartet wird?",
+    "a": "Empathie",
+    "b": "Reziproker Altruismus",
+    "c": "Gruppenkohäsion",
+    "d": "Sozialer Druck",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das Negative-State-Relief-Modell von Cialdini et al.?",
+    "a": "Hilfe wird geleistet, um eigene negative Emotionen zu reduzieren",
+    "b": "Hilfe basiert immer auf Mitgefühl",
+    "c": "Hilfe erfolgt unabhängig vom emotionalen Zustand",
+    "d": "Hilfe wird bei Eigengruppen vermieden",
+    "richtig": "a"
+  },
+  {
+    "frage": "Welcher Mechanismus wird beim Helfen innerhalb der Eigengruppe besonders aktiviert?",
+    "a": "Kalkulation",
+    "b": "Empathische Sorge",
+    "c": "Reziprozität",
+    "d": "Abwehrhaltung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Batson (1991) eine Voraussetzung für altruistisches Verhalten?",
+    "a": "Gruppennormen",
+    "b": "Kulturelle Ähnlichkeit",
+    "c": "Empathische Sorge",
+    "d": "Selbstinteresse",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Aussage trifft auf Eigengruppenhelfen am ehesten zu?",
+    "a": "Hilfe erfolgt vorrangig aus Kosten-Nutzen-Abwägung",
+    "b": "Hilfe erfolgt oft reflexhaft und empathiebasiert",
+    "c": "Hilfe ist seltener als bei Fremdgruppen",
+    "d": "Hilfe ist immer durch Gesetze geregelt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wann ist Hilfeverhalten laut Theorie besonders instabil?",
+    "a": "Bei geringer Empathie und hoher Kosten-Nutzen-Abwägung",
+    "b": "Wenn soziale Normen sehr stark sind",
+    "c": "Bei hoher Gruppenidentifikation",
+    "d": "Wenn kulturelle Ähnlichkeit besteht",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was ist ein typischer Nachteil bei kosten-nutzen-orientiertem Helfen?",
+    "a": "Hilfe erfolgt nur bei Angehörigen",
+    "b": "Hilfe ist qualitativ schlechter",
+    "c": "Hilfe ist immer empathisch",
+    "d": "Hilfe wird immer abgelehnt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Variable wurde in den Studien von Stürmer et al. gezielt manipuliert?",
+    "a": "Hilfsbereitschaft",
+    "b": "Gruppenzugehörigkeit der Zielperson",
+    "c": "Ethnie des Beobachters",
+    "d": "Dauer der Hilfeleistung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum sind Personen mit hoher Verträglichkeit oft zurückhaltend bei interkulturellem Kontakt?",
+    "a": "Sie sind weniger empathisch",
+    "b": "Sie bevorzugen sichere Beziehungen",
+    "c": "Sie sind impulsiver",
+    "d": "Sie suchen soziale Dominanz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was beschreibt das Konzept der “Kosten der Hilfeleistung”?",
+    "a": "Emotionale Nähe zur Zielperson",
+    "b": "Wahrgenommene Risiken oder Aufwände beim Helfen",
+    "c": "Finanzieller Aufwand der Hilfe",
+    "d": "Gruppennormen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wann ist laut Forschung Diskriminierung im Helfen besonders wahrscheinlich?",
+    "a": "Wenn Empathie sehr stark ist",
+    "b": "Wenn die Kosten niedrig sind",
+    "c": "Wenn die Zielperson als unattraktiv gilt",
+    "d": "Wenn soziale Normen klar definiert sind",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist eine plausible Intervention gegen Diskriminierung beim Helfen?",
+    "a": "Kategorisierung stärken",
+    "b": "Perspektivenübernahme fördern",
+    "c": "Fokus auf Eigennutzen legen",
+    "d": "Unähnlichkeiten betonen",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt sich empirisch in Bezug auf Hilfsbereitschaft gegenüber kulturell unähnlichen Personen?",
+    "a": "Sie ist stets höher",
+    "b": "Sie wird vor allem durch Reziprozität motiviert",
+    "c": "Sie ist unabhängig von Gruppenzugehörigkeit",
+    "d": "Sie ist identisch mit Eigengruppenhilfe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was reduziert laut Theorie die Wirkung von Empathie im intergruppalen Kontext?",
+    "a": "Wahrnehmung starker Ähnlichkeiten",
+    "b": "Eigengruppenstatus der Zielperson",
+    "c": "Wahrgenommene Unähnlichkeiten",
+    "d": "Emotionale Erschöpfung",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was kennzeichnet „interpersonal oneness“?",
+    "a": "Verlust der Ich-Grenzen bei Hilfeleistung",
+    "b": "Gleichzeitiges Gefühl von Angst und Empathie",
+    "c": "Reziprozität durch Ähnlichkeit",
+    "d": "Neutrale Haltung gegenüber Fremden",
+    "richtig": "a"
+  },
+  {
+    "frage": "Was ist eine zentrale Annahme von Stürmer & Siem (2017)?",
+    "a": "Hilfe wird durch Statusunterschiede bestimmt",
+    "b": "Wahrgenommene Ähnlichkeit aktiviert empathisches Helfen",
+    "c": "Nur persönliche Nähe motiviert zu helfen",
+    "d": "Reziprozität ist bei Eigengruppen dominant",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Forschung ein typischer Auslöser für empathiebasiertes Helfen?",
+    "a": "Eigennutz",
+    "b": "Ästhetik der Zielperson",
+    "c": "Mitgefühl für Bedürftige",
+    "d": "Medienpräsenz",
+    "richtig": "c"
+  },
+  {
+    "frage": "Wie kann man laut Theorie Hilfe gegenüber Fremdgruppen stabilisieren?",
+    "a": "Fokus auf emotionale Distanz",
+    "b": "Betonung des Fremden",
+    "c": "Normen zur Sanktionierung von Nicht-Hilfe stärken",
+    "d": "Hilfe durch Zwang erzwingen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist eine zentrale Voraussetzung für altruistisches Helfen gegenüber Fremdgruppen?",
+    "a": "Normverletzung",
+    "b": "Empathie trotz Unähnlichkeit",
+    "c": "Mitleid ohne Konsequenz",
+    "d": "Kulturelle Überlegenheit",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was zeigt die “Markus/Mohammed”-Studie von Stürmer et al. besonders deutlich?",
+    "a": "Reziprozität ist bei Eigengruppen besonders stark",
+    "b": "Gruppenzugehörigkeit beeinflusst die Wirkung von Empathie",
+    "c": "Muslimische Studierende helfen seltener",
+    "d": "Eigengruppen helfen weniger bei hoher Belastung",
+    "richtig": "b"
+  },
+  {
+    "frage": "Wodurch unterscheidet sich Helfen gegenüber Fremdgruppen qualitativ laut Theorie?",
+    "a": "Es ist stets stärker emotional gesteuert",
+    "b": "Es ist oft bedürfnisferner und strategischer",
+    "c": "Es ist universeller und spontaner",
+    "d": "Es basiert auf genetischer Nähe",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Prozess wird laut Theorie durch Selbst-Andere-Unähnlichkeit aktiviert?",
+    "a": "Reflexive Empathie",
+    "b": "Kalkuliertes Kosten-Nutzen-Denken",
+    "c": "Spontanes Helfen",
+    "d": "Impulsive Reaktion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum ist Fremdgruppenhilfe laut Forschung oft selektiver?",
+    "a": "Weil Ressourcen knapp sind",
+    "b": "Weil Zielpersonen stärker auf Attraktivität hin bewertet werden",
+    "c": "Weil Empathie automatisch wirkt",
+    "d": "Weil Perspektivenübernahme leichter ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was misst der Empathic Concern Subscale von Davis?",
+    "a": "Situative Empathie",
+    "b": "Kognitive Perspektivenübernahme",
+    "c": "Dispositionelle empathische Sorge",
+    "d": "Angst vor Fremdgruppen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Theorie beschreibt, dass Menschen helfen, um sich selbst besser zu fühlen?",
+    "a": "Intergruppale Empathie-Theorie",
+    "b": "Theorie der reziproken Altruismus",
+    "c": "Negative-State-Relief-Modell",
+    "d": "Gleichwertigkeitstheorie",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was ist ein zentrales Ergebnis der „Study-Buddy“-Studie (Siem & Stürmer, 2012)?",
+    "a": "Unähnliche Dyaden zeigten mehr Motivation",
+    "b": "Hilfsverhalten war unabhängig von Kultur",
+    "c": "Ähnliche kulturelle Hintergründe förderten Motivation",
+    "d": "Männer halfen häufiger als Frauen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Warum wird empathiebasiertes Helfen als stabiler angesehen als strategisches Helfen?",
+    "a": "Weil es weniger verbreitet ist",
+    "b": "Weil es unabhängig von Kosten motiviert ist",
+    "c": "Weil es durch Gruppennormen unterdrückt wird",
+    "d": "Weil es auf persönlichen Vorteil zielt",
+    "richtig": "b"
+  },
+  {
+    "frage": "Was ist laut Theorie eine wirksame Maßnahme zur Erhöhung intergruppaler Empathie?",
+    "a": "Kategorisierung in soziale Rollen",
+    "b": "Betonung gruppenspezifischer Merkmale",
+    "c": "Höhere Abstraktionsebene der Gruppenzugehörigkeit",
+    "d": "Konkurrenz um Ressourcen",
+    "richtig": "c"
+  },
+  {
+    "frage": "Was kennzeichnet „Warnsignal“-Effekte in der Wahrnehmung fremder Bedürftiger?",
+    "a": "Sie erhöhen Hilfsbereitschaft",
+    "b": "Sie aktivieren unreflektierte Hilfe",
+    "c": "Sie lösen Unsicherheit und Kontrollbedürfnis aus",
+    "d": "Sie fördern empathiebasierte Prozesse",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche Eigenschaft ist laut Theorie besonders hinderlich für Fremdgruppenhilfe in unsicheren Kontexten?",
+    "a": "Offenheit",
+    "b": "Emotionale Sensibilität (Emotionalität)",
+    "c": "Gewissenhaftigkeit",
+    "d": "Extraversion",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welcher Begriff beschreibt die emotionale Identifikation mit der Zielperson als „wie ich“?",
+    "a": "Interpersonale Nähe",
+    "b": "Einssein (Interpersonal Oneness)",
+    "c": "Kooperationsdisposition",
+    "d": "Soziale Salienz",
+    "richtig": "b"
+  },
+  {
+    "frage": "Warum spielt die wahrgenommene Qualität der Hilfeleistung bei Eigengruppenhilfe eine größere Rolle?",
+    "a": "Weil Hilfe dort strategischer ist",
+    "b": "Weil Empathie zu stärkerer Bedürfnisorientierung führt",
+    "c": "Weil Eigengruppe mehr Nutzen bringt",
+    "d": "Weil Vertrauen geringer ist",
+    "richtig": "b"
+  },
+  {
+    "frage": "Welche Rolle spielen soziale Normen im Kontext von Hilfeverhalten gegenüber Fremdgruppen?",
+    "a": "Sie haben keinen Effekt",
+    "b": "Sie verstärken immer die Ablehnung",
+    "c": "Sie können helfen, Diskriminierung zu reduzieren",
+    "d": "Sie wirken nur innerhalb der Eigengruppe",
+    "richtig": "c"
+  },
+  {
+    "frage": "Welche kognitive Maßnahme kann empathiebasierte Hilfe auch gegenüber Fremdgruppen fördern?",
+    "a": "Ressourcenverweigerung",
+    "b": "Soziale Isolation",
+    "c": "Perspektivenübernahme",
+    "d": "Kategorisierung nach Aussehen",
+    "richtig": "c"
+  }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizEl = document.getElementById("quiz");
+  const nextBtn = document.getElementById("next-btn");
+  const resultEl = document.getElementById("result");
+
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    quizEl.innerHTML = `
+      <div class="question">
+        <h2>${q.frage}</h2>
+        <div class="answers">
+          <button data-option="a">${q.a}</button>
+          <button data-option="b">${q.b}</button>
+          <button data-option="c">${q.c}</button>
+          <button data-option="d">${q.d}</button>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.addEventListener("click", () => selectAnswer(btn, q.richtig));
+    });
+    nextBtn.disabled = true;
+  }
+
+  function selectAnswer(button, correct) {
+    const selected = button.getAttribute("data-option");
+    if (selected === correct) {
+      button.classList.add("correct");
+      score++;
+    } else {
+      button.classList.add("wrong");
+      document.querySelector(`[data-option="${correct}"]`).classList.add("correct");
+    }
+    document.querySelectorAll(".answers button").forEach(btn => {
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      quizEl.innerHTML = "";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `Dein Ergebnis: ${score} von ${questions.length} richtig.`;
+    }
+  });
+
+  // Starte das Quiz
+  showQuestion();
+</script>
+
+</body>
+</html>
