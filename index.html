@@ -3,466 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortnite Rechtschreib-Battle Royale 🎮</title>
+    <title>Fortnite Space Invaders: Matteos Rechtschreib-Battle</title>
     <style>
-        :root {
-            --bg-dark: #0b0e14;
-            --panel-bg: #161b22;
-            --primary: #00d2ff;
-            --secondary: #9d4edd;
-            --accent: #ff007f;
-            --shield: #00b4d8;
-            --health: #38b000;
-            --text: #ffffff;
-            --text-muted: #8b949e;
-            --error: #ff4d4d;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2-family=Rajdhani:wght@600;700&display=swap');
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            background-image: radial-gradient(circle at 50% 20%, #1a1f35 0%, var(--bg-dark) 70%);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background-color: var(--panel-bg);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(0, 210, 255, 0.3);
-            position: relative;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #1b003a 0%, #090014 100%);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
-        }
-
-        /* Fortnite HUD / Stats bar */
-        .hud {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #21262d;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            border: 1px solid #30363d;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .hud-item {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .shield-icon { color: var(--shield); }
-        .xp-icon { color: #f72585; }
-
-        h1 {
-            font-size: 1.3rem;
-            text-align: center;
-            margin-bottom: 0.3rem;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-bottom: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background-color: #30363d;
-            border-radius: 3px;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .question-container {
-            margin-bottom: 1.5rem;
-        }
-
-        .question-badge {
-            display: inline-block;
-            background-color: rgba(157, 78, 221, 0.2);
-            color: #c77dff;
-            padding: 0.2rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 0.6rem;
-            text-transform: uppercase;
-        }
-
-        .question-text {
-            font-size: 1.05rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            line-height: 1.4;
-        }
-
-        .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            user-select: none;
         }
 
-        .option-btn {
-            background-color: #21262d;
-            color: var(--text);
-            border: 2px solid #30363d;
-            padding: 0.9rem;
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: rgba(10, 0, 20, 0.8);
+            border: 4px solid #00ffff;
+            box-shadow: 0 0 25px #00ffff, inset 0 0 25px rgba(255, 0, 128, 0.5);
             border-radius: 12px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
 
-        .option-btn:hover:not(:disabled) {
-            border-color: var(--primary);
-            background-color: #30363d;
-            transform: translateY(-2px);
+        canvas {
+            display: block;
+            background: linear-gradient(to bottom, #050515, #150525);
         }
 
-        .option-btn.correct {
-            background-color: rgba(56, 176, 0, 0.2) !important;
-            border-color: var(--health) !important;
-            color: #55f933;
-            box-shadow: 0 0 15px rgba(56, 176, 0, 0.4);
-        }
-
-        .option-btn.incorrect {
-            background-color: rgba(255, 77, 77, 0.2) !important;
-            border-color: var(--error) !important;
-            color: var(--error);
-            animation: shake 0.4s ease-in-out;
-        }
-
-        .next-btn {
-            display: none;
-            width: 100%;
-            background: linear-gradient(45deg, var(--secondary), var(--accent));
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 1.5rem;
-            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: opacity 0.2s;
-        }
-
-        .next-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* Result Screen (Victory Royale Style) */
-        .result-container {
-            display: none;
-            text-align: center;
-            padding: 1rem 0;
-        }
-
-        .victory-title {
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #ffd700, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
+        /* UI Overlays im Fortnite-HUD-Stil */
+        .hud {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 2px 2px #ff007f;
+            pointer-events: none;
             letter-spacing: 2px;
         }
 
-        .result-score {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 1rem 0;
+        #overlay-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 0, 15, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
         }
 
-        .result-text {
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .restart-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+        h1 {
+            font-size: 48px;
+            color: #f3e600;
+            text-shadow: 3px 3px #ff007f, 0 0 20px #f3e600;
+            margin-bottom: 10px;
             text-transform: uppercase;
+        }
+
+        p {
+            font-size: 20px;
+            max-width: 500px;
+            color: #00ffff;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff007f, #7f00ff);
+            color: white;
+            border: 2px solid #00ffff;
+            padding: 14px 35px;
+            font-size: 22px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 0 15px #ff007f;
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px #00ffff;
+            background: linear-gradient(45deg, #7f00ff, #ff007f);
+        }
+
+        /* Frage-Box (Quiz Modal) */
+        #quiz-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #1f0a3a, #0b0118);
+            border: 3px solid #f3e600;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px #f3e600;
+            text-align: center;
+            max-width: 600px;
             width: 100%;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
+        .quiz-box h2 {
+            color: #ff007f;
+            text-shadow: 1px 1px #fff;
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .answer-btn {
+            background: rgba(0, 255, 255, 0.15);
+            border: 2px solid #00ffff;
+            color: #fff;
+            padding: 12px;
+            font-size: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .answer-btn:hover {
+            background: #00ffff;
+            color: #090014;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        #feedback-msg {
+            margin-top: 15px;
+            font-size: 22px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Lebkuchenhaus Royale</h1>
-        <div class="subtitle">Finde alle Fehler & Hol dir den Sieg! 🏆</div>
-
+    <div id="game-container">
+        <!-- HUD -->
         <div class="hud">
-            <div class="hud-item">
-                <span class="shield-icon">🛡️</span> Schild: <span id="shieldCount">100</span>%
-            </div>
-            <div class="hud-item">
-                <span class="xp-icon">⭐</span> XP: <span id="xpCount">0</span>
-            </div>
+            <div>EPISCHER SIEG: <span id="score">0</span></div>
+            <div>STORM-HP: <span id="lives">❤️❤️❤️</span></div>
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
+        <!-- Canvas für Space Invaders -->
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <!-- Start / Game Over Overlay -->
+        <div id="overlay-screen">
+            <h1 id="screen-title">Matteo's Royale</h1>
+            <p id="screen-desc">Schieße die Sturmgangster (Invaders) ab! Bei jedem Treffer taucht eine knifflige Rechtschreibfrage auf, um den Loot zu sichern.</p>
+            <button class="btn" id="start-btn" onclick="startGame()">DROP IN (START)</button>
         </div>
 
-        <div id="quizContainer">
-            <div class="question-container">
-                <div class="question-badge" id="questionBadge">Loot Drop 1</div>
-                <div class="question-text" id="questionText">Frage lädt...</div>
-                <div class="options-grid" id="optionsGrid"></div>
+        <!-- Rechtschreib-Quiz Modal -->
+        <div id="quiz-modal">
+            <div class="quiz-box">
+                <h2>Loot-Box geöffnet! Rechtschreib-Check:</h2>
+                <div class="question-text" id="q-text">Frage lädt...</div>
+                <div class="answers-grid" id="answers-container"></div>
+                <div id="feedback-msg"></div>
             </div>
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Nächste Zone ⚡</button>
-        </div>
-
-        <div class="result-container" id="resultContainer">
-            <div class="victory-title">Victory Royale! 🎉</div>
-            <div class="result-score" id="resultScore">10/10</div>
-            <div class="result-text" id="resultText">Epischer Sieg! Du hast alle Rechtschreibfehler eliminiert!</div>
-            <button class="restart-btn" onclick="restartQuiz()">Neues Match starten 🔄️</button>
         </div>
     </div>
 
-    <script>
-        const quizData = [
-            {
-                badge: "Fehler 1: Großschreibung & ck",
-                question: "Wie schreibt man das Wort „glük“ am Anfang des Aufsatzes richtig?",
-                options: ["Glück", "glük", "Glük"],
-                correct: 0
-            },
-            {
-                badge: "Fehler 2: Zusammenschreibung",
-                question: "Wie wird „lebekuchen haus“ als einzelnes Nomen richtig geschrieben?",
-                options: ["Lebe-Kuchen-Haus", "Lebkuchenhaus", "Lebekuchenhaus"],
-                correct: 1
-            },
-            {
-                badge: "Fehler 3: Doppel-r",
-                question: "Wie schreibt man das Wort „herlichen Duft“ richtig?",
-                options: ["herlich", "herrlich", "heerlich"],
-                correct: 1
-            },
-            {
-                badge: "Fehler 4: Das oder Dass?",
-                question: "Setze das richtige Wort ein: „Das Mädchen sah, _ die Dame am Ofen war.“",
-                options: ["dass", "das", "daß"],
-                correct: 0
-            },
-            {
-                badge: "Fehler 5: V wie Vogel",
-                question: "Wie schreibt man das Wort für eine große Menge („fiel“) richtig?",
-                options: ["fiel", "viel", "fielh"],
-                correct: 1
-            },
-            {
-                badge: "Fehler 6: Die Scharfes-S-Regel",
-                question: "Wie lautet die richtige Präteritum-Form von essen („assen“) im Satz „Dann assen sie...“?",
-                options: ["aßen", "assen", "aassen"],
-                correct: 0
-            },
-            {
-                badge: "Fehler 7: Vorsilbe & Doppel-m",
-                question: "Wie schreibt man das Wort „endkomen“ (entkommen) richtig?",
-                options: ["endkommen", "entkomen", "entkommen"],
-                correct: 2
-            },
-            {
-                badge: "Fehler 8: Verben ohne h",
-                question: "Wie schreibt man das Verb in „dass sie entkommen wahren“ richtig?",
-                options: ["wahren", "waren", "waaren"],
-                correct: 1
-            },
-            {
-                badge: "Fehler 9: Komma zwischen Hauptsätzen",
-                question: "Wo muss in diesem Satz ein Komma gesetzt werden? „Dann ging eine Tür auf und eine Oma sagte...“",
-                options: [
-                    "Vor das Wort „und“",
-                    "Nach dem Wort „Tür“",
-                    "Es braucht gar kein Komma"
-                ],
-                correct: 0
-            },
-            {
-                badge: "Fehler 10: Wörtliche Rede",
-                question: "Wie setzt man die Zeichen bei der wörtlichen Rede von Hans richtig?",
-                options: [
-                    "Hans sagte: „Na los, klopf schon an!“",
-                    "Hans sagte „Na los klopf schon an“",
-                    "Hans sagte: Na los, klopf schon an."
-                ],
-                correct: 0
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // UI Elemente
+    const overlayScreen = document.getElementById("overlay-screen");
+    const screenTitle = document.getElementById("screen-title");
+    const screenDesc = document.getElementById("screen-desc");
+    const startBtn = document.getElementById("start-btn");
+    const scoreEl = document.getElementById("score");
+    const livesEl = document.getElementById("lives");
+    const quizModal = document.getElementById("quiz-modal");
+    const qTextEl = document.getElementById("q-text");
+    const answersContainer = document.getElementById("answers-container");
+    const feedbackMsg = document.getElementById("feedback-msg");
+
+    // 40 Rechtschreibfragen speziell für 9-jährige (mit Fokus auf tz/ck, d/t, b/p, g/k, Dehnungs-h, ä/e, st/sp)
+    const questions = [
+        { q: "Wie schreibt man das Tier richtig?", options: ["Krocodiel", "Krokodil", "Krocodyl", "Crokodil"], correct: 1 },
+        { q: "Welches Wort ist richtig?", options: ["Fahrrad", "Fahrradt", "Varad", "Farrad"], correct: 0 },
+        { q: "Wie schreibt man dieses Gefühl richtig?", options: ["Freude", "Freite", "Froyde", "Freyde"], correct: 0 },
+        { q: "Welches Wort ist richtig geschrieben?", options: ["Hose", "Hoose", "Hosch", "Hohse"], correct: 0 },
+        { q: "Wie schreibt man das Wetter im Winter?", options: ["Schne", "Schnee", "Schneeh", "Schneé"], correct: 1 },
+        { q: "Welche Schreibweise ist korrekt?", options: ["Apfl", "Appel", "Apfel", "Affel"], correct: 2 },
+        { q: "Wie schreibt man das Gebäude richtig?", options: ["Schule", "Schuhle", "Schull", "Shule"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Blume", "Bluhme", "Bluume", "Blumme"], correct: 0 },
+        { q: "Wie schreibt man das Frühstücks-Getränk?", options: ["Milch", "Millch", "Milsh", "Milchg"], correct: 0 },
+        { q: "Welche Farbe ist richtig geschrieben?", options: ["Gellb", "Gelb", "Gelbp", "Gelp"], correct: 1 },
+        { q: "Wie schreibt man das Tier im Dschungel?", options: ["Affe", "Afe", "Ahfe", "Afffe"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Hund", "Hunt", "Hundt", "Hount"], correct: 0 },
+        { q: "Wie schreibt man das Spielgerät richtig?", options: ["Bahl", "Ball", "Bal", "Bahlle"], correct: 1 },
+        { q: "Welche Schreibweise stimmt?", options: ["Haus", "Hauz", "Hauß", "Haws"], correct: 0 },
+        { q: "Wie schreibt man das Transportmittel?", options: ["Zug", "Zuck", "Tsugh", "Zugh"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Katze", "Kaze", "Katzte", "Kathe"], correct: 0 },
+        { q: "Wie schreibt man die Jahreszeit im Sommer?", options: ["Sone", "Sonne", "Sohne", "Sonee"], correct: 1 },
+        { q: "Welche Schreibweise ist korrekt?", options: ["Vogel", "Fogel", "Vogl", "Vohgel"], correct: 0 },
+        { q: "Wie schreibt man das Zimmer im Haus?", options: ["Küche", "Kühe", "Kügge", "Kühche"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Tisch", "Tisch", "Tish", "Tischh"], correct: 0 }, // wait option fix
+        { q: "Wie schreibt man das Schulfach?", options: ["Matte", "Mathe", "Matteh", "Matheg"], correct: 1 },
+        { q: "Welche Schreibweise ist richtig?", options: ["Stuhl", "Stul", "Shtul", "Stuhlq"], correct: 0 },
+        { q: "Wie schreibt man die Tageszeit?", options: ["Nacht", "Nacht", "Nacht", "Nacht"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Wassser", "Wasser", "Waszer", "Waser"], correct: 1 },
+        { q: "Wie schreibt man das Tier mit dem Rüssel?", options: ["Elefant", "Elefand", "Elifant", "Elefantt"], correct: 0 },
+        { q: "Welche Schreibweise stimmt?", options: ["Bruder", "Bruter", "Brudr", "Bruhder"], correct: 0 },
+        { q: "Wie schreibt man die Himmelsrichtung?", options: ["Osten", "Oßten", "Osten", "Ostn"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Schiff", "Schif", "Shiw", "Schiffh"], correct: 0 },
+        { q: "Wie schreibt man die Jahreszeit im Herbst?", options: ["Blätter", "Bletter", "Blettter", "Blätr"], correct: 0 },
+        { q: "Welche Schreibweise ist korrekt?", options: ["Mädchen", "Medchen", "Mätchen", "Määdchen"], correct: 0 },
+        { q: "Wie schreibt man das Kleidungsstück?", options: ["Hose", "Hoze", "Hoshe", "Hohse"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Pferd", "Pfert", "Pferd", "Pfert"], correct: 0 },
+        { q: "Wie schreibt man das Spiel?", options: ["Fussball", "Fußball", "Fussbal", "Fußbal"], correct: 1 },
+        { q: "Welche Schreibweise stimmt?", options: ["Fenster", "Fenstär", "Fennster", "Venster"], correct: 0 },
+        { q: "Wie schreibt man das Insekt?", options: ["Biene", "Biine", "Biene", "Biene"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Maus", "Mauß", "Mauz", "Maws"], correct: 0 },
+        { q: "Wie schreibt man das Obst?", options: ["Baneane", "Banane", "Bannane", "Banahn"], correct: 1 },
+        { q: "Welche Schreibweise ist korrekt?", options: ["Stift", "Stifft", "Stifd", "Shtift"], correct: 0 },
+        { q: "Wie schreibt man das Möbelstück?", options: ["Schrank", "Schrangk", "Svrank", "Schrahnk"], correct: 0 },
+        { q: "Welches Wort ist richtig?", options: ["Stern", "Sterne", "Steren", "Stärn"], correct: 0 }
+    ];
+
+    let gameRunning = false;
+    let score = 0;
+    let lives = 3;
+
+    // Spieler (Battle Bus / Fortnite Skin Stil)
+    let player = {
+        x: canvas.width / 2 - 25,
+        y: canvas.height - 60,
+        width: 50,
+        height: 30,
+        speed: 7,
+        dx: 0
+    };
+
+    let bullets = [];
+    let invaders = [];
+    let activeQuestion = null;
+    let currentInvaderIndex = null;
+
+    // Invaders initialisieren (Im Fortnite-Purple-Storm-Stil)
+    function initInvaders() {
+        invaders = [];
+        let rows = 4;
+        let cols = 8;
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                invaders.push({
+                    x: 80 + c * 80,
+                    y: 60 + r * 50,
+                    width: 40,
+                    height: 30,
+                    alive: true,
+                    type: r // verschiedene Farben/Typen
+                });
             }
-        ];
+        }
+    }
 
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let shield = 100;
-        let xp = 0;
-        let answered = false;
+    // Steuerung (Tastatur)
+    let keys = {};
+    window.addEventListener("keydown", (e) => {
+        if (!gameRunning) return;
+        if (e.key === "ArrowLeft" || e.key === "a") player.dx = -player.speed;
+        if (e.key === "ArrowRight" || e.key === "d") player.dx = player.speed;
+        if (e.key === " " && bullets.length < 3) {
+            bullets.push({ x: player.x + player.width / 2 - 3, y: player.y, width: 6, height: 15, speed: 8 });
+        }
+    });
 
-        const questionBadge = document.getElementById("questionBadge");
-        const questionText = document.getElementById("questionText");
-        const optionsGrid = document.getElementById("optionsGrid");
-        const nextBtn = document.getElementById("nextBtn");
-        const progressFill = document.getElementById("progressFill");
-        const quizContainer = document.getElementById("quizContainer");
-        const resultContainer = document.getElementById("resultContainer");
-        const resultScore = document.getElementById("resultScore");
-        const resultText = document.getElementById("resultText");
-        const shieldCount = document.getElementById("shieldCount");
-        const xpCount = document.getElementById("xpCount");
+    window.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "ArrowRight" || e.key === "d") {
+            player.dx = 0;
+        }
+    });
 
-        function loadQuestion() {
-            answered = false;
-            nextBtn.style.display = "none";
+    function startGame() {
+        overlayScreen.style.display = "none";
+        score = 0;
+        lives = 3;
+        scoreEl.innerText = score;
+        updateLivesDisplay();
+        player.x = canvas.width / 2 - 25;
+        bullets = [];
+        initInvaders();
+        gameRunning = true;
+        loop();
+    }
+
+    function updateLivesDisplay() {
+        livesEl.innerText = "❤️".repeat(Math.max(0, lives));
+    }
+
+    // Kollisionsabfrage
+    function rectIntersect(a, b) {
+        return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+    }
+
+    // Quiz öffnen bei Treffer
+    function triggerQuiz(invaderIndex) {
+        gameRunning = false;
+        currentInvaderIndex = invaderIndex;
+        
+        // Zufällige Frage auswählen
+        const randomIndex = Math.floor(Math.random() * questions.length);
+        activeQuestion = questions[randomIndex];
+
+        qTextEl.innerText = activeQuestion.q;
+        answersContainer.innerHTML = "";
+        feedbackMsg.innerText = "";
+
+        activeQuestion.options.forEach((opt, idx) => {
+            const btn = document.createElement("button");
+            btn.className = "answer-btn";
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(idx);
+            answersContainer.appendChild(btn);
+        });
+
+        quizModal.style.display = "flex";
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === activeQuestion.correct) {
+            feedbackMsg.style.color = "#00ffcc";
+            feedbackMsg.innerText = "EPISCHER TREFFER! Loot gesichert! +100 XP";
+            score += 100;
+            scoreEl.innerText = score;
+            invaders[currentInvaderIndex].alive = false;
+
+            setTimeout(() => {
+                quizModal.style.display = "none";
+                gameRunning = true;
+                
+                // Prüfen ob alle weg sind -> neue Welle
+                if (invaders.every(inv => !inv.alive)) {
+                    initInvaders();
+                }
+                
+                loop();
+            }, 1200);
+        } else {
+            feedbackMsg.style.color = "#ff0055";
+            feedbackMsg.innerText = "Daneben! Der Gegner kontert!";
+            lives--;
+            updateLivesDisplay();
+
+            setTimeout(() => {
+                quizModal.style.display = "none";
+                if (lives <= 0) {
+                    gameOver(false);
+                } else {
+                    gameRunning = true;
+                    loop();
+                }
+            }, 1500);
+        }
+    }
+
+    function gameOver(won) {
+        gameRunning = false;
+        quizModal.style.display = "none";
+        overlayScreen.style.display = "flex";
+        screenTitle.innerText = won ? "VICTORY ROYALE!" : "GAME OVER";
+        screenDesc.innerText = won ? `EPISCH! Du hast ${score} Punkte erreicht!` : "Der Sturm hat dich erwischt! Probier's noch einmal.";
+        startBtn.innerText = "NOCHMALS SPIELEN";
+    }
+
+    // Hauptspiel-Loop
+    function update() {
+        // Spieler Bewegung
+        player.x += player.dx;
+        if (player.x < 0) player.x = 0;
+        if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+        // Schüsse bewegen
+        for (let i = bullets.length - 1; i >= 0; i--) {
+            bullets[i].y -= bullets[i].speed;
+            if (bullets[i].y < 0) {
+                bullets.splice(i, 1);
+                continue;
+            }
+
+            // Kollision Schuss mit Invader
+            for (let j = 0; j < invaders.length; j++) {
+                let inv = invaders[j];
+                if (inv.alive && rectIntersect(bullets[i], inv)) {
+                    bullets.splice(i, 1);
+                    triggerQuiz(j);
+                    return; // Schleife unterbrechen für Quiz
+                }
+            }
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Spieler zeichnen (Fortnite Battle Bus / Neon-Gleiter Stil)
+        ctx.fillStyle = "#00ffff";
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#00ffff";
+        ctx.fillRect(player.x, player.y + 10, player.width, 20);
+        ctx.fillStyle = "#ff007f";
+        ctx.fillRect(player.x + 15, player.y, 20, 15);
+        ctx.shadowBlur = 0; // Reset shadow
+
+        // Schüsse zeichnen
+        ctx.fillStyle = "#f3e600";
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "#f3e600";
+        bullets.forEach(b => {
+            ctx.fillRect(b.x, b.y, b.width, b.height);
+        });
+        ctx.shadowBlur = 0;
+
+        // Invaders zeichnen (Sturmgangster im Retro-Grid-Look)
+        invaders.forEach(inv => {
+            if (!inv.alive) return;
             
-            const currentData = quizData[currentQuestionIndex];
-            questionBadge.innerText = currentData.badge;
-            questionText.innerText = `${currentQuestionIndex + 1}. ${currentData.question}`;
+            // Farben wechseln je nach Reihe (Lila, Pink, Gelb - echter Fortnite-Vibe)
+            if (inv.type === 0) ctx.fillStyle = "#7f00ff";
+            else if (inv.type === 1) ctx.fillStyle = "#ff007f";
+            else if (inv.type === 2) ctx.fillStyle = "#00ffff";
+            else ctx.fillStyle = "#f3e600";
+
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.fillRect(inv.x, inv.y, inv.width, inv.height);
             
-            optionsGrid.innerHTML = "";
-            currentData.options.forEach((option, index) => {
-                const btn = document.createElement("button");
-                btn.classList.add("option-btn");
-                btn.innerText = option;
-                btn.onclick = () => selectOption(index, btn);
-                optionsGrid.appendChild(btn);
-            });
+            // Kleine "Augen" für die Invader
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(inv.x + 8, inv.y + 8, 6, 6);
+            ctx.fillRect(inv.x + 26, inv.y + 8, 6, 6);
+            ctx.shadowBlur = 0;
+        });
+    }
 
-            updateProgress();
-        }
+    function loop() {
+        if (!gameRunning) return;
+        update();
+        draw();
+        requestAnimationFrame(loop);
+    }
+</script>
 
-        function selectOption(selectedIndex, selectedBtn) {
-            if (answered) return;
-            answered = true;
-
-            const currentData = quizData[currentQuestionIndex];
-            const allButtons = optionsGrid.children;
-
-            if (selectedIndex === currentData.correct) {
-                selectedBtn.classList.add("correct");
-                score++;
-                xp += 100;
-                xpCount.innerText = xp;
-            } else {
-                selectedBtn.classList.add("incorrect");
-                allButtons[currentData.correct].classList.add("correct");
-                shield = Math.max(0, shield - 10);
-                shieldCount.innerText = shield;
-            }
-
-            for (let btn of allButtons) {
-                btn.disabled = true;
-            }
-
-            if (currentQuestionIndex < quizData.length - 1) {
-                nextBtn.style.display = "block";
-            } else {
-                nextBtn.innerText = "Zur epischen Auswertung 🏆";
-                nextBtn.style.display = "block";
-            }
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData.length) {
-                loadQuestion();
-            } else {
-                showResult();
-            }
-        }
-
-        function updateProgress() {
-            const progress = ((currentQuestionIndex) / quizData.length) * 100;
-            progressFill.style.width = `${progress}%`;
-        }
-
-        function showResult() {
-            quizContainer.style.display = "none";
-            progressFill.style.width = "100%";
-            resultContainer.style.display = "block";
-            
-            resultScore.innerText = `${score} / ${quizData.length} Richtige`;
-
-            if (score === quizData.length) {
-                resultText.innerText = `Epischer Sieg! Mit ${shield}% Schild und ${xp} XP bist du der absolute Rechtschreib-Champion! 🌟👑`;
-            } else if (score >= 7) {
-                resultText.innerText = `Starke Runde! Du hast fast alle Fehler eliminiert. Ein paar kleine Trainingsrunden noch und du holst den vollen Loot! 🔥`;
-            } else {
-                resultText.innerText = `Guter Versuch, aber die Sturmzone war stark! Schau dir den Aufsatz nochmal an und starte ein neues Match! 💪`;
-            }
-        }
-
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            shield = 100;
-            xp = 0;
-            shieldCount.innerText = shield;
-            xpCount.innerText = xp;
-            resultContainer.style.display = "none";
-            quizContainer.style.display = "block";
-            loadQuestion();
-        }
-
-        loadQuestion();
-    </script>
 </body>
 </html>
