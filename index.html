@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Das Lebkuchenhaus - Lernquiz</title>
+    <title>Fortnite Rechtschreib-Battle Royale 🎮</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --accent: #ec4899;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #22c55e;
-            --error: #ef4444;
+            --bg-dark: #0b0e14;
+            --panel-bg: #161b22;
+            --primary: #00d2ff;
+            --secondary: #9d4edd;
+            --accent: #ff007f;
+            --shield: #00b4d8;
+            --health: #38b000;
+            --text: #ffffff;
+            --text-muted: #8b949e;
+            --error: #ff4d4d;
         }
 
         * {
@@ -26,48 +26,75 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 1rem;
+            background-image: radial-gradient(circle at 50% 20%, #1a1f35 0%, var(--bg-dark) 70%);
         }
 
         .container {
             width: 100%;
             max-width: 500px;
-            background-color: var(--card-bg);
+            background-color: var(--panel-bg);
             border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(0, 210, 255, 0.3);
             position: relative;
             overflow: hidden;
         }
 
+        /* Fortnite HUD / Stats bar */
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #21262d;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #30363d;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .hud-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .shield-icon { color: var(--shield); }
+        .xp-icon { color: #f72585; }
+
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-align: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .subtitle {
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background-color: #334155;
-            border-radius: 4px;
+            height: 6px;
+            background-color: #30363d;
+            border-radius: 3px;
             margin-bottom: 1.5rem;
             overflow: hidden;
         }
@@ -83,8 +110,20 @@
             margin-bottom: 1.5rem;
         }
 
+        .question-badge {
+            display: inline-block;
+            background-color: rgba(157, 78, 221, 0.2);
+            color: #c77dff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+        }
+
         .question-text {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
             margin-bottom: 1rem;
             line-height: 1.4;
@@ -97,43 +136,42 @@
         }
 
         .option-btn {
-            background-color: #334155;
+            background-color: #21262d;
             color: var(--text);
-            border: none;
-            padding: 1rem;
+            border: 2px solid #30363d;
+            padding: 0.9rem;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
         .option-btn:hover:not(:disabled) {
-            background-color: #475569;
+            border-color: var(--primary);
+            background-color: #30363d;
             transform: translateY(-2px);
         }
 
-        .option-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
         .option-btn.correct {
-            background-color: var(--success) !important;
-            color: white;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+            background-color: rgba(56, 176, 0, 0.2) !important;
+            border-color: var(--health) !important;
+            color: #55f933;
+            box-shadow: 0 0 15px rgba(56, 176, 0, 0.4);
         }
 
         .option-btn.incorrect {
-            background-color: var(--error) !important;
-            color: white;
+            background-color: rgba(255, 77, 77, 0.2) !important;
+            border-color: var(--error) !important;
+            color: var(--error);
             animation: shake 0.4s ease-in-out;
         }
 
         .next-btn {
             display: none;
             width: 100%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
             color: white;
             border: none;
             padding: 1rem;
@@ -142,7 +180,9 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 1.5rem;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: opacity 0.2s;
         }
 
@@ -150,28 +190,40 @@
             opacity: 0.9;
         }
 
+        /* Result Screen (Victory Royale Style) */
         .result-container {
             display: none;
             text-align: center;
+            padding: 1rem 0;
+        }
+
+        .victory-title {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .result-score {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: bold;
+            color: var(--primary);
             margin: 1rem 0;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .result-text {
             color: var(--text-muted);
             margin-bottom: 1.5rem;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .restart-btn {
-            background: linear-gradient(45deg, var(--primary), var(--accent));
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -179,7 +231,9 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+            text-transform: uppercase;
+            width: 100%;
         }
 
         @keyframes shake {
@@ -192,8 +246,17 @@
 <body>
 
     <div class="container">
-        <h1>Lebkuchenhaus-Quiz</h1>
-        <div class="subtitle">Teste dein Wissen zum Aufsatz!</div>
+        <h1>Lebkuchenhaus Royale</h1>
+        <div class="subtitle">Finde alle Fehler & Hol dir den Sieg! 🏆</div>
+
+        <div class="hud">
+            <div class="hud-item">
+                <span class="shield-icon">🛡️</span> Schild: <span id="shieldCount">100</span>%
+            </div>
+            <div class="hud-item">
+                <span class="xp-icon">⭐</span> XP: <span id="xpCount">0</span>
+            </div>
+        </div>
 
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
@@ -201,66 +264,88 @@
 
         <div id="quizContainer">
             <div class="question-container">
+                <div class="question-badge" id="questionBadge">Loot Drop 1</div>
                 <div class="question-text" id="questionText">Frage lädt...</div>
-                <div class="options-grid" id="optionsGrid">
-                    <!-- Buttons werden dynamisch eingefügt -->
-                </div>
+                <div class="options-grid" id="optionsGrid"></div>
             </div>
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Nächste Frage 🚀</button>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Nächste Zone ⚡</button>
         </div>
 
         <div class="result-container" id="resultContainer">
-            <h2>Quiz beendet! 🎉</h2>
-            <div class="result-score" id="resultScore">0/5</div>
-            <div class="result-text" id="resultText">Super gemacht!</div>
-            <button class="restart-btn" onclick="restartQuiz()">Nochmal spielen 🔄️</button>
+            <div class="victory-title">Victory Royale! 🎉</div>
+            <div class="result-score" id="resultScore">10/10</div>
+            <div class="result-text" id="resultText">Epischer Sieg! Du hast alle Rechtschreibfehler eliminiert!</div>
+            <button class="restart-btn" onclick="restartQuiz()">Neues Match starten 🔄️</button>
         </div>
     </div>
 
     <script>
         const quizData = [
             {
-                question: "Wie wird das Wort „lebekuchen haus“ richtig geschrieben?",
+                badge: "Fehler 1: Großschreibung & ck",
+                question: "Wie schreibt man das Wort „glük“ am Anfang des Aufsatzes richtig?",
+                options: ["Glück", "glük", "Glük"],
+                correct: 0
+            },
+            {
+                badge: "Fehler 2: Zusammenschreibung",
+                question: "Wie wird „lebekuchen haus“ als einzelnes Nomen richtig geschrieben?",
+                options: ["Lebe-Kuchen-Haus", "Lebkuchenhaus", "Lebekuchenhaus"],
+                correct: 1
+            },
+            {
+                badge: "Fehler 3: Doppel-r",
+                question: "Wie schreibt man das Wort „herlichen Duft“ richtig?",
+                options: ["herlich", "herrlich", "heerlich"],
+                correct: 1
+            },
+            {
+                badge: "Fehler 4: Das oder Dass?",
+                question: "Setze das richtige Wort ein: „Das Mädchen sah, _ die Dame am Ofen war.“",
+                options: ["dass", "das", "daß"],
+                correct: 0
+            },
+            {
+                badge: "Fehler 5: V wie Vogel",
+                question: "Wie schreibt man das Wort für eine große Menge („fiel“) richtig?",
+                options: ["fiel", "viel", "fielh"],
+                correct: 1
+            },
+            {
+                badge: "Fehler 6: Die Scharfes-S-Regel",
+                question: "Wie lautet die richtige Präteritum-Form von essen („assen“) im Satz „Dann assen sie...“?",
+                options: ["aßen", "assen", "aassen"],
+                correct: 0
+            },
+            {
+                badge: "Fehler 7: Vorsilbe & Doppel-m",
+                question: "Wie schreibt man das Wort „endkomen“ (entkommen) richtig?",
+                options: ["endkommen", "entkomen", "entkommen"],
+                correct: 2
+            },
+            {
+                badge: "Fehler 8: Verben ohne h",
+                question: "Wie schreibt man das Verb in „dass sie entkommen wahren“ richtig?",
+                options: ["wahren", "waren", "waaren"],
+                correct: 1
+            },
+            {
+                badge: "Fehler 9: Komma zwischen Hauptsätzen",
+                question: "Wo muss in diesem Satz ein Komma gesetzt werden? „Dann ging eine Tür auf und eine Oma sagte...“",
                 options: [
-                    "Lebkuchenhaus",
-                    "Lebäkuchendose",
-                    "Lebe Kuchen Haus"
+                    "Vor das Wort „und“",
+                    "Nach dem Wort „Tür“",
+                    "Es braucht gar kein Komma"
                 ],
                 correct: 0
             },
             {
-                question: "Wie lautet die richtige Rechtschreibung für das Wort „herlichen“?",
+                badge: "Fehler 10: Wörtliche Rede",
+                question: "Wie setzt man die Zeichen bei der wörtlichen Rede von Hans richtig?",
                 options: [
-                    "herrlich",
-                    "herrlichen",
-                    "herlich"
-                ],
-                correct: 1
-            },
-            {
-                question: "Was machten Hans und Gretl, nachdem die Hexe im Ofen war?",
-                options: [
-                    "Sie gingen sofort schlafen.",
-                    "Sie tanzten glücklich im Wald und aßen Lebkuchen.",
-                    "Sie suchten nach ihren Schuhen."
-                ],
-                correct: 1
-            },
-            {
-                question: "Wie schreibt man das Wort „wahren“ (in: „...dass die beiden entkommen waren“) richtig?",
-                options: [
-                    "wahren (mit h)",
-                    "waren (ohne h)",
-                    "wahrn"
-                ],
-                correct: 1
-            },
-            {
-                question: "Welches Wort wird mit Doppel-s („dass“) geschrieben?",
-                options: [
-                    "Das Mädchen sah, _ die Dame am Ofen war.",
-                    "Das ist _ Haus.",
-                    "Gib mir _ Buch."
+                    "Hans sagte: „Na los, klopf schon an!“",
+                    "Hans sagte „Na los klopf schon an“",
+                    "Hans sagte: Na los, klopf schon an."
                 ],
                 correct: 0
             }
@@ -268,8 +353,11 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
+        let shield = 100;
+        let xp = 0;
         let answered = false;
 
+        const questionBadge = document.getElementById("questionBadge");
         const questionText = document.getElementById("questionText");
         const optionsGrid = document.getElementById("optionsGrid");
         const nextBtn = document.getElementById("nextBtn");
@@ -278,12 +366,15 @@
         const resultContainer = document.getElementById("resultContainer");
         const resultScore = document.getElementById("resultScore");
         const resultText = document.getElementById("resultText");
+        const shieldCount = document.getElementById("shieldCount");
+        const xpCount = document.getElementById("xpCount");
 
         function loadQuestion() {
             answered = false;
             nextBtn.style.display = "none";
             
             const currentData = quizData[currentQuestionIndex];
+            questionBadge.innerText = currentData.badge;
             questionText.innerText = `${currentQuestionIndex + 1}. ${currentData.question}`;
             
             optionsGrid.innerHTML = "";
@@ -308,21 +399,23 @@
             if (selectedIndex === currentData.correct) {
                 selectedBtn.classList.add("correct");
                 score++;
+                xp += 100;
+                xpCount.innerText = xp;
             } else {
                 selectedBtn.classList.add("incorrect");
                 allButtons[currentData.correct].classList.add("correct");
+                shield = Math.max(0, shield - 10);
+                shieldCount.innerText = shield;
             }
 
-            // Alle Buttons deaktivieren
             for (let btn of allButtons) {
                 btn.disabled = true;
             }
 
-            // Nächste-Frage-Button anzeigen oder bei letzter Frage auf Auswertung wechseln
             if (currentQuestionIndex < quizData.length - 1) {
                 nextBtn.style.display = "block";
             } else {
-                nextBtn.innerText = "Zur Auswertung 🏆";
+                nextBtn.innerText = "Zur epischen Auswertung 🏆";
                 nextBtn.style.display = "block";
             }
         }
@@ -346,26 +439,29 @@
             progressFill.style.width = "100%";
             resultContainer.style.display = "block";
             
-            resultScore.innerText = `${score} / ${quizData.length}`;
+            resultScore.innerText = `${score} / ${quizData.length} Richtige`;
 
             if (score === quizData.length) {
-                resultText.innerText = "Wahnsinn! Du bist ein echter Rechtschreib-Profi! 🌟";
-            } else if (score >= 3) {
-                resultText.innerText = "Super gemacht! Da waren schon echte Meisterleistungen dabei! 👍";
+                resultText.innerText = `Epischer Sieg! Mit ${shield}% Schild und ${xp} XP bist du der absolute Rechtschreib-Champion! 🌟👑`;
+            } else if (score >= 7) {
+                resultText.innerText = `Starke Runde! Du hast fast alle Fehler eliminiert. Ein paar kleine Trainingsrunden noch und du holst den vollen Loot! 🔥`;
             } else {
-                resultText.innerText = "Das üben wir noch ein bisschen, du packst das! 💪";
+                resultText.innerText = `Guter Versuch, aber die Sturmzone war stark! Schau dir den Aufsatz nochmal an und starte ein neues Match! 💪`;
             }
         }
 
         function restartQuiz() {
             currentQuestionIndex = 0;
             score = 0;
+            shield = 100;
+            xp = 0;
+            shieldCount.innerText = shield;
+            xpCount.innerText = xp;
             resultContainer.style.display = "none";
             quizContainer.style.display = "block";
             loadQuestion();
         }
 
-        // Start beim Laden
         loadQuestion();
     </script>
 </body>
