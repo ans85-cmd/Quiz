@@ -1,203 +1,371 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jenny's Sozialpsychologie Quiz</title>
-  <style>
-    /* Grund-Reset */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Das Lebkuchenhaus - Lernquiz</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --accent: #ec4899;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
 
-    body {
-      margin: 0;
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(120deg, #6dd5ed, #2193b0);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 2rem 1rem 3rem;
-      animation: fadeIn 1.5s ease forwards;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
 
-    /* Header */
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
 
-    .logo {
-      font-size: 4rem;
-      line-height: 1;
-      margin-bottom: 0.3rem;
-      user-select: none;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
-    }
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
-      margin: 0;
-    }
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
 
-    /* Container für Buttons */
-    main {
-      width: 100%;
-      max-width: 440px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #334155;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
 
-    /* Buttons als Links für bessere Accessibility */
-   main a.button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 0.8rem;
-  background-color: white;
-  color: #2193b0;
-  font-weight: 600;
-  font-size: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  text-decoration: none;
-  user-select: none;
-  transition: background-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
-  will-change: transform;
-  cursor: pointer;
-  text-align: center;       /* Hier hinzugefügt */
-  line-height: 1.2;         /* Optional, sorgt für gute vertikale Zentrierung */
-}
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
 
+        .question-container {
+            margin-bottom: 1.5rem;
+        }
 
-    main a.button:hover,
-    main a.button:focus-visible {
-      background-color: #f0f8ff;
-      box-shadow: 0 8px 20px rgba(33, 147, 176, 0.5);
-      outline: none;
-    }
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
 
-    main a.button:active {
-      transform: scale(0.97);
-      box-shadow: 0 4px 10px rgba(33, 147, 176, 0.6);
-    }
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
 
-    /* Responsive: Eine Spalte auf sehr kleinen Displays */
-    @media (max-width: 400px) {
-      main {
-        grid-template-columns: 1fr;
-        max-width: 320px;
-      }
+        .option-btn {
+            background-color: #334155;
+            color: var(--text);
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-      .logo {
-        font-size: 3rem;
-      }
+        .option-btn:hover:not(:disabled) {
+            background-color: #475569;
+            transform: translateY(-2px);
+        }
 
-      h1 {
-        font-size: 1.5rem;
-      }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
 
-      main a.button {
-        font-size: 0.95rem;
-        padding: 0.85rem 0;
-      }
-    }
+        .option-btn.correct {
+            background-color: var(--success) !important;
+            color: white;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
 
-    /* Footer / Info-Bereich */
-    footer {
-      max-width: 440px;
-      text-align: center;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: rgba(255 255 255 / 0.85);
-      user-select: none;
-    }
+        .option-btn.incorrect {
+            background-color: var(--error) !important;
+            color: white;
+            animation: shake 0.4s ease-in-out;
+        }
 
-    footer a {
-      color: #ffecb3;
-      text-decoration: underline;
-      font-weight: 600;
-    }
+        .next-btn {
+            display: none;
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            transition: opacity 0.2s;
+        }
 
-    footer a:hover,
-    footer a:focus-visible {
-      color: #fff176;
-      outline: none;
-    }
+        .next-btn:hover {
+            opacity: 0.9;
+        }
 
-    footer h4 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
+        .result-container {
+            display: none;
+            text-align: center;
+        }
 
-    footer h6 {
-      margin-top: 1rem;
-      font-weight: 400;
-      font-size: 0.8rem;
-      color: rgba(255 255 255 / 0.6);
-    }
-  </style>
+        .result-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-text {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="logo" aria-hidden="true">🧠</div>
-    <h1>Jenny's Sozialpsychologie Quiz</h1>
-  </header>
 
-  <main>
-    <a href="Sozialpsychologie.html" class="button" role="button" tabindex="0">Sozialpsychologie</a>
-    <a href="Wahrnehmung.html" class="button" role="button" tabindex="0">Soziale Wahrnehmung</a>
-    <a href="Kognition.html" class="button" role="button" tabindex="0">Soziale Kognition &amp; Attribution</a>
-    <a href="Interpersonale.html" class="button" role="button" tabindex="0">Interpersonale Beziehungen</a>
-    <a href="Geschichte.html" class="button" role="button" tabindex="0">Geschichte der Sozialpsychologie</a>
-    <a href="Extraversion.html" class="button" role="button" tabindex="0">Studie 1 Extraversion</a>
-    <a href="Bildungstheorie.html" class="button" role="button" tabindex="0">Bindungstheorie &amp; Sozialpsychologie</a>
-    <a href="Kapitel6.html" class="button" role="button" tabindex="0">Kapitel 6 Kommunikation</a>
-    <a href="aw5.html" class="button" role="button" tabindex="0">AW 5 - Selbst &amp; Identität</a>
-    <a href="aw5_multiple.html" class="button" role="button" tabindex="0">AW 5 - Multiple Choice</a>
-    <a href="AW6_Einstellungen.html" class="button" role="button" tabindex="0">AW 6 - Einstellungen</a>
-    <a href="aw7.html" class="button" role="button" tabindex="0">AW 7 - Prosoziales Verhalten/Altruismus</a>
-    <a href="aw8.html" class="button" role="button" tabindex="0">AW 8 - Aggressives Verhalten</a>
-    <a href="aw9.html" class="button" role="button" tabindex="0">AW 9 - Gruppenpsychologie Grundbegriffe</a>
-    <a href="Paper2.html" class="button" role="button" tabindex="0">Paper 2 - Parent-child Communication</a>
-    <a href="aw10.html" class="button" role="button" tabindex="0">AW 10 - Sozialer Einfluss</a>
-    <a href="aw11.html" class="button" role="button" tabindex="0">AW 11 - Gerechtigkeit & Führung</a>
-    <a href="aw12.html" class="button" role="button" tabindex="0">AW12 - Vorurteile zwischen Gruppen</a>
-    <a href="studie3.html" class="button" role="button" tabindex="0">Studie 3 - Stereotypes and soc. decisions</a>
-    <a href="studie4.html" class="button" role="button" tabindex="0">Studie 4 : Kontakthypothese und die virtuelle Revolution</a>
-    <a href="aw13.html" class="button" role="button" tabindex="0">AW 13: Verringerung von Vorurteilen</a>
-    <a href="aw14.html" class="button" role="button" tabindex="0">AW 14 - soz. Bewegungsbeteiligung</a>
-    <a href="aw15.html" class="button" role="button" tabindex="0">AW 15 - pos. Verhalten zwischen Gruppen</a>
-  </main>
+    <div class="container">
+        <h1>Lebkuchenhaus-Quiz</h1>
+        <div class="subtitle">Teste dein Wissen zum Aufsatz!</div>
 
-  <footer>
-    <h4>📚✨ Dieses Lernquiz wurde mit viel Mühe (und einer ordentlichen Portion Kaffee) erstellt – damit das Lernen ein bisschen leichter fällt. Falls es dir geholfen hat und du mir einen virtuellen Kaffee ☕️ spendieren möchtest:</h4>
-    <h4>
-      <a href="https://paypal.me/virtualCoffeee?country.x=AT&locale.x=de_DE" target="_blank" rel="noopener noreferrer">
-        👉 paypal.me/virtualCoffeee
-      </a>
-    </h4>
-    <h6>by ans85-cmd</h6>
-  </footer>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="quizContainer">
+            <div class="question-container">
+                <div class="question-text" id="questionText">Frage lädt...</div>
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Buttons werden dynamisch eingefügt -->
+                </div>
+            </div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Nächste Frage 🚀</button>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <h2>Quiz beendet! 🎉</h2>
+            <div class="result-score" id="resultScore">0/5</div>
+            <div class="result-text" id="resultText">Super gemacht!</div>
+            <button class="restart-btn" onclick="restartQuiz()">Nochmal spielen 🔄️</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Wie wird das Wort „lebekuchen haus“ richtig geschrieben?",
+                options: [
+                    "Lebkuchenhaus",
+                    "Lebäkuchendose",
+                    "Lebe Kuchen Haus"
+                ],
+                correct: 0
+            },
+            {
+                question: "Wie lautet die richtige Rechtschreibung für das Wort „herlichen“?",
+                options: [
+                    "herrlich",
+                    "herrlichen",
+                    "herlich"
+                ],
+                correct: 1
+            },
+            {
+                question: "Was machten Hans und Gretl, nachdem die Hexe im Ofen war?",
+                options: [
+                    "Sie gingen sofort schlafen.",
+                    "Sie tanzten glücklich im Wald und aßen Lebkuchen.",
+                    "Sie suchten nach ihren Schuhen."
+                ],
+                correct: 1
+            },
+            {
+                question: "Wie schreibt man das Wort „wahren“ (in: „...dass die beiden entkommen waren“) richtig?",
+                options: [
+                    "wahren (mit h)",
+                    "waren (ohne h)",
+                    "wahrn"
+                ],
+                correct: 1
+            },
+            {
+                question: "Welches Wort wird mit Doppel-s („dass“) geschrieben?",
+                options: [
+                    "Das Mädchen sah, _ die Dame am Ofen war.",
+                    "Das ist _ Haus.",
+                    "Gib mir _ Buch."
+                ],
+                correct: 0
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById("questionText");
+        const optionsGrid = document.getElementById("optionsGrid");
+        const nextBtn = document.getElementById("nextBtn");
+        const progressFill = document.getElementById("progressFill");
+        const quizContainer = document.getElementById("quizContainer");
+        const resultContainer = document.getElementById("resultContainer");
+        const resultScore = document.getElementById("resultScore");
+        const resultText = document.getElementById("resultText");
+
+        function loadQuestion() {
+            answered = false;
+            nextBtn.style.display = "none";
+            
+            const currentData = quizData[currentQuestionIndex];
+            questionText.innerText = `${currentQuestionIndex + 1}. ${currentData.question}`;
+            
+            optionsGrid.innerHTML = "";
+            currentData.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.classList.add("option-btn");
+                btn.innerText = option;
+                btn.onclick = () => selectOption(index, btn);
+                optionsGrid.appendChild(btn);
+            });
+
+            updateProgress();
+        }
+
+        function selectOption(selectedIndex, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const currentData = quizData[currentQuestionIndex];
+            const allButtons = optionsGrid.children;
+
+            if (selectedIndex === currentData.correct) {
+                selectedBtn.classList.add("correct");
+                score++;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                allButtons[currentData.correct].classList.add("correct");
+            }
+
+            // Alle Buttons deaktivieren
+            for (let btn of allButtons) {
+                btn.disabled = true;
+            }
+
+            // Nächste-Frage-Button anzeigen oder bei letzter Frage auf Auswertung wechseln
+            if (currentQuestionIndex < quizData.length - 1) {
+                nextBtn.style.display = "block";
+            } else {
+                nextBtn.innerText = "Zur Auswertung 🏆";
+                nextBtn.style.display = "block";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        function showResult() {
+            quizContainer.style.display = "none";
+            progressFill.style.width = "100%";
+            resultContainer.style.display = "block";
+            
+            resultScore.innerText = `${score} / ${quizData.length}`;
+
+            if (score === quizData.length) {
+                resultText.innerText = "Wahnsinn! Du bist ein echter Rechtschreib-Profi! 🌟";
+            } else if (score >= 3) {
+                resultText.innerText = "Super gemacht! Da waren schon echte Meisterleistungen dabei! 👍";
+            } else {
+                resultText.innerText = "Das üben wir noch ein bisschen, du packst das! 💪";
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultContainer.style.display = "none";
+            quizContainer.style.display = "block";
+            loadQuestion();
+        }
+
+        // Start beim Laden
+        loadQuestion();
+    </script>
 </body>
 </html>
