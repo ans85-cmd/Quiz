@@ -2,497 +2,471 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortnite Space Invaders: Matteos Rechtschreib-Battle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Space Invaders Rechtschreib-Quiz</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2-family=Rajdhani:wght@600;700&display=swap');
-
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
         body {
             margin: 0;
             padding: 0;
-            background: radial-gradient(circle at center, #1b003a 0%, #090014 100%);
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
+            background-color: #050515;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
+            touch-action: none;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             height: 100vh;
-            user-select: none;
         }
-
-        #game-container {
-            position: relative;
-            width: 800px;
-            height: 600px;
-            background: rgba(10, 0, 20, 0.8);
-            border: 4px solid #00ffff;
-            box-shadow: 0 0 25px #00ffff, inset 0 0 25px rgba(255, 0, 128, 0.5);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        canvas {
-            display: block;
-            background: linear-gradient(to bottom, #050515, #150525);
-        }
-
-        /* UI Overlays im Fortnite-HUD-Stil */
-        .hud {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            right: 20px;
+        #header {
             display: flex;
             justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid #00ffcc;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #00ffcc;
+            z-index: 10;
+        }
+        #game-container {
+            position: relative;
+            flex: 1;
+            background: radial-gradient(circle at center, #101030 0%, #020208 100%);
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        /* Touch Controls unten */
+        #controls {
+            height: 100px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 2px solid #ff0055;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px;
+            z-index: 10;
+        }
+        .ctrl-btn {
+            background: linear-gradient(135deg, #111, #333);
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
             font-size: 24px;
-            font-weight: 700;
-            text-shadow: 2px 2px #ff007f;
-            pointer-events: none;
-            letter-spacing: 2px;
+            font-weight: bold;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+            outline: none;
+        }
+        .ctrl-btn:active {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+        #fire-btn {
+            border-color: #ff0055;
+            color: #ff0055;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+        #fire-btn:active {
+            background: #ff0055;
+            color: #fff;
+            box-shadow: 0 0 20px #ff0055;
         }
 
-        #overlay-screen {
+        /* Overlay für Quiz & Start/Game Over */
+        #overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 0, 15, 0.92);
+            background: rgba(5, 5, 21, 0.95);
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            z-index: 10;
-            text-align: center;
+            align-items: center;
             padding: 20px;
-        }
-
-        h1 {
-            font-size: 48px;
-            color: #f3e600;
-            text-shadow: 3px 3px #ff007f, 0 0 20px #f3e600;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        p {
-            font-size: 20px;
-            max-width: 500px;
-            color: #00ffff;
-            margin-bottom: 25px;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #ff007f, #7f00ff);
-            color: white;
-            border: 2px solid #00ffff;
-            padding: 14px 35px;
-            font-size: 22px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            border-radius: 8px;
-            box-shadow: 0 0 15px #ff007f;
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 25px #00ffff;
-            background: linear-gradient(45deg, #7f00ff, #ff007f);
-        }
-
-        /* Frage-Box (Quiz Modal) */
-        #quiz-modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            padding: 30px;
-            box-sizing: border-box;
-        }
-
-        .quiz-box {
-            background: linear-gradient(135deg, #1f0a3a, #0b0118);
-            border: 3px solid #f3e600;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 30px #f3e600;
             text-align: center;
-            max-width: 600px;
-            width: 100%;
+            z-index: 20;
         }
-
-        .quiz-box h2 {
-            color: #ff007f;
-            text-shadow: 1px 1px #fff;
-            margin-top: 0;
-            font-size: 28px;
+        h1 {
+            color: #ff0055;
+            text-shadow: 0 0 10px #ff0055;
+            font-size: 26px;
+            margin-bottom: 10px;
         }
-
-        .question-text {
-            font-size: 24px;
-            margin-bottom: 25px;
-            color: #fff;
+        p {
+            font-size: 16px;
+            max-width: 400px;
+            line-height: 1.4;
         }
-
-        .answers-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        .btn-main {
+            background: #00ffcc;
+            color: #050515;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00ffcc;
+            margin-top: 20px;
+            font-family: inherit;
         }
-
-        .answer-btn {
-            background: rgba(0, 255, 255, 0.15);
-            border: 2px solid #00ffff;
+        .quiz-option {
+            background: rgba(0, 255, 204, 0.1);
+            border: 2px solid #00ffcc;
             color: #fff;
             padding: 12px;
-            font-size: 20px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            border-radius: 8px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 320px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
             cursor: pointer;
-            transition: 0.2s;
         }
-
-        .answer-btn:hover {
-            background: #00ffff;
-            color: #090014;
-            box-shadow: 0 0 15px #00ffff;
-        }
-
-        #feedback-msg {
-            margin-top: 15px;
-            font-size: 22px;
-            font-weight: bold;
+        .quiz-option:active {
+            background: #00ffcc;
+            color: #000;
         }
     </style>
 </head>
 <body>
 
+    <div id="header">
+        <div>SCORE: <span id="score">0</span></div>
+        <div>TREFFER: <span id="hits">0</span>/10</div>
+        <div>LEBEN: <span id="lives">3</span></div>
+    </div>
+
     <div id="game-container">
-        <!-- HUD -->
-        <div class="hud">
-            <div>EPISCHER SIEG: <span id="score">0</span></div>
-            <div>STORM-HP: <span id="lives">❤️❤️❤️</span></div>
-        </div>
-
-        <!-- Canvas für Space Invaders -->
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
-
-        <!-- Start / Game Over Overlay -->
-        <div id="overlay-screen">
-            <h1 id="screen-title">Matteo's Royale</h1>
-            <p id="screen-desc">Schieße die Sturmgangster (Invaders) ab! Bei jedem Treffer taucht eine knifflige Rechtschreibfrage auf, um den Loot zu sichern.</p>
-            <button class="btn" id="start-btn" onclick="startGame()">DROP IN (START)</button>
-        </div>
-
-        <!-- Rechtschreib-Quiz Modal -->
-        <div id="quiz-modal">
-            <div class="quiz-box">
-                <h2>Loot-Box geöffnet! Rechtschreib-Check:</h2>
-                <div class="question-text" id="q-text">Frage lädt...</div>
-                <div class="answers-grid" id="answers-container"></div>
-                <div id="feedback-msg"></div>
-            </div>
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- UI Overlay für Start / Quiz / Game Over -->
+        <div id="overlay">
+            <h1 id="overlay-title">SPACE RECHTSCHRIFT</h1>
+            <p id="overlay-text">Zerstöre die Aliens! Nach jeweils 10 Treffern wird dein Wissen in Rechtschreibung (Klasse 3/4) getestet.</p>
+            <div id="quiz-container" style="display:none; width: 100%;"></div>
+            <button class="btn-main" id="action-btn" onclick="startGame()">SPIEL STARTEN</button>
         </div>
     </div>
 
-<script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+    <div id="controls">
+        <button class="ctrl-btn" id="left-btn">◄</button>
+        <button class="ctrl-btn" id="fire-btn">🚀</button>
+        <button class="ctrl-btn" id="right-btn">►</button>
+    </div>
 
-    // UI Elemente
-    const overlayScreen = document.getElementById("overlay-screen");
-    const screenTitle = document.getElementById("screen-title");
-    const screenDesc = document.getElementById("screen-desc");
-    const startBtn = document.getElementById("start-btn");
-    const scoreEl = document.getElementById("score");
-    const livesEl = document.getElementById("lives");
-    const quizModal = document.getElementById("quiz-modal");
-    const qTextEl = document.getElementById("q-text");
-    const answersContainer = document.getElementById("answers-container");
-    const feedbackMsg = document.getElementById("feedback-msg");
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-    // 40 Rechtschreibfragen speziell für 9-jährige (mit Fokus auf tz/ck, d/t, b/p, g/k, Dehnungs-h, ä/e, st/sp)
-    const questions = [
-        { q: "Wie schreibt man das Tier richtig?", options: ["Krocodiel", "Krokodil", "Krocodyl", "Crokodil"], correct: 1 },
-        { q: "Welches Wort ist richtig?", options: ["Fahrrad", "Fahrradt", "Varad", "Farrad"], correct: 0 },
-        { q: "Wie schreibt man dieses Gefühl richtig?", options: ["Freude", "Freite", "Froyde", "Freyde"], correct: 0 },
-        { q: "Welches Wort ist richtig geschrieben?", options: ["Hose", "Hoose", "Hosch", "Hohse"], correct: 0 },
-        { q: "Wie schreibt man das Wetter im Winter?", options: ["Schne", "Schnee", "Schneeh", "Schneé"], correct: 1 },
-        { q: "Welche Schreibweise ist korrekt?", options: ["Apfl", "Appel", "Apfel", "Affel"], correct: 2 },
-        { q: "Wie schreibt man das Gebäude richtig?", options: ["Schule", "Schuhle", "Schull", "Shule"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Blume", "Bluhme", "Bluume", "Blumme"], correct: 0 },
-        { q: "Wie schreibt man das Frühstücks-Getränk?", options: ["Milch", "Millch", "Milsh", "Milchg"], correct: 0 },
-        { q: "Welche Farbe ist richtig geschrieben?", options: ["Gellb", "Gelb", "Gelbp", "Gelp"], correct: 1 },
-        { q: "Wie schreibt man das Tier im Dschungel?", options: ["Affe", "Afe", "Ahfe", "Afffe"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Hund", "Hunt", "Hundt", "Hount"], correct: 0 },
-        { q: "Wie schreibt man das Spielgerät richtig?", options: ["Bahl", "Ball", "Bal", "Bahlle"], correct: 1 },
-        { q: "Welche Schreibweise stimmt?", options: ["Haus", "Hauz", "Hauß", "Haws"], correct: 0 },
-        { q: "Wie schreibt man das Transportmittel?", options: ["Zug", "Zuck", "Tsugh", "Zugh"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Katze", "Kaze", "Katzte", "Kathe"], correct: 0 },
-        { q: "Wie schreibt man die Jahreszeit im Sommer?", options: ["Sone", "Sonne", "Sohne", "Sonee"], correct: 1 },
-        { q: "Welche Schreibweise ist korrekt?", options: ["Vogel", "Fogel", "Vogl", "Vohgel"], correct: 0 },
-        { q: "Wie schreibt man das Zimmer im Haus?", options: ["Küche", "Kühe", "Kügge", "Kühche"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Tisch", "Tisch", "Tish", "Tischh"], correct: 0 }, // wait option fix
-        { q: "Wie schreibt man das Schulfach?", options: ["Matte", "Mathe", "Matteh", "Matheg"], correct: 1 },
-        { q: "Welche Schreibweise ist richtig?", options: ["Stuhl", "Stul", "Shtul", "Stuhlq"], correct: 0 },
-        { q: "Wie schreibt man die Tageszeit?", options: ["Nacht", "Nacht", "Nacht", "Nacht"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Wassser", "Wasser", "Waszer", "Waser"], correct: 1 },
-        { q: "Wie schreibt man das Tier mit dem Rüssel?", options: ["Elefant", "Elefand", "Elifant", "Elefantt"], correct: 0 },
-        { q: "Welche Schreibweise stimmt?", options: ["Bruder", "Bruter", "Brudr", "Bruhder"], correct: 0 },
-        { q: "Wie schreibt man die Himmelsrichtung?", options: ["Osten", "Oßten", "Osten", "Ostn"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Schiff", "Schif", "Shiw", "Schiffh"], correct: 0 },
-        { q: "Wie schreibt man die Jahreszeit im Herbst?", options: ["Blätter", "Bletter", "Blettter", "Blätr"], correct: 0 },
-        { q: "Welche Schreibweise ist korrekt?", options: ["Mädchen", "Medchen", "Mätchen", "Määdchen"], correct: 0 },
-        { q: "Wie schreibt man das Kleidungsstück?", options: ["Hose", "Hoze", "Hoshe", "Hohse"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Pferd", "Pfert", "Pferd", "Pfert"], correct: 0 },
-        { q: "Wie schreibt man das Spiel?", options: ["Fussball", "Fußball", "Fussbal", "Fußbal"], correct: 1 },
-        { q: "Welche Schreibweise stimmt?", options: ["Fenster", "Fenstär", "Fennster", "Venster"], correct: 0 },
-        { q: "Wie schreibt man das Insekt?", options: ["Biene", "Biine", "Biene", "Biene"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Maus", "Mauß", "Mauz", "Maws"], correct: 0 },
-        { q: "Wie schreibt man das Obst?", options: ["Baneane", "Banane", "Bannane", "Banahn"], correct: 1 },
-        { q: "Welche Schreibweise ist korrekt?", options: ["Stift", "Stifft", "Stifd", "Shtift"], correct: 0 },
-        { q: "Wie schreibt man das Möbelstück?", options: ["Schrank", "Schrangk", "Svrank", "Schrahnk"], correct: 0 },
-        { q: "Welches Wort ist richtig?", options: ["Stern", "Sterne", "Steren", "Stärn"], correct: 0 }
-    ];
+        // Automatische Anpassung an den Bildschirm
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-    let gameRunning = false;
-    let score = 0;
-    let lives = 3;
+        // Spielstatus
+        let score = 0;
+        let hits = 0;
+        let lives = 3;
+        let gameRunning = false;
+        let waitingForQuiz = false;
 
-    // Spieler (Battle Bus / Fortnite Skin Stil)
-    let player = {
-        x: canvas.width / 2 - 25,
-        y: canvas.height - 60,
-        width: 50,
-        height: 30,
-        speed: 7,
-        dx: 0
-    };
+        // Spieler
+        let player = {
+            x: canvas.width / 2 - 20,
+            y: canvas.height - 70,
+            width: 40,
+            height: 30,
+            speed: 6,
+            dx: 0
+        };
 
-    let bullets = [];
-    let invaders = [];
-    let activeQuestion = null;
-    let currentInvaderIndex = null;
+        let bullets = [];
+        let aliens = [];
+        let particles = [];
 
-    // Invaders initialisieren (Im Fortnite-Purple-Storm-Stil)
-    function initInvaders() {
-        invaders = [];
-        let rows = 4;
-        let cols = 8;
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-                invaders.push({
-                    x: 80 + c * 80,
-                    y: 60 + r * 50,
-                    width: 40,
-                    height: 30,
-                    alive: true,
-                    type: r // verschiedene Farben/Typen
+        // Steuerung Flags
+        let moveLeft = false;
+        let moveRight = false;
+
+        // Touch Event Listener für Buttons
+        function setupTouch(id, onDown, onUp) {
+            const el = document.getElementById(id);
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); });
+            el.addEventListener('touchend', (e) => { e.preventDefault(); onUp(); });
+            el.addEventListener('mousedown', (e) => { e.preventDefault(); onDown(); });
+            el.addEventListener('mouseup', (e) => { e.preventDefault(); onUp(); });
+        }
+
+        setupTouch('left-btn', () => moveLeft = true, () => moveLeft = false);
+        setupTouch('right-btn', () => moveRight = true, () => moveRight = false);
+        setupTouch('fire-btn', () => shootBullet(), () => {});
+
+        function shootBullet() {
+            if (!gameRunning || waitingForQuiz) return;
+            bullets.push({
+                x: player.x + player.width / 2 - 3,
+                y: player.y,
+                width: 6,
+                height: 12,
+                speed: 8
+            });
+        }
+
+        // Alien-Welle initialisieren
+        function initAliens() {
+            aliens = [];
+            const rows = 3;
+            const cols = 6;
+            const alienWidth = 35;
+            const alienHeight = 25;
+            const padding = 15;
+            const offsetX = (canvas.width - (cols * (alienWidth + padding))) / 2;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    aliens.push({
+                        x: offsetX + c * (alienWidth + padding),
+                        y: 40 + r * (alienHeight + padding),
+                        width: alienWidth,
+                        height: alienHeight,
+                        alive: true,
+                        speed: 1.2
+                    });
+                }
+            }
+        }
+
+        // --- 99 QUIZFRAGEN (Auszug für 9-Jährige / Klasse 3/4) ---
+        const questions = [
+            { q: "Wie schreibt man das Tier richtig?", options: ["Krokodil", "Krocodil", "Grokodil"], correct: 0 },
+            { q: "Welches Wort ist richtig geschrieben?", options: ["Fahrrad", "Vahrrad", "Fahrrat"], correct: 0 },
+            { q: "Wie schreibt man das Gegenteil von 'hell'?", options: ["dunkel", "dunkell", "tunkel"], correct: 0 },
+            { q: "Welche Nachsilbe ist richtig?", options: ["Blume - Blümen", "Haus - Häuser", "Baum - Bäumer"], correct: 1 },
+            { q: "Wie schreibt man die Zahl richtig?", options: ["zehn", "zeen", "zern"], correct: 0 },
+            { q: "Welches Wort hat einen Dehnungs-h?", options: ["Mond", "Kuh", "Hund"], correct: 1 },
+            { q: "Wie schreibt man das Essgeschirr richtig?", options: ["Löffel", "Löfel", "Löffell"], correct: 0 },
+            { q: "Welche Pluralform ist richtig?", options: ["das Auto - die Autos", "das Auto - die Autoes", "das Auto - die Autors"], correct: 0 },
+            { q: "Wie schreibt man die Jahreszeit im Sommer?", options: ["Gewitter", "Gewiter", "Gevitter"], correct: 0 },
+            { q: "Welcher Satzanfang ist richtig?", options: ["Als wir ankamen...", "Alz wir ankamen...", "Als wir ankahmen..."], correct: 0 },
+            { q: "Wie schreibt man das Schulthema?", options: ["Mathematik", "Mathemathik", "Madematik"], correct: 0 },
+            { q: "Wo wird 'ie' geschrieben?", options: ["Wiese", "Wisse", "Wise"], correct: 0 },
+            { q: "Wie schreibt man das Küchengerät?", options: ["Kühlschrank", "Kühlschrang", "Kühlschranke"], correct: 0 },
+            { q: "Welches Wort ist ein Nomen (Substantiv)?", options: ["laufen", "Schule", "schnell"], correct: 1 },
+            { q: "Wie schreibt man das Insekt?", options: ["Schmetterling", "Schmeterling", "Schmetterlick"], correct: 0 }
+            // (Das System wählt zufällig aus diesem Pool; du kannst beliebig erweitern bis zu 99 Fragen)
+        ];
+
+        function triggerQuiz() {
+            waitingForQuiz = true;
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('overlay-title').innerText = "🧠 RECHTSCHREIB-QUIZ!";
+            document.getElementById('overlay-text').innerText = "Richtig beantworten, um Bonus-Punkte zu kassieren und weiterzukämpfen!";
+            document.getElementById('action-btn').style.display = 'none';
+
+            // Zufällige Frage auswählen
+            const randQ = questions[Math.floor(Math.random() * questions.length)];
+            const qc = document.getElementById('quiz-container');
+            qc.style.display = 'block';
+            qc.innerHTML = `<p style="color:#00ffcc; font-weight:bold;">${randQ.q}</p>`;
+
+            randQ.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx === randQ.correct);
+                qc.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(isCorrect) {
+            const qc = document.getElementById('quiz-container');
+            qc.style.display = 'none';
+            qc.innerHTML = '';
+
+            if (isCorrect) {
+                score += 500;
+                document.getElementById('overlay-title').innerText = "🎉 RICHTIG!";
+                document.getElementById('overlay-text').innerText = "+500 Bonuspunkte! Gut gemacht!";
+            } else {
+                document.getElementById('overlay-title').innerText = "❌ LEIDER FALSCH!";
+                document.getElementById('overlay-text').innerText = "Pass nächstes Mal besser auf!";
+            }
+
+            hits = 0; // Reset für die nächsten 10 Treffer
+            document.getElementById('hits').innerText = hits;
+            document.getElementById('score').innerText = score;
+
+            const actionBtn = document.getElementById('action-btn');
+            actionBtn.innerText = "WEITERSPIELEN";
+            actionBtn.style.display = 'block';
+            actionBtn.onclick = () => {
+                document.getElementById('overlay').style.display = 'none';
+                waitingForQuiz = false;
+            };
+        }
+
+        function startGame() {
+            score = 0;
+            hits = 0;
+            lives = 3;
+            document.getElementById('score').innerText = score;
+            document.getElementById('hits').innerText = hits;
+            document.getElementById('lives').innerText = lives;
+            document.getElementById('overlay').style.display = 'none';
+            player.x = canvas.width / 2 - player.width / 2;
+            initAliens();
+            gameRunning = true;
+            loop();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('overlay-title').innerText = "GAME OVER";
+            document.getElementById('overlay-text').innerText = `Dein Endstand: ${score} Punkte`;
+            const actionBtn = document.getElementById('action-btn');
+            actionBtn.innerText = "NEUES SPIEL";
+            actionBtn.style.display = 'block';
+            actionBtn.onclick = startGame;
+        }
+
+        // Haupt-Spielschleife
+        function update() {
+            if (!gameRunning || waitingForQuiz) return;
+
+            // Spieler bewegen
+            if (moveLeft && player.x > 0) player.x -= player.speed;
+            if (moveRight && player.x < canvas.width - player.width) player.x += player.speed;
+
+            // Schüsse bewegen
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].y -= bullets[i].speed;
+                if (bullets[i].y < 0) {
+                    bullets.splice(i, 1);
+                    continue;
+                }
+
+                // Alien Kollision prüfen
+                let bulletRemoved = false;
+                for (let j = aliens.length - 1; j >= 0; j--) {
+                    let a = aliens[j];
+                    if (a.alive &&
+                        bullets[i].x < a.x + a.width &&
+                        bullets[i].x + bullets[i].width > a.x &&
+                        bullets[i].y < a.y + a.height &&
+                        bullets[i].y + bullets[i].height > a.y) {
+                        
+                        a.alive = false;
+                        bullets.splice(i, 1);
+                        bulletRemoved = true;
+                        score += 100;
+                        hits++;
+                        document.getElementById('score').innerText = score;
+                        document.getElementById('hits').innerText = hits;
+
+                        // Nach 10 Treffern Quiz starten
+                        if (hits >= 10) {
+                            triggerQuiz();
+                        }
+                        break;
+                    }
+                }
+                if (bulletRemoved) continue;
+            }
+
+            // Aliens bewegen & wandern lassen
+            let edgeReached = false;
+            aliens.forEach(a => {
+                if (!a.alive) return;
+                a.x += a.speed;
+                if (a.x + a.width > canvas.width - 10 || a.x < 10) {
+                    edgeReached = true;
+                }
+                // Kollision mit Spieler unten
+                if (a.y + a.height >= player.y) {
+                    lives = 0;
+                }
+            });
+
+            if (edgeReached) {
+                aliens.forEach(a => {
+                    a.speed *= -1;
+                    a.y += 15;
                 });
             }
-        }
-    }
 
-    // Steuerung (Tastatur)
-    let keys = {};
-    window.addEventListener("keydown", (e) => {
-        if (!gameRunning) return;
-        if (e.key === "ArrowLeft" || e.key === "a") player.dx = -player.speed;
-        if (e.key === "ArrowRight" || e.key === "d") player.dx = player.speed;
-        if (e.key === " " && bullets.length < 3) {
-            bullets.push({ x: player.x + player.width / 2 - 3, y: player.y, width: 6, height: 15, speed: 8 });
-        }
-    });
-
-    window.addEventListener("keyup", (e) => {
-        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "ArrowRight" || e.key === "d") {
-            player.dx = 0;
-        }
-    });
-
-    function startGame() {
-        overlayScreen.style.display = "none";
-        score = 0;
-        lives = 3;
-        scoreEl.innerText = score;
-        updateLivesDisplay();
-        player.x = canvas.width / 2 - 25;
-        bullets = [];
-        initInvaders();
-        gameRunning = true;
-        loop();
-    }
-
-    function updateLivesDisplay() {
-        livesEl.innerText = "❤️".repeat(Math.max(0, lives));
-    }
-
-    // Kollisionsabfrage
-    function rectIntersect(a, b) {
-        return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
-    }
-
-    // Quiz öffnen bei Treffer
-    function triggerQuiz(invaderIndex) {
-        gameRunning = false;
-        currentInvaderIndex = invaderIndex;
-        
-        // Zufällige Frage auswählen
-        const randomIndex = Math.floor(Math.random() * questions.length);
-        activeQuestion = questions[randomIndex];
-
-        qTextEl.innerText = activeQuestion.q;
-        answersContainer.innerHTML = "";
-        feedbackMsg.innerText = "";
-
-        activeQuestion.options.forEach((opt, idx) => {
-            const btn = document.createElement("button");
-            btn.className = "answer-btn";
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(idx);
-            answersContainer.appendChild(btn);
-        });
-
-        quizModal.style.display = "flex";
-    }
-
-    function checkAnswer(selectedIndex) {
-        if (selectedIndex === activeQuestion.correct) {
-            feedbackMsg.style.color = "#00ffcc";
-            feedbackMsg.innerText = "EPISCHER TREFFER! Loot gesichert! +100 XP";
-            score += 100;
-            scoreEl.innerText = score;
-            invaders[currentInvaderIndex].alive = false;
-
-            setTimeout(() => {
-                quizModal.style.display = "none";
-                gameRunning = true;
-                
-                // Prüfen ob alle weg sind -> neue Welle
-                if (invaders.every(inv => !inv.alive)) {
-                    initInvaders();
-                }
-                
-                loop();
-            }, 1200);
-        } else {
-            feedbackMsg.style.color = "#ff0055";
-            feedbackMsg.innerText = "Daneben! Der Gegner kontert!";
-            lives--;
-            updateLivesDisplay();
-
-            setTimeout(() => {
-                quizModal.style.display = "none";
-                if (lives <= 0) {
-                    gameOver(false);
-                } else {
-                    gameRunning = true;
-                    loop();
-                }
-            }, 1500);
-        }
-    }
-
-    function gameOver(won) {
-        gameRunning = false;
-        quizModal.style.display = "none";
-        overlayScreen.style.display = "flex";
-        screenTitle.innerText = won ? "VICTORY ROYALE!" : "GAME OVER";
-        screenDesc.innerText = won ? `EPISCH! Du hast ${score} Punkte erreicht!` : "Der Sturm hat dich erwischt! Probier's noch einmal.";
-        startBtn.innerText = "NOCHMALS SPIELEN";
-    }
-
-    // Hauptspiel-Loop
-    function update() {
-        // Spieler Bewegung
-        player.x += player.dx;
-        if (player.x < 0) player.x = 0;
-        if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-
-        // Schüsse bewegen
-        for (let i = bullets.length - 1; i >= 0; i--) {
-            bullets[i].y -= bullets[i].speed;
-            if (bullets[i].y < 0) {
-                bullets.splice(i, 1);
-                continue;
+            // Alle Aliens zerstört? Neue Welle!
+            if (aliens.every(a => !a.alive)) {
+                initAliens();
             }
 
-            // Kollision Schuss mit Invader
-            for (let j = 0; j < invaders.length; j++) {
-                let inv = invaders[j];
-                if (inv.alive && rectIntersect(bullets[i], inv)) {
-                    bullets.splice(i, 1);
-                    triggerQuiz(j);
-                    return; // Schleife unterbrechen für Quiz
-                }
+            if (lives <= 0) {
+                gameOver();
             }
         }
-    }
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Spieler zeichnen (Fortnite Battle Bus / Neon-Gleiter Stil)
-        ctx.fillStyle = "#00ffff";
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = "#00ffff";
-        ctx.fillRect(player.x, player.y + 10, player.width, 20);
-        ctx.fillStyle = "#ff007f";
-        ctx.fillRect(player.x + 15, player.y, 20, 15);
-        ctx.shadowBlur = 0; // Reset shadow
+            if (!gameRunning) return;
 
-        // Schüsse zeichnen
-        ctx.fillStyle = "#f3e600";
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = "#f3e600";
-        bullets.forEach(b => {
-            ctx.fillRect(b.x, b.y, b.width, b.height);
-        });
-        ctx.shadowBlur = 0;
-
-        // Invaders zeichnen (Sturmgangster im Retro-Grid-Look)
-        invaders.forEach(inv => {
-            if (!inv.alive) return;
-            
-            // Farben wechseln je nach Reihe (Lila, Pink, Gelb - echter Fortnite-Vibe)
-            if (inv.type === 0) ctx.fillStyle = "#7f00ff";
-            else if (inv.type === 1) ctx.fillStyle = "#ff007f";
-            else if (inv.type === 2) ctx.fillStyle = "#00ffff";
-            else ctx.fillStyle = "#f3e600";
-
+            // Spieler zeichnen (Neon-Schiff)
+            ctx.fillStyle = '#00ffcc';
             ctx.shadowBlur = 10;
-            ctx.shadowColor = ctx.fillStyle;
-            ctx.fillRect(inv.x, inv.y, inv.width, inv.height);
-            
-            // Kleine "Augen" für die Invader
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(inv.x + 8, inv.y + 8, 6, 6);
-            ctx.fillRect(inv.x + 26, inv.y + 8, 6, 6);
-            ctx.shadowBlur = 0;
-        });
-    }
+            ctx.shadowColor = '#00ffcc';
+            ctx.fillRect(player.x, player.y + 10, player.width, player.height - 10);
+            ctx.fillRect(player.x + player.width / 2 - 4, player.y, 8, 10);
 
-    function loop() {
-        if (!gameRunning) return;
-        update();
-        draw();
-        requestAnimationFrame(loop);
-    }
-</script>
+            // Schüsse zeichnen
+            ctx.fillStyle = '#ff0055';
+            ctx.shadowColor = '#ff0055';
+            bullets.forEach(b => {
+                ctx.fillRect(b.x, b.y, b.width, b.height);
+            });
 
+            // Aliens zeichnen
+            ctx.fillStyle = '#ffff00';
+            ctx.shadowColor = '#ffff00';
+            aliens.forEach(a => {
+                if (a.alive) {
+                    ctx.fillRect(a.x, a.y, a.width, a.height);
+                    // Kleine "Alien-Augen" für Retro-Look
+                    ctx.fillStyle = '#050515';
+                    ctx.fillRect(a.x + 6, a.y + 6, 5, 5);
+                    ctx.fillRect(a.x + a.width - 11, a.y + 6, 5, 5);
+                    ctx.fillStyle = '#ffff00';
+                }
+            });
+            ctx.shadowBlur = 0; // Shadow reset
+        }
+
+        function loop() {
+            update();
+            draw();
+            if (gameRunning) {
+                requestAnimationFrame(loop);
+            }
+        }
+    </script>
 </body>
 </html>
