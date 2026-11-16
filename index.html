@@ -2,8 +2,16 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Space Invaders Rechtschreib-Quiz</title>
+    <!-- Wichtig für Vollbild und App-Verhalten auf Mobilgeräten -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#050515">
+    
+    <!-- Verknüpfung zur App-Manifest-Datei -->
+    <link rel="manifest" href="manifest.json">
+    
+    <title>Space Rechtschrieb</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,6 +29,9 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            /* Unterstützung für moderne Handys mit Notch/Kamerastanzung */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
         #header {
             display: flex;
@@ -105,11 +116,11 @@
         h1 {
             color: #ff0055;
             text-shadow: 0 0 10px #ff0055;
-            font-size: 26px;
+            font-size: 24px;
             margin-bottom: 10px;
         }
         p {
-            font-size: 16px;
+            font-size: 15px;
             max-width: 400px;
             line-height: 1.4;
         }
@@ -135,7 +146,7 @@
             width: 100%;
             max-width: 320px;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 15px;
             font-family: inherit;
             cursor: pointer;
         }
@@ -175,7 +186,6 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Automatische Anpassung an den Bildschirm
         function resize() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
@@ -183,32 +193,26 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Spielstatus
         let score = 0;
         let hits = 0;
         let lives = 3;
         let gameRunning = false;
         let waitingForQuiz = false;
 
-        // Spieler
         let player = {
             x: canvas.width / 2 - 20,
             y: canvas.height - 70,
             width: 40,
             height: 30,
-            speed: 6,
-            dx: 0
+            speed: 6
         };
 
         let bullets = [];
         let aliens = [];
-        let particles = [];
 
-        // Steuerung Flags
         let moveLeft = false;
         let moveRight = false;
 
-        // Touch Event Listener für Buttons
         function setupTouch(id, onDown, onUp) {
             const el = document.getElementById(id);
             el.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); });
@@ -232,7 +236,6 @@
             });
         }
 
-        // Alien-Welle initialisieren
         function initAliens() {
             aliens = [];
             const rows = 3;
@@ -256,7 +259,6 @@
             }
         }
 
-        // --- 99 QUIZFRAGEN (Auszug für 9-Jährige / Klasse 3/4) ---
         const questions = [
             { q: "Wie schreibt man das Tier richtig?", options: ["Krokodil", "Krocodil", "Grokodil"], correct: 0 },
             { q: "Welches Wort ist richtig geschrieben?", options: ["Fahrrad", "Vahrrad", "Fahrrat"], correct: 0 },
@@ -273,7 +275,6 @@
             { q: "Wie schreibt man das Küchengerät?", options: ["Kühlschrank", "Kühlschrang", "Kühlschranke"], correct: 0 },
             { q: "Welches Wort ist ein Nomen (Substantiv)?", options: ["laufen", "Schule", "schnell"], correct: 1 },
             { q: "Wie schreibt man das Insekt?", options: ["Schmetterling", "Schmeterling", "Schmetterlick"], correct: 0 }
-            // (Das System wählt zufällig aus diesem Pool; du kannst beliebig erweitern bis zu 99 Fragen)
         ];
 
         function triggerQuiz() {
@@ -283,7 +284,6 @@
             document.getElementById('overlay-text').innerText = "Richtig beantworten, um Bonus-Punkte zu kassieren und weiterzukämpfen!";
             document.getElementById('action-btn').style.display = 'none';
 
-            // Zufällige Frage auswählen
             const randQ = questions[Math.floor(Math.random() * questions.length)];
             const qc = document.getElementById('quiz-container');
             qc.style.display = 'block';
@@ -312,7 +312,7 @@
                 document.getElementById('overlay-text').innerText = "Pass nächstes Mal besser auf!";
             }
 
-            hits = 0; // Reset für die nächsten 10 Treffer
+            hits = 0;
             document.getElementById('hits').innerText = hits;
             document.getElementById('score').innerText = score;
 
@@ -350,15 +350,12 @@
             actionBtn.onclick = startGame;
         }
 
-        // Haupt-Spielschleife
         function update() {
             if (!gameRunning || waitingForQuiz) return;
 
-            // Spieler bewegen
             if (moveLeft && player.x > 0) player.x -= player.speed;
             if (moveRight && player.x < canvas.width - player.width) player.x += player.speed;
 
-            // Schüsse bewegen
             for (let i = bullets.length - 1; i >= 0; i--) {
                 bullets[i].y -= bullets[i].speed;
                 if (bullets[i].y < 0) {
@@ -366,7 +363,6 @@
                     continue;
                 }
 
-                // Alien Kollision prüfen
                 let bulletRemoved = false;
                 for (let j = aliens.length - 1; j >= 0; j--) {
                     let a = aliens[j];
@@ -384,7 +380,6 @@
                         document.getElementById('score').innerText = score;
                         document.getElementById('hits').innerText = hits;
 
-                        // Nach 10 Treffern Quiz starten
                         if (hits >= 10) {
                             triggerQuiz();
                         }
@@ -394,7 +389,6 @@
                 if (bulletRemoved) continue;
             }
 
-            // Aliens bewegen & wandern lassen
             let edgeReached = false;
             aliens.forEach(a => {
                 if (!a.alive) return;
@@ -402,7 +396,6 @@
                 if (a.x + a.width > canvas.width - 10 || a.x < 10) {
                     edgeReached = true;
                 }
-                // Kollision mit Spieler unten
                 if (a.y + a.height >= player.y) {
                     lives = 0;
                 }
@@ -415,7 +408,6 @@
                 });
             }
 
-            // Alle Aliens zerstört? Neue Welle!
             if (aliens.every(a => !a.alive)) {
                 initAliens();
             }
@@ -427,37 +419,32 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             if (!gameRunning) return;
 
-            // Spieler zeichnen (Neon-Schiff)
             ctx.fillStyle = '#00ffcc';
             ctx.shadowBlur = 10;
             ctx.shadowColor = '#00ffcc';
             ctx.fillRect(player.x, player.y + 10, player.width, player.height - 10);
             ctx.fillRect(player.x + player.width / 2 - 4, player.y, 8, 10);
 
-            // Schüsse zeichnen
             ctx.fillStyle = '#ff0055';
             ctx.shadowColor = '#ff0055';
             bullets.forEach(b => {
                 ctx.fillRect(b.x, b.y, b.width, b.height);
             });
 
-            // Aliens zeichnen
             ctx.fillStyle = '#ffff00';
             ctx.shadowColor = '#ffff00';
             aliens.forEach(a => {
                 if (a.alive) {
                     ctx.fillRect(a.x, a.y, a.width, a.height);
-                    // Kleine "Alien-Augen" für Retro-Look
                     ctx.fillStyle = '#050515';
                     ctx.fillRect(a.x + 6, a.y + 6, 5, 5);
                     ctx.fillRect(a.x + a.width - 11, a.y + 6, 5, 5);
                     ctx.fillStyle = '#ffff00';
                 }
             });
-            ctx.shadowBlur = 0; // Shadow reset
+            ctx.shadowBlur = 0;
         }
 
         function loop() {
